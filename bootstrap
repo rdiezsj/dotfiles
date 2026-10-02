@@ -109,6 +109,10 @@ ejecutar_checkout_local() {
   # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/fuentes-externas.sh"
   # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/platforms/fedora/catalogo-software.sh"
+  # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/platforms/fedora/multimedia-nvidia.sh"
+  # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/scaffold.sh"
   # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/vaultwarden.sh"
@@ -116,6 +120,9 @@ ejecutar_checkout_local() {
   registrar_resultado presentes 'Entorno Fedora Workstation con GNOME validado'
   mostrar_encabezado 'DOTFILES FEDORA -- PLAN COMPLETO'
   mostrar_mensaje '[>] Comprobar dependencias mínimas y catálogos esenciales.'
+  mostrar_mensaje '[>] Configurar Microsoft, RPM Fusion, software DNF/Flatpak y AppImage verificados.'
+  mostrar_mensaje '[>] Sustituir Firefox y ONLYOFFICE por las variantes declaradas.'
+  mostrar_mensaje '[>] Detectar NVIDIA, codecs multimedia y requisitos de reinicio de forma condicionada.'
   mostrar_mensaje '[>] Crear scaffold, plantillas Nautilus y configuración mínima de Dotbot.'
   mostrar_mensaje '[>] Instalar Bitwarden CLI y ofrecer la configuración opcional de Vaultwarden.'
   if [[ $SIMULACION == true ]]; then
@@ -130,9 +137,12 @@ ejecutar_checkout_local() {
   fi
   instalar_dependencias_minimas
   configurar_rpm_fusion "$DIRECTORIO_SCRIPT/catalogs/fuentes-externas.sh"
+  configurar_fuentes_catalogo "$DIRECTORIO_SCRIPT/platforms/fedora" "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env"
   instalar_homebrew
   crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh"
   instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates"
+  ejecutar_catalogo_software "$DIRECTORIO_SCRIPT/catalogs"
+  configurar_multimedia_y_nvidia "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env"
 
   if command -v bw >/dev/null 2>&1; then
     registrar_resultado presentes 'Bitwarden CLI ya estaba disponible'

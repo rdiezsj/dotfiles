@@ -11,4 +11,4 @@ dependencia_disponible() {
 }
 
 resultado=$(dependencias_ausentes)
-[[ $resultado == $'zsh\nflatpak\ngum\npython3\nlibsecret' ]]
+[[ $resultado == $'zsh\nflatpak\ngum\npython3\nlibsecret\npciutils\nmokutil' ]]

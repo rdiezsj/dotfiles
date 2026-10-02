@@ -3,7 +3,7 @@
 # Dependencias mínimas del bootstrap. Python permite ejecutar Dotbot cuando se
 # incorpore su código gestionado al repositorio.
 
-DEPENDENCIAS_MINIMAS=(git curl zsh flatpak gum python3 libsecret)
+DEPENDENCIAS_MINIMAS=(git curl zsh flatpak gum python3 libsecret pciutils mokutil)
 
 dependencia_disponible() {
   command -v "$1" >/dev/null 2>&1

@@ -9,3 +9,18 @@ for catalogo in dnf-rpm flatpak homebrew appimage; do
   grep -q '^# ' "$archivo"
   bash -n "$archivo"
 done
+
+# shellcheck source=/dev/null
+source "$RAIZ/catalogs/dnf-rpm.sh"
+# shellcheck source=/dev/null
+source "$RAIZ/catalogs/flatpak.sh"
+# shellcheck source=/dev/null
+source "$RAIZ/catalogs/appimage.sh"
+
+[[ $(printf '%s\n' "${PAQUETES_DNF[@]}" | sort -u | wc -l) -eq ${#PAQUETES_DNF[@]} ]]
+[[ $(printf '%s\n' "${PAQUETES_FLATPAK[@]}" | sort -u | wc -l) -eq ${#PAQUETES_FLATPAK[@]} ]]
+[[ ${#PAQUETES_APPIMAGE[@]} -eq 2 ]]
+for appimage in "${PAQUETES_APPIMAGE[@]}"; do
+  [[ ${APPIMAGE_URL[$appimage]} == https://* ]]
+  [[ ${APPIMAGE_SHA256[$appimage]} =~ ^[[:xdigit:]]{64}$ ]]
+done

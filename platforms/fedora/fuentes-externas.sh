@@ -10,6 +10,45 @@ rpm_fusion_configurado() {
   rpm -q rpmfusion-free-release rpmfusion-nonfree-release >/dev/null 2>&1
 }
 
+url_microsoft_valida() {
+  [[ $1 == "https://packages.microsoft.com/config/fedora/${FEDORA_VERSION}/packages-microsoft-prod.rpm" ]]
+}
+
+url_firefoxpwa_valida() {
+  [[ $1 == https://packagecloud.io/filips/FirefoxPWA/gpgkey ]]
+}
+
+configurar_fuentes_catalogo() {
+  local directorio_plataforma=$1
+  local archivo_compatibilidad=$2
+  local version
+  local url_microsoft
+  # shellcheck source=/dev/null
+  source "$archivo_compatibilidad"
+  version=$FEDORA_VERSION
+  url_microsoft="https://packages.microsoft.com/config/fedora/${version}/packages-microsoft-prod.rpm"
+  if ! url_microsoft_valida "$url_microsoft"; then
+    printf '%s\n' 'El origen declarado de Microsoft no es válido.' >&2
+    return 1
+  fi
+  if rpm -q packages-microsoft-prod >/dev/null 2>&1; then
+    printf '%s\n' 'Repositorio oficial de Microsoft ya está configurado.'
+  else
+    sudo dnf install -y "$url_microsoft"
+  fi
+
+  if ! url_firefoxpwa_valida 'https://packagecloud.io/filips/FirefoxPWA/gpgkey'; then
+    printf '%s\n' 'La clave declarada de Firefox PWA no es válida.' >&2
+    return 1
+  fi
+  if [[ ! -f /etc/yum.repos.d/firefoxpwa.repo ]] || ! grep -Fqx 'gpgcheck=1' /etc/yum.repos.d/firefoxpwa.repo; then
+    sudo install -Dm0644 "$directorio_plataforma/repos/firefoxpwa.repo" /etc/yum.repos.d/firefoxpwa.repo
+    printf '%s\n' 'Repositorio de Firefox PWA configurado con comprobación GPG.'
+  else
+    printf '%s\n' 'Repositorio de Firefox PWA ya está configurado.'
+  fi
+}
+
 ruta_brew() {
   if command -v brew >/dev/null 2>&1; then
     command -v brew

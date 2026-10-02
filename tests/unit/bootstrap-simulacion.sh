@@ -24,7 +24,9 @@ salida_remota=$(printf 'n\n' | bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
 
 git clone --quiet "$RAIZ" "$TEMPORAL/remoto"
 cp "$RAIZ/bootstrap" "$TEMPORAL/remoto/bootstrap"
-git -C "$TEMPORAL/remoto" add bootstrap
+cp "$RAIZ/platforms/fedora/catalogo-software.sh" "$TEMPORAL/remoto/platforms/fedora/catalogo-software.sh"
+cp "$RAIZ/platforms/fedora/multimedia-nvidia.sh" "$TEMPORAL/remoto/platforms/fedora/multimedia-nvidia.sh"
+git -C "$TEMPORAL/remoto" add bootstrap platforms/fedora/catalogo-software.sh platforms/fedora/multimedia-nvidia.sh
 git -C "$TEMPORAL/remoto" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
   commit --quiet -m 'Actualiza bootstrap para la prueba remota'
 
