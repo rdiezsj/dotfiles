@@ -8,6 +8,11 @@ preparar_bitwarden_cli() {
   if command -v bw >/dev/null 2>&1; then
     return 0
   fi
+  if ! command -v brew >/dev/null 2>&1; then
+    printf '%s\n' 'Homebrew no está disponible; no se puede instalar Bitwarden CLI.' >&2
+    return 1
+  fi
+  printf '%s\n' 'Instalando Bitwarden CLI mediante Homebrew.'
   brew install bitwarden-cli
 }
 
@@ -41,16 +46,16 @@ iniciar_sesion_vaultwarden() {
 
 configurar_vaultwarden() {
   local servidor=${1:-}
-  if ! command -v bw >/dev/null 2>&1; then
-    printf '%s\n' 'Bitwarden CLI no está disponible; Vaultwarden queda pendiente.'
-    return 0
+  if ! preparar_bitwarden_cli; then
+    printf '%s\n' 'Bitwarden CLI no está disponible; Vaultwarden queda pendiente.' >&2
+    return 1
   fi
   if [[ -z $servidor ]]; then
     read -r -p 'URL de Vaultwarden (vacía para omitir): ' servidor
   fi
   if [[ -z $servidor ]]; then
     printf '%s\n' 'Configuración de Vaultwarden omitida.'
-    return 0
+    return 2
   fi
   bw config server "$servidor"
   iniciar_sesion_vaultwarden

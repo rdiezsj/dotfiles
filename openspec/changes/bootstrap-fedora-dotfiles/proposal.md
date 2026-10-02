@@ -7,12 +7,12 @@ Un equipo Fedora Workstation recién instalado necesita un punto de entrada pequ
 ## What Changes
 
 - Incorporar `./bootstrap` para validar Fedora Workstation con GNOME, mostrar un plan y, tras confirmación, preparar `$HOME/.dotfiles`.
-- Instalar únicamente las dependencias base `git`, `curl`, `zsh`, `flatpak`, `gum` y las herramientas de Dotbot; Gum mejora la interfaz cuando ya está disponible.
+- Instalar únicamente las dependencias base `git`, `curl`, `zsh`, `flatpak`, `gum`, las herramientas de Dotbot y el grupo de compilación requerido por Homebrew; Gum mejora la interfaz cuando ya está disponible.
 - Crear el scaffold declarativo de carpetas y las plantillas Nautilus de texto, Markdown y shell.
 - Preparar Dotbot sin reemplazar destinos no gestionados: los conflictos se detienen hasta confirmación humana explícita.
-- Preparar los catálogos separados DNF/RPM, Flatpak, Homebrew y AppImage; instalar Homebrew y configurar las fuentes externas declaradas necesarias, sin instalar el catálogo completo.
-- Integrar Vaultwarden y GNOME Keyring como fase final sin bloquear el bootstrap base.
-- Mantener operaciones idempotentes, diagnósticos en español, pruebas automatizadas y documentación del bootstrap.
+- Preparar los catálogos separados DNF/RPM, Flatpak, Homebrew y AppImage; instalar Homebrew, activar su entorno de forma idempotente para Bash y Zsh, y configurar las fuentes externas declaradas necesarias, sin instalar el catálogo completo.
+- Instalar Bitwarden CLI mediante Homebrew e integrar Vaultwarden y GNOME Keyring como fase final sin bloquear el bootstrap base.
+- Mantener operaciones idempotentes, diagnósticos en español, salida ASCII legible, pruebas automatizadas y documentación del bootstrap.
 
 ## Capabilities
 

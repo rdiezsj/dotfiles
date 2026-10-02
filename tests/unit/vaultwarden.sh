@@ -27,9 +27,20 @@ chmod +x "$TEMPORAL/secret-tool"
 
 # shellcheck source=/dev/null
 source "$RAIZ/platforms/fedora/vaultwarden.sh"
-export PATH="$TEMPORAL:$PATH"
+export PATH="$TEMPORAL:/usr/bin:/bin"
 export BW_PRUEBA_SALIDA="$TEMPORAL/salida"
 export BW_PRUEBA_SESION="$TEMPORAL/sesion"
 configurar_vaultwarden 'https://vaultwarden.example.invalid'
 [[ $(<"$TEMPORAL/salida") == 'config server https://vaultwarden.example.invalid' ]]
 [[ $(<"$TEMPORAL/sesion") == sesion-de-prueba ]]
+
+rm "$TEMPORAL/bw"
+hash -r
+cat >"$TEMPORAL/brew" <<'EOF'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >"$BW_PRUEBA_BREW"
+EOF
+chmod +x "$TEMPORAL/brew"
+export BW_PRUEBA_BREW="$TEMPORAL/brew.log"
+preparar_bitwarden_cli
+[[ $(<"$TEMPORAL/brew.log") == 'install bitwarden-cli' ]]

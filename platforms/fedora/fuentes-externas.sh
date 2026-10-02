@@ -10,6 +10,65 @@ rpm_fusion_configurado() {
   rpm -q rpmfusion-free-release rpmfusion-nonfree-release >/dev/null 2>&1
 }
 
+ruta_brew() {
+  if command -v brew >/dev/null 2>&1; then
+    command -v brew
+    return 0
+  fi
+  if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    printf '%s\n' /home/linuxbrew/.linuxbrew/bin/brew
+    return 0
+  fi
+  return 1
+}
+
+anadir_entorno_homebrew_shell() {
+  local shell=$1
+  local archivo=$2
+  local brew=$3
+  local inicio='# >>> dotfiles: Homebrew >>>'
+  local fin='# <<< dotfiles: Homebrew <<<'
+  local linea
+  linea=$(printf 'eval "$(%s shellenv %s)"' "$brew" "$shell")
+
+  if [[ -f $archivo ]] && grep -Fqx "$linea" "$archivo"; then
+    printf 'Entorno de Homebrew ya configurado en %s.\n' "$archivo"
+    return 0
+  fi
+  if [[ -f $archivo ]] && grep -Fq 'brew shellenv' "$archivo"; then
+    printf 'Entorno de Homebrew ya declarado en %s; no se modifica.\n' "$archivo"
+    return 0
+  fi
+  if [[ -f $archivo ]] && { grep -Fq "$inicio" "$archivo" || grep -Fq "$fin" "$archivo"; }; then
+    printf 'Bloque de Homebrew incompleto en %s; no se modifica.\n' "$archivo" >&2
+    return 1
+  fi
+
+  {
+    printf '\n%s\n' "$inicio"
+    printf '%s\n' "$linea"
+    printf '%s\n' "$fin"
+  } >>"$archivo"
+  printf 'Entorno de Homebrew añadido a %s.\n' "$archivo"
+}
+
+configurar_entorno_homebrew() {
+  local brew
+  brew=$(ruta_brew) || {
+    printf '%s\n' 'No se encontró el ejecutable de Homebrew tras su instalación.' >&2
+    return 1
+  }
+
+  eval "$("$brew" shellenv bash)"
+  anadir_entorno_homebrew_shell bash "$HOME/.bashrc" "$brew"
+  anadir_entorno_homebrew_shell zsh "$HOME/.zshrc" "$brew"
+}
+
+instalar_dependencias_homebrew() {
+  printf '%s\n' 'Preparando herramientas de compilación para Homebrew.'
+  sudo dnf group install -y development-tools
+}
+
 configurar_rpm_fusion() {
   local catalogo=$1
   # shellcheck source=/dev/null
@@ -26,10 +85,12 @@ configurar_rpm_fusion() {
 }
 
 instalar_homebrew() {
-  if command -v brew >/dev/null 2>&1; then
+  if ruta_brew >/dev/null 2>&1; then
     printf '%s\n' 'Homebrew ya está instalado.'
-    return 0
+  else
+    printf '%s\n' 'Instalando Homebrew desde su instalador oficial.'
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
-  printf '%s\n' 'Instalando Homebrew desde su instalador oficial.'
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  configurar_entorno_homebrew
+  instalar_dependencias_homebrew
 }

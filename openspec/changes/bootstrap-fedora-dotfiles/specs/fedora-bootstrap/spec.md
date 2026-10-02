@@ -11,7 +11,7 @@ El sistema SHALL verificar que el equipo ejecuta Fedora Workstation, una versió
 
 #### Scenario: Entorno compatible
 - **WHEN** se ejecuta `./bootstrap` en Fedora Workstation con GNOME compatible
-- **THEN** el sistema muestra el plan de bootstrap
+- **THEN** el sistema muestra una única confirmación de compatibilidad y el plan de bootstrap
 
 #### Scenario: Entorno no compatible
 - **WHEN** el sistema no es Fedora Workstation, no usa GNOME o declara una versión incompatible

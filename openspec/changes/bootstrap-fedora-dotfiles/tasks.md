@@ -11,12 +11,14 @@
 - [x] 2.1 Implementar simulación y plan previo con confirmación humana, y verificar que la simulación no ejecuta operaciones mutantes.
 - [x] 2.2 Implementar salida Bash clara y activación progresiva de Gum, y verificar que el plan se entiende cuando Gum está ausente.
 - [x] 2.3 Implementar resumen de instalados, presentes, omitidos, fallidos y acciones pendientes, y verificarlo con resultados simulados.
+- [x] 2.4 Eliminar diagnósticos de compatibilidad duplicados, mostrar un resumen de pendientes reales y estructurar la salida Bash con ASCII legible; verificar el flujo remoto.
 
 ## 3. Dependencias y catálogos esenciales
 
 - [x] 3.1 Implementar la comprobación e instalación idempotente de git, curl, zsh, flatpak, gum y Dotbot; verificar con dobles de comandos una primera y segunda ejecución.
 - [x] 3.2 Crear catálogos Bash comentados en español para DNF/RPM, Flatpak, Homebrew y AppImage, y verificar su estructura declarativa.
 - [x] 3.3 Implementar Homebrew y fuentes externas esenciales con verificación de origen, y comprobar que no se instalan aplicaciones, fuentes ni AppImages opcionales.
+- [x] 3.4 Activar Homebrew en la sesión actual y en bloques idempotentes de Bash y Zsh, e instalar `development-tools`; verificar que no se sobrescriben archivos de inicio.
 
 ## 4. Scaffold, Nautilus y Dotbot mínimo
 
@@ -29,9 +31,11 @@
 - [x] 5.1 Implementar la fase final no bloqueante de Vaultwarden con solicitud de servidor y `--vault-server`, y verificar que cancelarla conserva el bootstrap base completado.
 - [x] 5.2 Implementar el inicio de sesión `bw`, el almacenamiento exclusivo de sesión revocable en GNOME Keyring y su validación, y verificar que no se escriben contraseñas ni tokens en archivos o salidas.
 - [x] 5.3 Documentar configuración y revocación de Vaultwarden, y verificar que la guía no contiene credenciales reales ni indica versionarlas.
+- [x] 5.4 Instalar Bitwarden CLI antes de la fase opcional de Vaultwarden y verificar que el login sigue siendo cancelable y no bloquea el bootstrap base.
 
 ## 6. Documentación e integración
 
 - [x] 6.1 Documentar en README el comando de bootstrap, el plan, las confirmaciones y las referencias legacy, y verificar que los comandos documentados coinciden con pruebas.
 - [x] 6.2 Mantener la estructura Markdown y la configuración de MkDocs Material, y verificar que la generación local de HTML finaliza correctamente.
 - [x] 6.3 Añadir pruebas automatizadas para la lógica que no modifica un equipo real y una comprobación integral con secretos simulados, y verificar que la suite pasa.
+- [x] 6.4 Documentar la activación de Homebrew para Bash/Zsh y el alcance de Bitwarden CLI, y verificar los enlaces y comandos documentados.

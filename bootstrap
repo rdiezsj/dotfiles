@@ -34,13 +34,24 @@ mostrar_mensaje() {
   fi
 }
 
-mostrar_plan_inicial() {
-  mostrar_mensaje 'Plan inicial:'
-  if ! command -v git >/dev/null 2>&1; then
-    mostrar_mensaje '- Instalar git mediante DNF para poder clonar el repositorio.'
+mostrar_encabezado() {
+  local titulo=$1
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
+    gum style --border double --padding '0 1' --foreground 212 "$titulo"
+  else
+    printf '\n+----------------------------------------+\n'
+    printf '| %-38s |\n' "$titulo"
+    printf '+----------------------------------------+\n'
   fi
-  mostrar_mensaje "- Descargar y validar la referencia $REFERENCIA."
-  mostrar_mensaje "- Crear $DESTINO solo si la referencia es compatible."
+}
+
+mostrar_plan_inicial() {
+  mostrar_encabezado 'DOTFILES FEDORA -- PLAN INICIAL'
+  if ! command -v git >/dev/null 2>&1; then
+    mostrar_mensaje '[>] Instalar git mediante DNF para poder clonar el repositorio.'
+  fi
+  mostrar_mensaje "[>] Descargar y validar la referencia $REFERENCIA."
+  mostrar_mensaje "[>] Crear $DESTINO solo si la referencia es compatible."
 }
 
 confirmar_plan_inicial() {
@@ -49,7 +60,7 @@ confirmar_plan_inicial() {
     gum confirm '¿Deseas continuar con el plan inicial?'
     return
   fi
-  read -r -p '¿Deseas continuar con el plan inicial? [s/N] ' respuesta
+  read -r -p '--> ¿Deseas continuar con el plan inicial? [s/N] ' respuesta
   [[ ${respuesta,,} == s || ${respuesta,,} == si || ${respuesta,,} == sí ]]
 }
 
@@ -73,7 +84,7 @@ ejecutar_instalador_remoto() {
 
   # shellcheck source=/dev/null
   source "$temporal/scripts/lib/validar-entorno-fedora.sh"
-  if ! validar_entorno_fedora "$temporal/platforms/fedora/compatibility.env" "$OS_RELEASE" "$ESCRITORIO"; then
+  if ! validar_entorno_fedora "$temporal/platforms/fedora/compatibility.env" "$OS_RELEASE" "$ESCRITORIO" >/dev/null; then
     rm -rf "$temporal"
     return 1
   fi
@@ -103,10 +114,10 @@ ejecutar_checkout_local() {
   source "$DIRECTORIO_SCRIPT/platforms/fedora/vaultwarden.sh"
   validar_entorno_fedora "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" "$OS_RELEASE" "$ESCRITORIO"
   registrar_resultado presentes 'Entorno Fedora Workstation con GNOME validado'
-  mostrar_mensaje 'Plan completo:'
-  mostrar_mensaje '- Comprobar dependencias mínimas y catálogos esenciales.'
-  mostrar_mensaje '- Crear scaffold, plantillas Nautilus y configuración mínima de Dotbot.'
-  mostrar_mensaje '- Ofrecer la fase opcional de Vaultwarden.'
+  mostrar_encabezado 'DOTFILES FEDORA -- PLAN COMPLETO'
+  mostrar_mensaje '[>] Comprobar dependencias mínimas y catálogos esenciales.'
+  mostrar_mensaje '[>] Crear scaffold, plantillas Nautilus y configuración mínima de Dotbot.'
+  mostrar_mensaje '[>] Instalar Bitwarden CLI y ofrecer la configuración opcional de Vaultwarden.'
   if [[ $SIMULACION == true ]]; then
     registrar_resultado omitidos 'Cambios de bootstrap en modo de simulación'
     mostrar_mensaje 'Simulación completada: no se ha modificado el equipo.'
@@ -122,10 +133,30 @@ ejecutar_checkout_local() {
   instalar_homebrew
   crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh"
   instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates"
-  configurar_vaultwarden "$VAULT_SERVER"
+
+  if command -v bw >/dev/null 2>&1; then
+    registrar_resultado presentes 'Bitwarden CLI ya estaba disponible'
+  elif preparar_bitwarden_cli; then
+    registrar_resultado instalados 'Bitwarden CLI instalado mediante Homebrew'
+  else
+    registrar_resultado pendientes 'Bitwarden CLI no pudo instalarse; Vaultwarden no se configuró'
+  fi
+
+  if command -v bw >/dev/null 2>&1; then
+    if configurar_vaultwarden "$VAULT_SERVER"; then
+      registrar_resultado instalados 'Sesión de Vaultwarden configurada'
+    else
+      codigo_vaultwarden=$?
+      if (( codigo_vaultwarden == 2 )); then
+        registrar_resultado omitidos 'Configuración de Vaultwarden omitida por la persona usuaria'
+      else
+        registrar_resultado pendientes 'Vaultwarden requiere una sesión válida'
+      fi
+    fi
+  fi
+
   registrar_resultado instalados 'Dependencias mínimas comprobadas mediante DNF'
-  registrar_resultado pendientes 'Fases de dependencias, scaffold y secretos'
-  printf '%s\n' 'Plan confirmado. Las fases disponibles se ejecutarán a continuación.'
+  printf '%s\n' '[OK] Plan completado.'
   mostrar_resumen_final
 }
 

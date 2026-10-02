@@ -13,13 +13,13 @@ VARIANT_ID=workstation
 EOF
 
 salida=$(DOTFILES_DISABLE_GUM=true DOTFILES_OS_RELEASE="$TEMPORAL/os-release" DOTFILES_DESKTOP=GNOME "$RAIZ/bootstrap" --dry-run)
-[[ $salida == *'Plan completo:'* ]]
+[[ $salida == *'DOTFILES FEDORA -- PLAN COMPLETO'* ]]
 [[ $salida == *'Simulación completada: no se ha modificado el equipo.'* ]]
-[[ $salida == *'Resumen final:'* ]]
+[[ $salida == *'| RESUMEN FINAL'* ]]
 [[ $salida == *'Omitidos:'* ]]
 
 salida_remota=$(printf 'n\n' | bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
-[[ $salida_remota == *'Plan inicial:'* ]]
+[[ $salida_remota == *'DOTFILES FEDORA -- PLAN INICIAL'* ]]
 [[ $salida_remota == *'Instalación cancelada antes de modificar el equipo.'* ]]
 
 git clone --quiet "$RAIZ" "$TEMPORAL/remoto"
@@ -35,5 +35,6 @@ salida_remota=$(printf 's\nn\n' | DOTFILES_DISABLE_GUM=true \
   DOTFILES_DESKTOP=GNOME \
   bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
 [[ -d $TEMPORAL/dotfiles ]]
-[[ $salida_remota == *'Plan completo:'* ]]
+[[ $salida_remota == *'DOTFILES FEDORA -- PLAN COMPLETO'* ]]
 [[ $salida_remota == *'Bootstrap cancelado antes de modificar el equipo.'* ]]
+[[ $(grep -Fc 'Entorno compatible: Fedora Workstation 44 con GNOME.' <<<"$salida_remota") == 1 ]]

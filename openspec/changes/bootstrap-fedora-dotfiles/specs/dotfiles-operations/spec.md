@@ -18,14 +18,14 @@ El sistema SHALL ofrecer una simulación o comprobación previa y SHALL mostrar 
 - **THEN** el bootstrap aplica únicamente las acciones mostradas
 
 ### Requirement: Interfaz progresiva en español
-El sistema SHALL usar Gum cuando esté disponible y SHALL usar salida Bash clara y legible hasta que Gum se instale; todos los mensajes, scripts y comentarios estarán en español.
+El sistema SHALL usar Gum cuando esté disponible y SHALL usar salida Bash clara, legible y visualmente estructurada con caracteres ASCII hasta que Gum se instale; todos los mensajes, scripts y comentarios estarán en español.
 
 #### Scenario: Gum ausente al inicio
 - **WHEN** `gum` aún no está instalado
 - **THEN** el bootstrap muestra el plan y las intervenciones humanas mediante salida Bash legible
 
 ### Requirement: Idempotencia y resumen final
-El sistema SHALL evitar reinstalar o sobrescribir elementos ya conformes y SHALL finalizar con un resumen de instalados, ya presentes, omitidos, fallidos y acciones manuales pendientes.
+El sistema SHALL evitar reinstalar o sobrescribir elementos ya conformes y SHALL finalizar con un resumen de instalados, ya presentes, omitidos, fallidos y acciones manuales pendientes reales; no incluirá marcadores genéricos de fases ya ejecutadas.
 
 #### Scenario: Segunda ejecución conforme
 - **WHEN** el bootstrap se ejecuta de nuevo sobre un estado conforme

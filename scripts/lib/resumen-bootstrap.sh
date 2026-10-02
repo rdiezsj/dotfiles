@@ -40,7 +40,9 @@ mostrar_categoria() {
 }
 
 mostrar_resumen_final() {
-  printf '%s\n' 'Resumen final:'
+  printf '\n+----------------------------------------+\n'
+  printf '%s\n' '| RESUMEN FINAL                          |'
+  printf '%s\n' '+----------------------------------------+'
   mostrar_categoria 'Instalados:' "${RESULTADOS_INSTALADOS[@]}"
   mostrar_categoria 'Ya presentes:' "${RESULTADOS_PRESENTES[@]}"
   mostrar_categoria 'Omitidos:' "${RESULTADOS_OMITIDOS[@]}"

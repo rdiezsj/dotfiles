@@ -33,11 +33,11 @@ Dotbot solo se preparará en esta iteración. Ante un destino no gestionado, el 
 
 ### Dependencias y catálogos
 
-DNF instalará solo las dependencias mínimas. Homebrew y las fuentes externas esenciales se prepararán mediante declaraciones verificables. Los catálogos Bash separados estarán presentes, pero no instalarán el catálogo completo, fuentes ni AppImages opcionales.
+DNF instalará solo las dependencias mínimas y el grupo `development-tools` requerido por Homebrew. Homebrew y las fuentes externas esenciales se prepararán mediante declaraciones verificables. Tras instalar Homebrew, el bootstrap activará su entorno en el proceso actual y añadirá bloques identificables e idempotentes a `.bashrc` y `.zshrc`, sin cambiar todavía la shell predeterminada con `chsh`. Los catálogos Bash separados estarán presentes, pero no instalarán el catálogo completo, fuentes ni AppImages opcionales.
 
 ### Secretos y documentación
 
-Vaultwarden se configura al final sin bloquear el resultado base. `bw` recibe la contraseña maestra de su interfaz y GNOME Keyring conserva únicamente una sesión revocable. El README documenta el bootstrap y la documentación de mayor alcance continuará publicándose con MkDocs Material.
+Vaultwarden se configura al final sin bloquear el resultado base, pero Bitwarden CLI se instala antes de solicitar la URL del servidor. `bw` recibe la contraseña maestra de su interfaz y GNOME Keyring conserva únicamente una sesión revocable. El resumen solo mostrará pendientes reales. El README documenta el bootstrap y la documentación de mayor alcance continuará publicándose con MkDocs Material.
 
 ## Risks / Trade-offs
 

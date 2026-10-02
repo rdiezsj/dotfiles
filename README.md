@@ -10,7 +10,9 @@ En una instalación nueva, ejecuta:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rdiezsj/dotfiles/main/bootstrap)"
 ```
 
-El instalador muestra un plan, solicita confirmación antes de cambiar el equipo y clona el repositorio en `~/.dotfiles` solo después de validar Fedora Workstation con GNOME.
+El instalador muestra un plan, solicita confirmación antes de cambiar el equipo y clona el repositorio en `~/.dotfiles` solo después de validar Fedora Workstation con GNOME. La validación se muestra una vez, al arrancar desde el clon compatible.
+
+Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bootstrap activa Homebrew en la shell actual y añade un bloque delimitado, idempotente y no destructivo a `~/.bashrc` y `~/.zshrc`. No cambia todavía la shell predeterminada con `chsh`.
 
 Para revisar el plan sin cambiar nada desde el checkout:
 
@@ -19,7 +21,7 @@ cd ~/.dotfiles
 ./bootstrap --dry-run
 ```
 
-Para configurar Vaultwarden:
+Bitwarden CLI se instala mediante Homebrew. Para configurar Vaultwarden:
 
 ```bash
 ./bootstrap --vault-server https://tu-servidor

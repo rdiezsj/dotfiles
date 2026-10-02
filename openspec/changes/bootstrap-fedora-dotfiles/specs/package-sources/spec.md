@@ -21,7 +21,7 @@ El sistema SHALL preparar catálogos Bash diferenciados para DNF/RPM, Flatpak, H
 - **THEN** cada tecnología dispone de un bloque separado y comentado en español
 
 ### Requirement: Homebrew y fuentes externas esenciales
-El sistema SHALL instalar Homebrew y configurar las fuentes externas declaradas necesarias para el bootstrap, verificando su origen y sin instalar paquetes de catálogo no esenciales.
+El sistema SHALL instalar Homebrew, su grupo `development-tools` requerido en Fedora y configurar las fuentes externas declaradas necesarias para el bootstrap, verificando su origen y sin instalar paquetes de catálogo no esenciales. Tras la instalación SHALL activar Homebrew en la sesión actual y mantener bloques idempotentes para Bash y Zsh sin reemplazar el contenido ajeno de sus archivos de inicio.
 
 #### Scenario: Fuente externa declarada
 - **WHEN** el bootstrap requiere una fuente externa esencial
@@ -30,3 +30,7 @@ El sistema SHALL instalar Homebrew y configurar las fuentes externas declaradas 
 #### Scenario: Catálogo de aplicaciones diferido
 - **WHEN** finaliza el bootstrap inicial
 - **THEN** no instala aplicaciones opcionales, fuentes tipográficas ni AppImages de catálogo
+
+#### Scenario: Inicio de una shell nueva
+- **WHEN** una persona abre Bash o Zsh después de instalar Homebrew
+- **THEN** `brew` está disponible en `PATH` sin duplicar ni reemplazar contenido de `.bashrc` o `.zshrc`
