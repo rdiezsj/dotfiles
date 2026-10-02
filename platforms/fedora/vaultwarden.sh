@@ -13,7 +13,7 @@ preparar_bitwarden_cli() {
     return 1
   fi
   printf '%s\n' 'Instalando Bitwarden CLI mediante Homebrew.'
-  brew install bitwarden-cli
+  HOMEBREW_NO_ASK=1 brew install bitwarden-cli
 }
 
 guardar_sesion_vaultwarden() {

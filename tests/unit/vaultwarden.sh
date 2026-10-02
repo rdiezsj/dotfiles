@@ -38,9 +38,9 @@ rm "$TEMPORAL/bw"
 hash -r
 cat >"$TEMPORAL/brew" <<'EOF'
 #!/usr/bin/env bash
-printf '%s\n' "$*" >"$BW_PRUEBA_BREW"
+printf '%s|%s\n' "${HOMEBREW_NO_ASK:-}" "$*" >"$BW_PRUEBA_BREW"
 EOF
 chmod +x "$TEMPORAL/brew"
 export BW_PRUEBA_BREW="$TEMPORAL/brew.log"
 preparar_bitwarden_cli
-[[ $(<"$TEMPORAL/brew.log") == 'install bitwarden-cli' ]]
+[[ $(<"$TEMPORAL/brew.log") == '1|install bitwarden-cli' ]]
