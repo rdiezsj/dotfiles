@@ -7,7 +7,7 @@ Bootstrap personal reproducible para Fedora Workstation con GNOME.
 En una instalación nueva, ejecuta:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rdiezsj/dotfiles/refs/heads/main/bootstrap)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rdiezsj/dotfiles/main/bootstrap)"
 ```
 
 El instalador muestra un plan, solicita confirmación antes de cambiar el equipo y clona el repositorio en `~/.dotfiles` solo después de validar Fedora Workstation con GNOME.
