@@ -5,7 +5,11 @@ set -euo pipefail
 REFERENCIA=${DOTFILES_REF:-main}
 REMOTO=${DOTFILES_REMOTE:-https://github.com/rdiezsj/dotfiles.git}
 DESTINO=${DOTFILES_HOME:-"$HOME/.dotfiles"}
-DIRECTORIO_SCRIPT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ARCHIVO_SCRIPT=${BASH_SOURCE[0]:-}
+DIRECTORIO_SCRIPT=
+if [[ -n $ARCHIVO_SCRIPT && -f $ARCHIVO_SCRIPT ]]; then
+  DIRECTORIO_SCRIPT=$(cd "$(dirname "$ARCHIVO_SCRIPT")" && pwd)
+fi
 OS_RELEASE=${DOTFILES_OS_RELEASE:-/etc/os-release}
 ESCRITORIO=${DOTFILES_DESKTOP:-${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}}
 SIMULACION=false
@@ -120,7 +124,7 @@ ejecutar_checkout_local() {
   mostrar_resumen_final
 }
 
-if [[ -f "$DIRECTORIO_SCRIPT/scripts/lib/validar-entorno-fedora.sh" ]]; then
+if [[ -n $DIRECTORIO_SCRIPT && -f "$DIRECTORIO_SCRIPT/scripts/lib/validar-entorno-fedora.sh" ]]; then
   ejecutar_checkout_local
 else
   ejecutar_instalador_remoto

@@ -17,3 +17,7 @@ salida=$(DOTFILES_DISABLE_GUM=true DOTFILES_OS_RELEASE="$TEMPORAL/os-release" DO
 [[ $salida == *'Simulación completada: no se ha modificado el equipo.'* ]]
 [[ $salida == *'Resumen final:'* ]]
 [[ $salida == *'Omitidos:'* ]]
+
+salida_remota=$(printf 'n\n' | bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
+[[ $salida_remota == *'Plan inicial:'* ]]
+[[ $salida_remota == *'Instalación cancelada antes de modificar el equipo.'* ]]
