@@ -66,20 +66,25 @@ ejecutar_instalador_remoto() {
 
   local temporal
   temporal=$(mktemp -d)
-  trap 'rm -rf "$temporal"' RETURN
-  git clone --quiet --depth 1 --branch "$REFERENCIA" "$REMOTO" "$temporal"
+  if ! git clone --quiet --depth 1 --branch "$REFERENCIA" "$REMOTO" "$temporal"; then
+    rm -rf "$temporal"
+    return 1
+  fi
 
   # shellcheck source=/dev/null
   source "$temporal/scripts/lib/validar-entorno-fedora.sh"
-  validar_entorno_fedora "$temporal/platforms/fedora/compatibility.env"
+  if ! validar_entorno_fedora "$temporal/platforms/fedora/compatibility.env" "$OS_RELEASE" "$ESCRITORIO"; then
+    rm -rf "$temporal"
+    return 1
+  fi
 
   if [[ -e $DESTINO ]]; then
+    rm -rf "$temporal"
     printf 'El destino %s ya existe; no se ha modificado.\n' "$DESTINO" >&2
     return 1
   fi
 
   mv "$temporal" "$DESTINO"
-  trap - RETURN
   exec "$DESTINO/bootstrap" --desde-instalador
 }
 
