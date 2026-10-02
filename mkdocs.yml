@@ -1,0 +1,6 @@
+site_name: Dotfiles Fedora
+theme:
+  name: material
+nav:
+  - Inicio: index.md
+  - Vaultwarden: vaultwarden.md

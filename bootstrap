@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+REFERENCIA=${DOTFILES_REF:-main}
+REMOTO=${DOTFILES_REMOTE:-https://github.com/rdiezsj/dotfiles.git}
+DESTINO=${DOTFILES_HOME:-"$HOME/.dotfiles"}
+DIRECTORIO_SCRIPT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+OS_RELEASE=${DOTFILES_OS_RELEASE:-/etc/os-release}
+ESCRITORIO=${DOTFILES_DESKTOP:-${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-}}}
+SIMULACION=false
+VAULT_SERVER=${DOTFILES_VAULT_SERVER:-}
+
+while (( $# > 0 )); do
+  case $1 in
+    --dry-run) SIMULACION=true ;;
+    --vault-server)
+      VAULT_SERVER=${2:?Falta la URL tras --vault-server}
+      shift
+      ;;
+  esac
+  shift
+done
+
+mostrar_mensaje() {
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
+    gum style --foreground 212 "$1"
+  else
+    printf '%s\n' "$1"
+  fi
+}
+
+mostrar_plan_inicial() {
+  mostrar_mensaje 'Plan inicial:'
+  if ! command -v git >/dev/null 2>&1; then
+    mostrar_mensaje '- Instalar git mediante DNF para poder clonar el repositorio.'
+  fi
+  mostrar_mensaje "- Descargar y validar la referencia $REFERENCIA."
+  mostrar_mensaje "- Crear $DESTINO solo si la referencia es compatible."
+}
+
+confirmar_plan_inicial() {
+  local respuesta
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
+    gum confirm '¿Deseas continuar con el plan inicial?'
+    return
+  fi
+  read -r -p '¿Deseas continuar con el plan inicial? [s/N] ' respuesta
+  [[ ${respuesta,,} == s || ${respuesta,,} == si || ${respuesta,,} == sí ]]
+}
+
+ejecutar_instalador_remoto() {
+  mostrar_plan_inicial
+  if ! confirmar_plan_inicial; then
+    printf '%s\n' 'Instalación cancelada antes de modificar el equipo.'
+    return 0
+  fi
+
+  if ! command -v git >/dev/null 2>&1; then
+    sudo dnf install -y git
+  fi
+
+  local temporal
+  temporal=$(mktemp -d)
+  trap 'rm -rf "$temporal"' RETURN
+  git clone --quiet --depth 1 --branch "$REFERENCIA" "$REMOTO" "$temporal"
+
+  # shellcheck source=/dev/null
+  source "$temporal/scripts/lib/validar-entorno-fedora.sh"
+  validar_entorno_fedora "$temporal/platforms/fedora/compatibility.env"
+
+  if [[ -e $DESTINO ]]; then
+    printf 'El destino %s ya existe; no se ha modificado.\n' "$DESTINO" >&2
+    return 1
+  fi
+
+  mv "$temporal" "$DESTINO"
+  trap - RETURN
+  exec "$DESTINO/bootstrap" --desde-instalador
+}
+
+ejecutar_checkout_local() {
+  # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/scripts/lib/validar-entorno-fedora.sh"
+  # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/scripts/lib/resumen-bootstrap.sh"
+  # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/platforms/fedora/dependencias.sh"
+  # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/platforms/fedora/fuentes-externas.sh"
+  # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/platforms/fedora/scaffold.sh"
+  # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/platforms/fedora/vaultwarden.sh"
+  validar_entorno_fedora "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" "$OS_RELEASE" "$ESCRITORIO"
+  registrar_resultado presentes 'Entorno Fedora Workstation con GNOME validado'
+  mostrar_mensaje 'Plan completo:'
+  mostrar_mensaje '- Comprobar dependencias mínimas y catálogos esenciales.'
+  mostrar_mensaje '- Crear scaffold, plantillas Nautilus y configuración mínima de Dotbot.'
+  mostrar_mensaje '- Ofrecer la fase opcional de Vaultwarden.'
+  if [[ $SIMULACION == true ]]; then
+    registrar_resultado omitidos 'Cambios de bootstrap en modo de simulación'
+    mostrar_mensaje 'Simulación completada: no se ha modificado el equipo.'
+    mostrar_resumen_final
+    return 0
+  fi
+  if ! confirmar_plan_inicial; then
+    printf '%s\n' 'Bootstrap cancelado antes de modificar el equipo.'
+    return 0
+  fi
+  instalar_dependencias_minimas
+  configurar_rpm_fusion "$DIRECTORIO_SCRIPT/catalogs/fuentes-externas.sh"
+  instalar_homebrew
+  crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh"
+  instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates"
+  configurar_vaultwarden "$VAULT_SERVER"
+  registrar_resultado instalados 'Dependencias mínimas comprobadas mediante DNF'
+  registrar_resultado pendientes 'Fases de dependencias, scaffold y secretos'
+  printf '%s\n' 'Plan confirmado. Las fases disponibles se ejecutarán a continuación.'
+  mostrar_resumen_final
+}
+
+if [[ -f "$DIRECTORIO_SCRIPT/scripts/lib/validar-entorno-fedora.sh" ]]; then
+  ejecutar_checkout_local
+else
+  ejecutar_instalador_remoto
+fi

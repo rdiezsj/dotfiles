@@ -1,0 +1,8 @@
+- defaults:
+    link:
+      create: true
+      relink: false
+      force: false
+
+# Los enlaces gestionados se incorporarán explícitamente en iteraciones posteriores.
+- clean: []

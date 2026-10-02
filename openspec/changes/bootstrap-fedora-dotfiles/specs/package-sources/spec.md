@@ -1,0 +1,32 @@
+# Spec Delta
+
+## Purpose
+
+Prepara las fuentes de software y las dependencias mínimas que necesita el bootstrap de una estación Fedora.
+
+## ADDED Requirements
+
+### Requirement: Dependencias mínimas del bootstrap
+El sistema SHALL comprobar e instalar `git`, `curl`, `zsh`, `flatpak`, `gum` y las herramientas necesarias para Dotbot, sin instalar el catálogo general de aplicaciones.
+
+#### Scenario: Dependencia ausente
+- **WHEN** una dependencia mínima no está instalada
+- **THEN** el plan la identifica y, tras confirmación, el bootstrap intenta instalarla
+
+### Requirement: Catálogos base separados
+El sistema SHALL preparar catálogos Bash diferenciados para DNF/RPM, Flatpak, Homebrew y AppImage, con comentarios en español que describan la finalidad de cada bloque.
+
+#### Scenario: Revisión de catálogos
+- **WHEN** se inspecciona la configuración de catálogos
+- **THEN** cada tecnología dispone de un bloque separado y comentado en español
+
+### Requirement: Homebrew y fuentes externas esenciales
+El sistema SHALL instalar Homebrew y configurar las fuentes externas declaradas necesarias para el bootstrap, verificando su origen y sin instalar paquetes de catálogo no esenciales.
+
+#### Scenario: Fuente externa declarada
+- **WHEN** el bootstrap requiere una fuente externa esencial
+- **THEN** la configura solo si coincide con su declaración de origen y verificación
+
+#### Scenario: Catálogo de aplicaciones diferido
+- **WHEN** finaliza el bootstrap inicial
+- **THEN** no instala aplicaciones opcionales, fuentes tipográficas ni AppImages de catálogo
