@@ -17,7 +17,7 @@ PAQUETES_FLATPAK=(
   org.localsend.localsend_app
 )
 
-declare -A DESCRIPCIONES_FLATPAK=(
+declare -gA DESCRIPCIONES_FLATPAK=(
   [org.onlyoffice.desktopeditors]='Suite ofimática ONLYOFFICE'
   [com.bitwarden.desktop]='Aplicación de escritorio Bitwarden'
   [md.obsidian.Obsidian]='Gestor de conocimiento Obsidian'

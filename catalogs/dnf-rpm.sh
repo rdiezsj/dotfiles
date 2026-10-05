@@ -20,7 +20,7 @@ PAQUETES_DNF=(
   firefoxpwa
 )
 
-declare -A DESCRIPCIONES_DNF=(
+declare -gA DESCRIPCIONES_DNF=(
   [gnome-tweaks]='Ajustes adicionales para GNOME'
   [sushi]='Vista previa rápida de archivos en Nautilus'
   [p7zip]='Compresión 7z'
