@@ -25,11 +25,11 @@ La configuración actual de Zsh carga directamente fzf y Starship, mientras que 
 
 ### Sheldon como fuente única de plugins
 
-Sheldon se instalará mediante Homebrew. La configuración se enlazará desde una ruta versionada bajo `home/config/sheldon/` y el lockfile se versionará junto a ella. Se declararán repositorios de zsh-completions, zsh-autosuggestions, zsh-autopair, zsh-syntax-highlighting y los scripts `sudo` y `extract` de Oh My Zsh mediante selección de archivos, sin cargar el framework completo. La fórmula `zsh-completions` dejará de ser necesaria en el catálogo Homebrew para evitar dos fuentes de verdad.
+Sheldon se instalará mediante Homebrew. La configuración se enlazará desde una ruta versionada bajo `home/config/sheldon/` y fijará cada repositorio mediante SHA. Sus lockfiles y clones se mantendrán bajo `~/.local/share/sheldon/`, porque Sheldon registra rutas absolutas del equipo en ellos y no son portables. Se declararán repositorios de zsh-completions, zsh-autosuggestions, zsh-autopair, zsh-syntax-highlighting y los scripts `sudo` y `extract` de Oh My Zsh mediante selección de archivos, sin cargar el framework completo. La fórmula `zsh-completions` dejará de ser necesaria en el catálogo Homebrew para evitar dos fuentes de verdad.
 
 ### Bloqueo y mantenimiento
 
-El bootstrap ejecutará `sheldon lock` para validar o crear el lockfile después de instalar Sheldon. Las actualizaciones usarán `sheldon lock --update` como acción explícita y se revisarán antes de hacer commit. El arranque ejecutará `sheldon source` contra el lockfile existente y no invocará la actualización automática.
+El bootstrap ejecutará `sheldon lock` para materializar localmente las revisiones fijadas después de instalar Sheldon. Las actualizaciones modificarán los SHA de `plugins.toml` como acción explícita y se revisarán antes de hacer commit. El arranque ejecutará `sheldon source` contra el estado local existente y no invocará actualizaciones automáticas.
 
 ### Orden de carga
 
@@ -47,17 +47,17 @@ Será una función local versionada. En una terminal con Gum ofrecerá selecció
 
 - Los repositorios Git externos pueden cambiar de disponibilidad; el lockfile reduce el riesgo de cambios de contenido, pero una referencia inaccesible debe producir un fallo explícito.
 - Cargar scripts aislados de Oh My Zsh reduce dependencias, pero exige comprobar en pruebas que no dependen de inicialización global del framework.
-- Sheldon puede mantener datos bajo `~/.local/share/sheldon`; esa ruta será explícitamente local e ignorada y nunca se enlazará desde el repositorio.
+- Sheldon mantiene lockfiles y clones bajo `~/.local/share/sheldon`; esa ruta será explícitamente local e ignorada y nunca se enlazará desde el repositorio.
 - La división genérica con `split` requiere recomponer antes de extraer; el asistente y la documentación lo indicarán claramente.
 
 ## Migration Plan
 
 1. Añadir Sheldon al catálogo Homebrew y retirar la fórmula duplicada de plugins Zsh.
-2. Crear y enlazar `plugins.toml` y el lockfile; generar el lockfile en una máquina con red y revisar las revisiones antes de versionarlo.
+2. Crear y enlazar `plugins.toml`; materializar el estado local de Sheldon en una máquina con red y revisar los SHA antes de versionarlos.
 3. Sustituir las cargas directas de plugins en `.zshrc` por `sheldon source`, conservando fzf, Starship y la configuración de historial.
 4. Añadir `extract`, `compress`, pruebas unitarias y documentación de mantenimiento.
 5. Ejecutar bootstrap en modo simulación y después en una Fedora limpia; verificar una segunda ejecución idempotente.
 
 ## Open Questions
 
-No quedan decisiones de alcance abiertas para implementar esta propuesta. Las revisiones concretas del lockfile se resolverán durante la implementación al generar el bloqueo desde los repositorios declarados.
+No quedan decisiones de alcance abiertas para implementar esta propuesta. Las revisiones concretas se resolverán durante la implementación al fijar los SHA de los repositorios declarados.

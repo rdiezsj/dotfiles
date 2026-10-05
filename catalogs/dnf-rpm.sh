@@ -7,6 +7,8 @@ PAQUETES_DNF=(
   sushi
   p7zip
   p7zip-plugins
+  zip
+  unzip
   file-roller
   vlc
   syncthing
@@ -24,6 +26,8 @@ declare -gA DESCRIPCIONES_DNF=(
   [sushi]='Vista previa rápida de archivos en Nautilus'
   [p7zip]='Compresión 7z'
   [p7zip-plugins]='Complementos de compresión 7z'
+  [zip]='Creación de archivos ZIP'
+  [unzip]='Extracción de archivos ZIP'
   [file-roller]='Interfaz gráfica para archivos comprimidos'
   [vlc]='Reproductor multimedia VLC'
   [syncthing]='Sincronización de archivos entre dispositivos'

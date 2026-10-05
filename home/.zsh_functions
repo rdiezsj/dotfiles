@@ -1,0 +1,186 @@
+# Funciones interactivas versionadas de Zsh.
+
+_dotfiles_confirmar() {
+  local pregunta=$1 respuesta
+  if command -v gum >/dev/null 2>&1; then
+    gum confirm "$pregunta"
+    return
+  fi
+  [[ -t 0 ]] || return 1
+  read -r "respuesta?$pregunta [s/N] "
+  [[ ${respuesta:l} == s || ${respuesta:l} == si || ${respuesta:l} == sí ]]
+}
+
+_dotfiles_elegir() {
+  local pregunta=$1 respuesta opcion
+  shift
+  local -a opciones=("$@")
+
+  if command -v gum >/dev/null 2>&1; then
+    printf '%s\n' "${opciones[@]}" | gum choose --header "$pregunta"
+    return
+  fi
+  [[ -t 0 ]] || return 1
+  integer indice=1
+  for opcion in "${opciones[@]}"; do
+    print -- "$indice) $opcion"
+    (( indice++ ))
+  done
+  read -r "respuesta?$pregunta [1-${#opciones}]: "
+  [[ $respuesta == <-> && $respuesta -ge 1 && $respuesta -le ${#opciones} ]] || return 1
+  print -r -- "${opciones[$respuesta]}"
+}
+
+_dotfiles_pedir_texto() {
+  local pregunta=$1 predeterminado=$2 respuesta
+  if command -v gum >/dev/null 2>&1; then
+    gum input --prompt "$pregunta " --value "$predeterminado"
+    return
+  fi
+  [[ -t 0 ]] || return 1
+  read -r "respuesta?$pregunta [$predeterminado]: "
+  print -r -- "${respuesta:-$predeterminado}"
+}
+
+extract() {
+  emulate -L zsh
+  local archivo nombre destino
+
+  if (( $# != 1 )); then
+    print -u2 -- 'Uso: extract <archivo-comprimido>'
+    return 2
+  fi
+  archivo=$1
+  if [[ ! -f $archivo ]]; then
+    print -u2 -- "Extract: no existe un archivo válido en $archivo"
+    return 1
+  fi
+
+  nombre=${archivo:t}
+  case $nombre in
+    *.tar.gz|*.tgz) nombre=${nombre%.tar.gz}; nombre=${nombre%.tgz} ;;
+    *.tar.xz|*.txz) nombre=${nombre%.tar.xz}; nombre=${nombre%.txz} ;;
+    *.tar.bz2|*.tbz2) nombre=${nombre%.tar.bz2}; nombre=${nombre%.tbz2} ;;
+    *.tar) nombre=${nombre%.tar} ;;
+    *.zip) nombre=${nombre%.zip} ;;
+    *.7z) nombre=${nombre%.7z} ;;
+    *)
+      print -u2 -- "Extract: formato no compatible: $archivo"
+      return 1
+      ;;
+  esac
+  destino="${archivo:h}/$nombre"
+  if [[ -e $destino ]]; then
+    _dotfiles_confirmar "El destino $destino ya existe. ¿Continuar sin sobrescribir archivos?" || return 0
+  else
+    mkdir -p -- "$destino" || return 1
+  fi
+
+  case $archivo in
+    *.tar.gz|*.tgz) tar --skip-old-files -xzf "$archivo" -C "$destino" ;;
+    *.tar.xz|*.txz) tar --skip-old-files -xJf "$archivo" -C "$destino" ;;
+    *.tar.bz2|*.tbz2) tar --skip-old-files -xjf "$archivo" -C "$destino" ;;
+    *.tar) tar --skip-old-files -xf "$archivo" -C "$destino" ;;
+    *.zip) unzip -n -q "$archivo" -d "$destino" ;;
+    *.7z) 7z x -bd -aos "-o$destino" "$archivo" ;;
+  esac || {
+    print -u2 -- "Extract: no se pudo extraer $archivo"
+    return 1
+  }
+  print -- "Extract: contenido disponible en $destino"
+}
+
+compress() {
+  emulate -L zsh
+  setopt pipefail
+  local formato nivel bloques destino temporal nombre extension
+  local -a elementos partes
+
+  if (( $# == 0 )); then
+    print -u2 -- 'Uso: compress <archivo-o-carpeta> [...]'
+    return 2
+  fi
+  [[ -t 0 ]] || {
+    print -u2 -- 'Compress: requiere una terminal interactiva.'
+    return 1
+  }
+  elementos=("$@")
+  local elemento
+  for elemento in "${elementos[@]}"; do
+    [[ -e $elemento ]] || {
+      print -u2 -- "Compress: no existe $elemento"
+      return 1
+    }
+  done
+
+  formato=$(_dotfiles_elegir 'Formato de compresión' 'tar.gz' 'tar.xz' 'zip' '7z') || return 1
+  nivel=$(_dotfiles_elegir 'Nivel de compresión' 'Normal' 'Máximo') || return 1
+  bloques=$(_dotfiles_elegir 'Dividir en bloques' 'Sin dividir' '100M' '500M' '1G') || return 1
+
+  nombre=${elementos[1]:t}
+  nombre=${nombre%.*}
+  (( ${#elementos} > 1 )) && nombre='archivos'
+  case $formato in
+    tar.gz) extension='tar.gz' ;;
+    tar.xz) extension='tar.xz' ;;
+    zip) extension='zip' ;;
+    7z) extension='7z' ;;
+  esac
+  destino=$(_dotfiles_pedir_texto 'Archivo de salida:' "$PWD/$nombre.$extension") || return 1
+  [[ -n $destino ]] || return 1
+
+  if [[ -d $destino ]]; then
+    print -u2 -- "Compress: el destino $destino es un directorio"
+    return 1
+  fi
+  if [[ -e $destino ]]; then
+    _dotfiles_confirmar "El archivo $destino ya existe. ¿Reemplazarlo?" || return 0
+  fi
+  mkdir -p -- "${destino:h}" || return 1
+  temporal=$(mktemp "${destino:h}/.${destino:t}.XXXXXX") || return 1
+
+  case $formato:$nivel in
+    tar.gz:Normal) tar -czf "$temporal" -- "${elementos[@]}" ;;
+    tar.gz:Máximo) tar -I 'gzip -9' -cf "$temporal" -- "${elementos[@]}" ;;
+    tar.xz:Normal) tar -cJf "$temporal" -- "${elementos[@]}" ;;
+    tar.xz:Máximo) env XZ_OPT=-9 tar -cJf "$temporal" -- "${elementos[@]}" ;;
+    zip:Normal) zip -r -q -6 "$temporal" -- "${elementos[@]}" ;;
+    zip:Máximo) zip -r -q -9 "$temporal" -- "${elementos[@]}" ;;
+    7z:Normal) 7z a -t7z -bd -mx=5 "$temporal" -- "${elementos[@]}" ;;
+    7z:Máximo) 7z a -t7z -bd -mx=9 "$temporal" -- "${elementos[@]}" ;;
+  esac || {
+    rm -f -- "$temporal"
+    print -u2 -- "Compress: no se pudo crear $destino"
+    return 1
+  }
+
+  if [[ $bloques == 'Sin dividir' ]]; then
+    mv -f -- "$temporal" "$destino"
+    print -- "Compress: archivo creado en $destino"
+    return 0
+  fi
+
+  partes=("${destino}".part-*(N))
+  if (( ${#partes} > 0 )); then
+    for elemento in "${partes[@]}"; do
+      if [[ -d $elemento ]]; then
+        rm -f -- "$temporal"
+        print -u2 -- "Compress: la parte $elemento es un directorio"
+        return 1
+      fi
+    done
+    _dotfiles_confirmar "Ya existen partes para $destino. ¿Reemplazarlas?" || {
+      rm -f -- "$temporal"
+      return 0
+    }
+    rm -f -- "${partes[@]}"
+  fi
+  split -b "$bloques" -d -a 3 "$temporal" "${destino}.part-" || {
+    rm -f -- "$temporal"
+    print -u2 -- "Compress: no se pudo dividir $destino"
+    return 1
+  }
+  rm -f -- "$temporal"
+  print -- "Compress: partes creadas con prefijo ${destino}.part-"
+  print -- "Recomponer: cat ${destino}.part-* > ${destino}"
+}

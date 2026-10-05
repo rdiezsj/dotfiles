@@ -1,0 +1,41 @@
+# Plugins Zsh versionados con revisiones SHA portables entre equipos.
+shell = "zsh"
+
+[templates]
+completions = 'fpath=( "{{ dir }}/src" $fpath )'
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+rev = "b5e8e0a22deb05a807bb8655aef809a29f3cffed"
+apply = ["completions"]
+profiles = ["base"]
+
+[plugins.zsh-autopair]
+github = "hlissner/zsh-autopair"
+rev = "449a7c3d095bc8f3d78cf37b9549f8bb4c383f3d"
+use = ["autopair.zsh"]
+profiles = ["base"]
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+rev = "85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5"
+use = ["zsh-autosuggestions.zsh"]
+profiles = ["base"]
+
+[plugins.oh-my-zsh-sudo]
+github = "ohmyzsh/ohmyzsh"
+rev = "d745fbf3bd49a5038e089d7d343ca89db0cbaaff"
+use = ["plugins/sudo/sudo.plugin.zsh"]
+profiles = ["base"]
+
+[plugins.oh-my-zsh-extract]
+github = "ohmyzsh/ohmyzsh"
+rev = "d745fbf3bd49a5038e089d7d343ca89db0cbaaff"
+use = ["plugins/extract/extract.plugin.zsh"]
+profiles = ["base"]
+
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
+rev = "0bfcb582e71d3abe604ce67bc0fe5a21f377507e"
+use = ["zsh-syntax-highlighting.zsh"]
+profiles = ["resaltado"]

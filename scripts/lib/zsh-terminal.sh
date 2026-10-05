@@ -8,8 +8,8 @@ destino_zsh_gestionado() {
   local relativo=${destino#"$HOME"/}
   local origen
 
-  if [[ $relativo == .config/starship.toml ]]; then
-    origen="$raiz/home/config/starship.toml"
+  if [[ $relativo == .config/* ]]; then
+    origen="$raiz/home/config/${relativo#.config/}"
   else
     origen="$raiz/home/$relativo"
   fi
@@ -20,7 +20,7 @@ destino_zsh_gestionado() {
 preparar_migracion_zsh() {
   local raiz=$1
   local destino relativo
-  local -a destinos=("$HOME/.zshrc" "$HOME/.zsh_aliases" "$HOME/.profile" "$HOME/.zprofile" "$HOME/.config/starship.toml")
+  local -a destinos=("$HOME/.zshrc" "$HOME/.zsh_aliases" "$HOME/.zsh_functions" "$HOME/.profile" "$HOME/.zprofile" "$HOME/.config/starship.toml" "$HOME/.config/sheldon/plugins.toml")
 
   for destino in "${destinos[@]}"; do
     if [[ -e $destino || -L $destino ]]; then
@@ -55,6 +55,41 @@ ejecutar_dotbot_zsh() {
   "$raiz/dotbot/bin/dotbot" -d "$raiz" -c "$raiz/install.conf.yaml"
 }
 
+configurar_plugins_sheldon() {
+  local perfil
+  local directorio_configuracion="${XDG_CONFIG_HOME:-$HOME/.config}/sheldon"
+  local directorio_datos="${XDG_DATA_HOME:-$HOME/.local/share}/sheldon"
+  local estado_previo=true
+
+  if ! command -v sheldon >/dev/null 2>&1; then
+    registrar_resultado fallidos 'Sheldon: no está disponible para materializar los plugins Zsh'
+    return 1
+  fi
+  if [[ ! -f $directorio_configuracion/plugins.toml ]]; then
+    registrar_resultado fallidos 'Sheldon: no se encontró la configuración versionada de plugins'
+    return 1
+  fi
+  if [[ $(grep -Ec '^rev = "[[:xdigit:]]{40}"$' "$directorio_configuracion/plugins.toml") -ne 6 ]]; then
+    registrar_resultado fallidos 'Sheldon: la configuración no contiene seis revisiones SHA válidas'
+    return 1
+  fi
+
+  for perfil in base resaltado; do
+    [[ -f $directorio_datos/plugins.$perfil.lock ]] || estado_previo=false
+    if ! SHELDON_CONFIG_DIR="$directorio_configuracion" SHELDON_DATA_DIR="$directorio_datos" \
+      sheldon --non-interactive --profile "$perfil" lock; then
+      registrar_resultado fallidos "Sheldon: no se pudo materializar el perfil $perfil"
+      return 1
+    fi
+  done
+
+  if [[ $estado_previo == true ]]; then
+    registrar_resultado presentes 'Sheldon: estado local de plugins ya materializado'
+  else
+    registrar_resultado instalados 'Sheldon: plugins Zsh materializados en el estado local'
+  fi
+}
+
 preparar_dotbot_zsh() {
   local raiz=$1
   if [[ -f $raiz/dotbot/lib/pyyaml/lib/yaml/__init__.py ]]; then
@@ -69,6 +104,7 @@ configurar_archivos_zsh() {
   preparar_dotbot_zsh "$raiz" || return 1
   preparar_migracion_zsh "$raiz" || return 1
   if ejecutar_dotbot_zsh "$raiz"; then
+    configurar_plugins_sheldon || return 1
     if declare -F registrar_resultado >/dev/null; then
       registrar_resultado instalados 'Zsh: archivos versionados enlazados mediante Dotbot'
     fi

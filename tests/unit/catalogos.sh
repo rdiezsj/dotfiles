@@ -27,5 +27,9 @@ for appimage in "${PAQUETES_APPIMAGE[@]}"; do
   [[ ${APPIMAGE_SHA256[$appimage]} =~ ^[[:xdigit:]]{64}$ ]]
 done
 ! printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq firefoxpwa
-[[ ${PAQUETES_HOMEBREW[*]} == 'firefoxpwa starship zsh-completions fzf helm kubernetes-cli kubectx' ]]
+printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq zip
+printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq unzip
+[[ ${PAQUETES_HOMEBREW[*]} == 'firefoxpwa starship sheldon fzf helm kubernetes-cli kubectx' ]]
 [[ $(printf '%s\n' "${PAQUETES_HOMEBREW[@]}" | sort -u | wc -l) -eq ${#PAQUETES_HOMEBREW[@]} ]]
+! printf '%s\n' "${PAQUETES_HOMEBREW[@]}" | grep -Fxq zsh-completions
+printf '%s\n' "${PAQUETES_HOMEBREW[@]}" | grep -Fxq sheldon

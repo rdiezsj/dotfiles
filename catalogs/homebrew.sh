@@ -4,7 +4,7 @@
 PAQUETES_HOMEBREW=(
   firefoxpwa
   starship
-  zsh-completions
+  sheldon
   fzf
   helm
   kubernetes-cli

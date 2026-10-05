@@ -7,8 +7,10 @@
 - link:
     ~/.zshrc: home/.zshrc
     ~/.zsh_aliases: home/.zsh_aliases
+    ~/.zsh_functions: home/.zsh_functions
     ~/.profile: home/.profile
     ~/.zprofile: home/.zprofile
     ~/.config/starship.toml: home/config/starship.toml
+    ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
 
 - clean: []

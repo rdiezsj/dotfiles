@@ -6,12 +6,12 @@ La configuración Zsh actual ya integra fzf y Starship, pero todavía no ofrece 
 
 ## What Changes
 
-- Instalar Sheldon mediante Homebrew y versionar su configuración y lockfile sin versionar su caché local.
+- Instalar Sheldon mediante Homebrew y versionar su configuración con revisiones Git fijadas, sin versionar sus lockfiles ni su caché local dependientes del equipo.
 - Gestionar con Sheldon todos los plugins Zsh declarados: completions, autosuggestions, autopair y syntax highlighting, además de las capacidades `sudo` y `extract`; `compress` será una utilidad local.
 - Mantener fzf y las integraciones nativas de kubectl fuera del gestor de plugins porque ya las proporcionan sus propias herramientas.
 - Añadir `compress` como asistente Gum sencillo para formato, división por bloques y opciones compatibles; `extract` seguirá siendo una función directa.
 - Integrar la inicialización y actualización controlada de plugins en el bootstrap, con modo simulación, idempotencia y resumen.
-- Documentar cómo actualizar referencias, regenerar el lockfile y recomponer archivos divididos.
+- Documentar cómo actualizar referencias, regenerar el estado local de Sheldon y recomponer archivos divididos.
 
 ## Capabilities
 
@@ -27,6 +27,6 @@ La configuración Zsh actual ya integra fzf y Starship, pero todavía no ofrece 
 ## Impact
 
 - Afecta `catalogs/homebrew.sh`, la configuración versionada de Zsh, el bootstrap, las pruebas unitarias y la documentación.
-- Añade Sheldon como dependencia Homebrew y repositorios Git externos fijados en un lockfile público.
+- Añade Sheldon como dependencia Homebrew y repositorios Git externos fijados mediante SHA públicos.
 - Escribe archivos de salida de compresión solo bajo rutas elegidas por la persona usuaria y no elimina originales.
 - No almacena secretos, historial, cachés de Sheldon ni configuraciones específicas de un equipo.

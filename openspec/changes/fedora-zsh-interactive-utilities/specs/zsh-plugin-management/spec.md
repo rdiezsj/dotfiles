@@ -7,15 +7,15 @@ Gestiona los plugins Zsh de forma declarativa, reproducible y separada de Oh My 
 ## ADDED Requirements
 
 ### Requirement: Declaración y bloqueo de plugins
-El sistema SHALL instalar Sheldon mediante Homebrew y SHALL mantener versionados una configuración declarativa y un lockfile con revisiones concretas para cada plugin. El caché local de Sheldon SHALL permanecer fuera del repositorio.
+El sistema SHALL instalar Sheldon mediante Homebrew y SHALL mantener versionada una configuración declarativa con SHA concretos para cada plugin. Los lockfiles y el caché local de Sheldon SHALL permanecer fuera del repositorio por contener rutas específicas del equipo.
 
 #### Scenario: Primera instalación
 - **WHEN** el bootstrap se ejecuta en una cuenta Fedora compatible
-- **THEN** instala Sheldon, enlaza su configuración versionada y genera o valida el lockfile antes de cargar los plugins
+- **THEN** instala Sheldon, enlaza su configuración versionada y materializa localmente las revisiones fijadas antes de cargar los plugins
 
 #### Scenario: Referencia no bloqueada
-- **WHEN** la configuración declara un plugin sin una revisión bloqueada o el lockfile no coincide
-- **THEN** el bootstrap detiene la fase de plugins y explica cómo regenerar el lockfile explícitamente
+- **WHEN** la configuración declara un plugin sin una revisión SHA válida
+- **THEN** el bootstrap detiene la fase de plugins y explica cómo fijar una revisión explícitamente
 
 ### Requirement: Plugins mínimos sin Oh My Zsh completo
 Sheldon SHALL cargar, en un orden determinista, los plugins de completions, autosuggestions, autopair, resaltado de sintaxis y los scripts `sudo` y `extract` seleccionados de sus repositorios de origen, sin instalar ni inicializar el framework completo de Oh My Zsh. La configuración SHALL ejecutarse solo en shells interactivas.
@@ -29,12 +29,12 @@ Sheldon SHALL cargar, en un orden determinista, los plugins de completions, auto
 - **THEN** no carga plugins ni emite mensajes de inicialización
 
 ### Requirement: Actualización controlada
-El sistema SHALL documentar `sheldon lock --update` como operación explícita de mantenimiento y SHALL ejecutar `sheldon source` usando el lockfile existente durante el arranque, sin actualizar repositorios automáticamente en cada shell.
+El sistema SHALL documentar la actualización de SHA como operación explícita de mantenimiento y SHALL ejecutar `sheldon source` usando el estado local existente durante el arranque, sin actualizar repositorios automáticamente en cada shell.
 
 #### Scenario: Actualización solicitada
 - **WHEN** la persona usuaria solicita actualizar plugins
-- **THEN** el procedimiento regenera el lockfile, muestra las revisiones resultantes y permite revisar el diff antes de versionarlo
+- **THEN** el procedimiento actualiza los SHA, muestra las revisiones resultantes y permite revisar el diff antes de versionarlo
 
 #### Scenario: Arranque repetido
 - **WHEN** se abre una segunda shell sin cambios en la configuración
-- **THEN** Sheldon reutiliza el lockfile y no descarga ni reinstala plugins innecesariamente
+- **THEN** Sheldon reutiliza el estado local y no descarga ni reinstala plugins innecesariamente
