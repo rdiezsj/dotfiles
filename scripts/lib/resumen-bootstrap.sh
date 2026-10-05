@@ -28,21 +28,29 @@ registrar_resultado() {
 mostrar_categoria() {
   local titulo=$1
   shift
-  printf '%s\n' "$titulo"
+  if command -v gum >/dev/null 2>&1; then
+    gum style --foreground 212 --bold "$titulo"
+  else
+    printf '%s\n' "$titulo"
+  fi
   if (( $# == 0 )); then
     printf '%s\n' '- Ninguno.'
     return
   fi
   local elemento
   for elemento in "$@"; do
-    printf '%s\n' "- $elemento"
+    printf '%s\n' "  - $elemento"
   done
 }
 
 mostrar_resumen_final() {
-  printf '\n+----------------------------------------+\n'
-  printf '%s\n' '| RESUMEN FINAL                          |'
-  printf '%s\n' '+----------------------------------------+'
+  if command -v gum >/dev/null 2>&1; then
+    gum style --border double --padding '0 1' --foreground 212 'DOTFILES FEDORA -- RESUMEN FINAL'
+  else
+    printf '\n+----------------------------------------+\n'
+    printf '%s\n' '| RESUMEN FINAL                          |'
+    printf '%s\n' '+----------------------------------------+'
+  fi
   mostrar_categoria 'Instalados:' "${RESULTADOS_INSTALADOS[@]}"
   mostrar_categoria 'Ya presentes:' "${RESULTADOS_PRESENTES[@]}"
   mostrar_categoria 'Omitidos:' "${RESULTADOS_OMITIDOS[@]}"

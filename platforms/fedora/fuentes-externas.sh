@@ -10,8 +10,12 @@ rpm_fusion_configurado() {
   rpm -q rpmfusion-free-release rpmfusion-nonfree-release >/dev/null 2>&1
 }
 
-url_microsoft_valida() {
-  [[ $1 == "https://packages.microsoft.com/config/fedora/${FEDORA_VERSION}/packages-microsoft-prod.rpm" ]]
+url_repositorio_vscode_valida() {
+  [[ $1 == https://packages.microsoft.com/yumrepos/vscode ]]
+}
+
+url_clave_microsoft_valida() {
+  [[ $1 == https://packages.microsoft.com/keys/microsoft.asc ]]
 }
 
 url_firefoxpwa_valida() {
@@ -21,20 +25,20 @@ url_firefoxpwa_valida() {
 configurar_fuentes_catalogo() {
   local directorio_plataforma=$1
   local archivo_compatibilidad=$2
-  local version
-  local url_microsoft
+  local url_repositorio_vscode='https://packages.microsoft.com/yumrepos/vscode'
+  local url_clave_microsoft='https://packages.microsoft.com/keys/microsoft.asc'
   # shellcheck source=/dev/null
   source "$archivo_compatibilidad"
-  version=$FEDORA_VERSION
-  url_microsoft="https://packages.microsoft.com/config/fedora/${version}/packages-microsoft-prod.rpm"
-  if ! url_microsoft_valida "$url_microsoft"; then
-    printf '%s\n' 'El origen declarado de Microsoft no es válido.' >&2
+  if ! url_repositorio_vscode_valida "$url_repositorio_vscode" || ! url_clave_microsoft_valida "$url_clave_microsoft"; then
+    printf '%s\n' 'El repositorio o la clave declarados de Microsoft no son válidos.' >&2
     return 1
   fi
-  if rpm -q packages-microsoft-prod >/dev/null 2>&1; then
+  if [[ -f /etc/yum.repos.d/vscode.repo ]] && cmp -s "$directorio_plataforma/repos/vscode.repo" /etc/yum.repos.d/vscode.repo; then
     printf '%s\n' 'Repositorio oficial de Microsoft ya está configurado.'
   else
-    sudo dnf install -y "$url_microsoft"
+    sudo rpm --import "$url_clave_microsoft"
+    sudo install -Dm0644 "$directorio_plataforma/repos/vscode.repo" /etc/yum.repos.d/vscode.repo
+    printf '%s\n' 'Repositorio oficial de Microsoft configurado con comprobación GPG.'
   fi
 
   if ! url_firefoxpwa_valida 'https://packagecloud.io/filips/FirefoxPWA/gpgkey'; then

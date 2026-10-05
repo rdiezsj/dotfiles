@@ -8,7 +8,7 @@ El bootstrap ya prepara fuentes y catálogos vacíos, pero una estación Fedora 
 
 - Ejecutar catálogos declarativos DNF/RPM y Flatpak con los paquetes acordados, sus identificadores explícitos y comprobación idempotente.
 - Configurar el repositorio oficial de Microsoft para VS Code y aplicar las sustituciones acordadas: Firefox DNF frente a Firefox Flatpak y ONLYOFFICE frente a LibreOffice o FreeOffice.
-- Gestionar la descarga verificable de los AppImage de Heynote y Nextcloud Desktop Client a `~/Apps`, sin asumir que Gear Lever dispone de una interfaz de automatización.
+- Gestionar la descarga verificable de los AppImage de Heynote y Nextcloud Desktop Client a `~/Apps`. Gear Lever se instalará como gestor visual, pero la importación de cada archivo será una acción manual visible; el bootstrap no asumirá una interfaz de automatización ni rutas internas de Gear Lever.
 - Instalar la pila multimedia de RPM Fusion: FFmpeg completo, grupo multimedia, códecs y soporte DVD cuando la fuente RPM Fusion correspondiente esté disponible.
 - Detectar una GPU NVIDIA y, solo si existe, instalar el controlador RPM Fusion y las bibliotecas VA-API de 64 y 32 bits; tratar Secure Boot como una intervención humana explícita si requiere enrolar MOK.
 - Instalar y habilitar Syncthing como servicio `systemd --user`, asociado al usuario que posee los datos sincronizados.

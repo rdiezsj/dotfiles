@@ -45,6 +45,26 @@ mostrar_encabezado() {
   fi
 }
 
+mostrar_fase() {
+  local titulo=$1
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
+    gum style --border normal --padding '0 1' --foreground 39 "[>] $titulo"
+  else
+    printf '\n[>] %s\n' "$titulo"
+  fi
+}
+
+ejecutar_fase() {
+  local titulo=$1
+  shift
+  mostrar_fase "$titulo"
+  if "$@"; then
+    return 0
+  fi
+  registrar_resultado fallidos "$titulo: fase no completada"
+  return 1
+}
+
 mostrar_plan_inicial() {
   mostrar_encabezado 'DOTFILES FEDORA -- PLAN INICIAL'
   if ! command -v git >/dev/null 2>&1; then
@@ -135,14 +155,15 @@ ejecutar_checkout_local() {
     printf '%s\n' 'Bootstrap cancelado antes de modificar el equipo.'
     return 0
   fi
-  instalar_dependencias_minimas
-  configurar_rpm_fusion "$DIRECTORIO_SCRIPT/catalogs/fuentes-externas.sh"
-  configurar_fuentes_catalogo "$DIRECTORIO_SCRIPT/platforms/fedora" "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env"
-  instalar_homebrew
-  crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh"
-  instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates"
-  ejecutar_catalogo_software "$DIRECTORIO_SCRIPT/catalogs"
-  configurar_multimedia_y_nvidia "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env"
+  local hubo_fallos=false
+  ejecutar_fase 'Dependencias mínimas' instalar_dependencias_minimas || hubo_fallos=true
+  ejecutar_fase 'RPM Fusion Free y Nonfree' configurar_rpm_fusion "$DIRECTORIO_SCRIPT/catalogs/fuentes-externas.sh" || hubo_fallos=true
+  ejecutar_fase 'Repositorio oficial de Microsoft y Firefox PWA' configurar_fuentes_catalogo "$DIRECTORIO_SCRIPT/platforms/fedora" "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" || hubo_fallos=true
+  ejecutar_fase 'Homebrew y herramientas de compilación' instalar_homebrew || hubo_fallos=true
+  ejecutar_fase 'Carpetas personales' crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh" || hubo_fallos=true
+  ejecutar_fase 'Plantillas de Nautilus' instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates" || hubo_fallos=true
+  ejecutar_fase 'Catálogo DNF, Flatpak y AppImage' ejecutar_catalogo_software "$DIRECTORIO_SCRIPT/catalogs" || hubo_fallos=true
+  ejecutar_fase 'Multimedia y NVIDIA' configurar_multimedia_y_nvidia "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" || hubo_fallos=true
 
   if command -v bw >/dev/null 2>&1; then
     registrar_resultado presentes 'Bitwarden CLI ya estaba disponible'
@@ -166,8 +187,13 @@ ejecutar_checkout_local() {
   fi
 
   registrar_resultado instalados 'Dependencias mínimas comprobadas mediante DNF'
-  printf '%s\n' '[OK] Plan completado.'
+  if [[ $hubo_fallos == true || ${#RESULTADOS_FALLIDOS[@]} -gt 0 ]]; then
+    printf '%s\n' '[!] Plan completado con incidencias; consulta el resumen.' >&2
+  else
+    printf '%s\n' '[OK] Plan completado.'
+  fi
   mostrar_resumen_final
+  [[ $hubo_fallos == false && ${#RESULTADOS_FALLIDOS[@]} -eq 0 ]]
 }
 
 if [[ -n $DIRECTORIO_SCRIPT && -f "$DIRECTORIO_SCRIPT/scripts/lib/validar-entorno-fedora.sh" ]]; then

@@ -16,7 +16,7 @@ Los catálogos están en `catalogs/dnf-rpm.sh`, `catalogs/flatpak.sh` y `catalog
 - [Flathub](https://flathub.org/): remoto Flatpak por usuario.
 - [Heynote 2.9.1](https://github.com/heyman/heynote/releases/tag/v2.9.1) y [descargas de Nextcloud Desktop](https://download.nextcloud.com/desktop/releases/Linux/): binarios AppImage fijados en el catálogo.
 
-El bootstrap comprueba que las URLs críticas coinciden con las declaradas y DNF valida las firmas GPG de sus repositorios. No descarga claves, repositorios ni sumas desde entradas proporcionadas en tiempo de ejecución.
+El bootstrap importa la clave oficial de Microsoft y declara el repositorio YUM específico de VS Code con `gpgcheck=1`. También comprueba que las URLs críticas coinciden con las declaradas. No acepta claves, repositorios ni sumas desde entradas proporcionadas en tiempo de ejecución.
 
 ## Sustituciones deliberadas
 
@@ -37,6 +37,8 @@ Comprueba el servicio de Syncthing para el usuario actual:
 ```bash
 systemctl --user status syncthing.service
 ```
+
+Es un servicio de usuario, no un demonio global ejecutado como `root`; por ello usa el HOME y los permisos de quien ejecutó el bootstrap. Se inicia con la sesión gráfica. Si se requiere que continúe sin iniciar sesión, habilita explícitamente `linger` más adelante.
 
 Comprueba la variante completa de FFmpeg y los codecs:
 

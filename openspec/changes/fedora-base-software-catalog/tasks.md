@@ -12,6 +12,7 @@
 - [x] 2.2 Implementar los grupos exclusivos Firefox y ONLYOFFICE, con detección y retirada visible de variantes Snap, Flatpak, LibreOffice y FreeOffice; verificar que no se eliminan elementos no declarados.
 - [x] 2.3 Implementar descarga temporal, verificación SHA-256 y colocación no destructiva de Heynote y Nextcloud AppImage en `~/Apps`; verificar las rutas conforme, existente y checksum incorrecto.
 - [x] 2.4 Instalar y habilitar Syncthing como unidad `systemd --user`; verificar con un doble de `systemctl --user` que no se invoca como root.
+- [x] 2.5 Informar en el resumen de la importación manual de cada AppImage verificado desde `~/Apps` en Gear Lever, sin abrirlo ni mover archivos; verificar rutas de primera y segunda ejecución mediante dobles.
 
 ## 3. Multimedia y NVIDIA
 

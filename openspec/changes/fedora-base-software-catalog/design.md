@@ -11,7 +11,7 @@ Los catálogos existentes están vacíos y el bootstrap ya habilita RPM Fusion F
 - Ejecutar listas declarativas reproducibles, con estado por elemento y sin reinstalaciones innecesarias.
 - Resolver sustituciones de aplicaciones antes de instalar su alternativa aprobada.
 - Aislar la lógica Fedora, las fuentes externas y las acciones que requieren reinicio o intervención humana.
-- Descargar AppImage con versiones y sumas fijadas, manteniendo `~/Apps` como destino de Gear Lever.
+- Descargar AppImage con versiones y sumas fijadas, manteniendo `~/Apps` como ubicación estable desde la que la persona usuaria los importa manualmente en Gear Lever.
 
 **Non-Goals:**
 
@@ -27,6 +27,12 @@ Los catálogos existentes están vacíos y el bootstrap ya habilita RPM Fusion F
 Cada catálogo conservará el identificador real del gestor, la finalidad en español y, para AppImage, versión, URL y SHA-256. Los ejecutores consultarán primero el estado, mostrarán el plan y aplicarán solo las diferencias.
 
 Alternativa descartada: un catálogo único de nombres de aplicaciones. Impediría identificar de forma estable paquetes DNF, IDs Flatpak y archivos AppImage.
+
+### Gear Lever como gestor visual con importación manual
+
+El bootstrap instala Gear Lever desde Flathub y descarga los AppImage verificados a `~/Apps`, sin abrir Gear Lever, importarlos ni moverlos a directorios internos. Tras gestionar cada AppImage, el resumen indicará la ruta exacta que debe importarse manualmente. Así, `~/Apps` permanece visible, reproducible y bajo control del catálogo.
+
+Alternativa descartada: automatizar la importación o usar un directorio interno de Gear Lever. No existe una interfaz de automatización estable declarada y esa ruta podría cambiar entre versiones.
 
 ### Sustituciones como operaciones declaradas
 
@@ -58,6 +64,7 @@ Alternativa descartada: un servicio global ejecutado como root. Complica permiso
 - [Las sustituciones pueden retirar software con datos locales] → mostrar plan y requerir la confirmación global ya existente; no borrar perfiles ni datos de usuario.
 - [Módulo NVIDIA aún compilando o Secure Boot activo] → no validar el driver hasta reinicio y enrolamiento MOK cuando corresponda.
 - [AppImage sin suma oficial] → no descargarlo automáticamente; mantenerlo pendiente hasta declarar una suma verificable.
+- [AppImage verificado pendiente de gestión visual] → mantenerlo en `~/Apps` y comunicar su importación manual en Gear Lever, sin moverlo.
 
 ## Migration Plan
 
@@ -65,3 +72,4 @@ Alternativa descartada: un servicio global ejecutado como root. Complica permiso
 2. Ejecutar en una VM Fedora con y sin GPU NVIDIA; verificar no-op en el caso sin NVIDIA.
 3. Verificar tras reinicio el controlador NVIDIA, codecs y servicio de Syncthing.
 4. Reejecutar el bootstrap y comprobar idempotencia y ausencia de aplicaciones excluidas.
+5. Abrir Gear Lever e importar manualmente los AppImage verificados desde `~/Apps`.

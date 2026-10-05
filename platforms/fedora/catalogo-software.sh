@@ -100,6 +100,7 @@ instalar_appimage() {
   if [[ -e $destino ]]; then
     if [[ -f $destino ]] && printf '%s  %s\n' "${APPIMAGE_SHA256[$id]}" "$destino" | sha256sum -c - >/dev/null 2>&1; then
       registrar_catalogo presentes "AppImage: ${APPIMAGE_NOMBRE[$id]} ya estaba verificado"
+      registrar_catalogo pendientes "Gear Lever: importa manualmente $destino"
       return 0
     fi
     registrar_catalogo pendientes "AppImage: conflicto en $destino; no se reemplazó"
@@ -120,15 +121,23 @@ instalar_appimage() {
   install -m 0755 "$temporal" "$destino"
   rm -f "$temporal"
   registrar_catalogo instalados "AppImage: ${APPIMAGE_NOMBRE[$id]} instalado"
+  registrar_catalogo pendientes "Gear Lever: importa manualmente $destino"
 }
 
 habilitar_syncthing_usuario() {
+  if ! rpm -q syncthing >/dev/null 2>&1; then
+    registrar_catalogo omitidos 'Syncthing: servicio no habilitado porque el paquete no está instalado'
+    return 0
+  fi
   if systemctl --user is-enabled syncthing.service >/dev/null 2>&1; then
     registrar_catalogo presentes 'Syncthing: servicio de usuario ya habilitado'
     return 0
   fi
-  systemctl --user enable --now syncthing.service
-  registrar_catalogo instalados 'Syncthing: servicio de usuario habilitado e iniciado'
+  if systemctl --user enable --now syncthing.service; then
+    registrar_catalogo instalados 'Syncthing: servicio de usuario habilitado e iniciado'
+  else
+    registrar_catalogo fallidos 'Syncthing: no se pudo habilitar el servicio de usuario'
+  fi
 }
 
 ejecutar_catalogo_software() {
@@ -137,14 +146,14 @@ ejecutar_catalogo_software() {
   cargar_catalogos_software "$directorio_catalogos"
   reconciliar_aplicaciones_exclusivas
   for paquete in "${PAQUETES_DNF[@]}"; do
-    instalar_paquete_dnf "$paquete"
+    instalar_paquete_dnf "$paquete" || true
   done
   configurar_flathub
   for paquete in "${PAQUETES_FLATPAK[@]}"; do
-    instalar_paquete_flatpak "$paquete"
+    instalar_paquete_flatpak "$paquete" || true
   done
   for paquete in "${PAQUETES_APPIMAGE[@]}"; do
-    instalar_appimage "$paquete"
+    instalar_appimage "$paquete" || true
   done
   habilitar_syncthing_usuario
 }

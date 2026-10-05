@@ -36,11 +36,15 @@ El sistema SHALL configurar el repositorio RPM oficial de Microsoft con comproba
 - **THEN** el sistema instala la clave y declaración de repositorio oficiales antes de instalar el paquete
 
 ### Requirement: AppImage declarados y verificables
-El sistema SHALL descargar Heynote y Nextcloud Desktop Client a `~/Apps` únicamente desde sus fuentes oficiales, con versión y suma SHA-256 declaradas, sin sobrescribir una descarga local no gestionada.
+El sistema SHALL descargar Heynote y Nextcloud Desktop Client a `~/Apps` únicamente desde sus fuentes oficiales, con versión y suma SHA-256 declaradas, sin sobrescribir una descarga local no gestionada. SHALL instalar Gear Lever como gestor visual, pero no SHALL importar ni mover automáticamente los AppImage: SHALL comunicar en el resumen la ruta exacta que la persona usuaria debe importar manualmente.
 
 #### Scenario: AppImage nuevo
 - **WHEN** el AppImage declarado no está presente en `~/Apps`
 - **THEN** el sistema descarga, verifica la suma y conserva el archivo ejecutable en esa ruta
+
+#### Scenario: AppImage listo para Gear Lever
+- **WHEN** un AppImage declarado queda verificado o ya estaba verificado en `~/Apps`
+- **THEN** el resumen informa de que debe importarse manualmente desde esa ruta en Gear Lever, sin modificarlo
 
 #### Scenario: Descarga no verificable
 - **WHEN** la versión o suma declaradas no coinciden con el archivo descargado

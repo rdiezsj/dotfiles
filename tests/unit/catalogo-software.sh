@@ -38,6 +38,7 @@ flatpak() {
 instalar_paquete_flatpak md.obsidian.Obsidian
 grep -Fqx 'instalados:Flatpak: md.obsidian.Obsidian instalado' "$registro"
 
+rpm() { [[ $1 == -q && $2 == syncthing ]]; }
 systemctl() {
   [[ $1 == --user && $2 == is-enabled ]] && return 1
   [[ $1 == --user && $2 == enable && $3 == --now && $4 == syncthing.service ]]
@@ -54,8 +55,10 @@ APPIMAGE_URL[prueba]="file://$origen"
 curl() { cp "${APPIMAGE_URL[prueba]#file://}" "$6"; }
 instalar_appimage prueba
 [[ -x $HOME/Apps/Prueba.AppImage ]]
+grep -Fqx "pendientes:Gear Lever: importa manualmente $HOME/Apps/Prueba.AppImage" "$registro"
 instalar_appimage prueba
 grep -Fqx 'presentes:AppImage: Prueba.AppImage ya estaba verificado' "$registro"
+[[ $(grep -Fc "pendientes:Gear Lever: importa manualmente $HOME/Apps/Prueba.AppImage" "$registro") -eq 2 ]]
 printf 'contenido distinto' >"$HOME/Apps/Conflicto.AppImage"
 APPIMAGE_NOMBRE[conflicto]='Conflicto.AppImage'
 APPIMAGE_SHA256[conflicto]=$sha
