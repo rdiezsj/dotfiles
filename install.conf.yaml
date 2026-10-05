@@ -4,5 +4,11 @@
       relink: false
       force: false
 
-# Los enlaces gestionados se incorporarán explícitamente en iteraciones posteriores.
+- link:
+    ~/.zshrc: home/.zshrc
+    ~/.zsh_aliases: home/.zsh_aliases
+    ~/.profile: home/.profile
+    ~/.zprofile: home/.zprofile
+    ~/.config/starship.toml: home/config/starship.toml
+
 - clean: []

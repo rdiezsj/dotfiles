@@ -3,7 +3,7 @@
 El bootstrap declara los paquetes por su gestor para que el origen y la actualización sean trazables:
 
 - DNF/RPM: paquetes de Fedora y VS Code desde Microsoft.
-- Homebrew: Firefox PWA.
+- Homebrew: Firefox PWA, Starship, `zsh-completions`, fzf, Helm, `kubernetes-cli`, kubectx y tldr.
 - Flatpak: aplicaciones de escritorio por usuario desde Flathub.
 - AppImage: Heynote 2.9.1 y Nextcloud Desktop 34.0.4 en `~/Apps`, con SHA-256 fijado.
 
@@ -13,6 +13,7 @@ Los catálogos están en `catalogs/dnf-rpm.sh`, `catalogs/homebrew.sh`, `catalog
 
 - [VS Code para Linux](https://code.visualstudio.com/docs/setup/linux): repositorio RPM oficial de Microsoft.
 - [Firefox PWA en Homebrew](https://formulae.brew.sh/formula/firefoxpwa): fórmula instalada por Homebrew y actualizada con sus mecanismos habituales.
+- Herramientas de terminal: Starship, `zsh-completions`, fzf, Helm, `kubernetes-cli`, kubectx y tldr se instalan como fórmulas Homebrew para mantener una única procedencia y actualización.
 - [RPM Fusion](https://rpmfusion.org/): Free, Nonfree y Free tainted para multimedia y DVD.
 - [Flathub](https://flathub.org/): remoto Flatpak por usuario.
 - [Heynote 2.9.1](https://github.com/heyman/heynote/releases/tag/v2.9.1) y [descargas de Nextcloud Desktop](https://download.nextcloud.com/desktop/releases/Linux/): binarios AppImage fijados en el catálogo.
@@ -47,6 +48,12 @@ Comprueba la instalación de Firefox PWA desde Homebrew:
 brew list --versions firefoxpwa
 ```
 
+Comprueba las herramientas de terminal instaladas por Homebrew:
+
+```bash
+brew list --versions starship zsh-completions fzf helm kubernetes-cli kubectx tldr
+```
+
 En una segunda ejecución del bootstrap, la fórmula debe informarse como ya presente.
 
 Comprueba la variante completa de FFmpeg y los codecs:
@@ -58,7 +65,7 @@ rpm -q ffmpeg libavcodec-freeworld libdvdcss
 
 ## Alcance aplazado
 
-Zsh, Starship, plugins y las fórmulas Homebrew relacionadas quedan para el siguiente cambio. También quedan aplazados los ajustes versionables de Terminator, input-remapper, Heynote, Gear Lever y Flameshot: no se copian configuraciones desde un equipo existente.
+Los ajustes versionables de Terminator, input-remapper, Heynote, Gear Lever y Flameshot quedan aplazados: no se copian configuraciones desde un equipo existente.
 
 ## Validación dependiente de Fedora real
 

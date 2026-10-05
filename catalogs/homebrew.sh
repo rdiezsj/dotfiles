@@ -3,4 +3,11 @@
 # Fórmulas Homebrew aprobadas para la estación Fedora.
 PAQUETES_HOMEBREW=(
   firefoxpwa
+  starship
+  zsh-completions
+  fzf
+  helm
+  kubernetes-cli
+  kubectx
+  tldr
 )

@@ -91,12 +91,14 @@ ruta_brew() { printf '%s\n' brew; }
 brew() {
   case $1 in
     list) return 1 ;;
-    install) [[ $2 == firefoxpwa ]] ;;
+    install) [[ $2 == firefoxpwa || $2 == starship ]] ;;
     *) return 1 ;;
   esac
 }
 instalar_paquete_homebrew firefoxpwa
 grep -Fqx 'instalados:Homebrew: firefoxpwa instalado' "$registro"
+instalar_paquete_homebrew starship
+grep -Fqx 'instalados:Homebrew: starship instalado' "$registro"
 
 brew() {
   [[ $1 == list && $2 == --versions && $3 == firefoxpwa ]]
@@ -116,7 +118,31 @@ if instalar_paquete_homebrew firefoxpwa; then
 fi
 grep -Fqx 'fallidos:Homebrew: no está disponible para instalar firefoxpwa' "$registro"
 
+cargar_catalogos_software() {
+  PAQUETES_DNF=()
+  PAQUETES_HOMEBREW=(fallida siguiente)
+  PAQUETES_FLATPAK=()
+  PAQUETES_APPIMAGE=()
+  FLATPAK_EXCLUIDOS=()
+}
+rpm() { return 1; }
+snap() { return 1; }
+flatpak() { return 0; }
+systemctl() { return 1; }
+ruta_brew() { printf '%s\n' brew; }
+brew() {
+  [[ $1 == install ]] || return 1
+  case "$2" in
+    fallida) return 1 ;;
+    siguiente) [[ $1 == install ]] ;;
+  esac
+}
+ejecutar_catalogo_software "$RAIZ/catalogs"
+grep -Fqx 'fallidos:Homebrew: no se pudo instalar fallida' "$registro"
+grep -Fqx 'instalados:Homebrew: siguiente instalado' "$registro"
+
 operaciones="$TEMPORAL/operaciones"
+FLATPAK_EXCLUIDOS=(org.mozilla.firefox)
 flatpak() {
   case $1 in
     info) [[ $3 == org.mozilla.firefox ]] ;;

@@ -90,7 +90,6 @@ configurar_entorno_homebrew() {
 
   eval "$("$brew" shellenv bash)"
   anadir_entorno_homebrew_shell bash "$HOME/.bashrc" "$brew"
-  anadir_entorno_homebrew_shell zsh "$HOME/.zshrc" "$brew"
 }
 
 instalar_dependencias_homebrew() {

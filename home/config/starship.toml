@@ -1,0 +1,7 @@
+# Prompt sobrio y legible para la terminal personal.
+
+add_newline = false
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"

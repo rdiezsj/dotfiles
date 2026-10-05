@@ -32,9 +32,7 @@ HOME="$TEMPORAL/home" instalar_homebrew
 
 [[ $(<"$TEMPORAL/home/.bashrc") == *'# Contenido personal de Bash'* ]]
 [[ $(grep -Fc '# >>> dotfiles: Homebrew >>>' "$TEMPORAL/home/.bashrc") == 1 ]]
-[[ $(grep -Fc '# >>> dotfiles: Homebrew >>>' "$TEMPORAL/home/.zshrc") == 1 ]]
 linea_bash=$(printf 'eval "$(%s shellenv bash)"' "$TEMPORAL/bin/brew")
-linea_zsh=$(printf 'eval "$(%s shellenv zsh)"' "$TEMPORAL/bin/brew")
 grep -Fqx "$linea_bash" "$TEMPORAL/home/.bashrc"
-grep -Fqx "$linea_zsh" "$TEMPORAL/home/.zshrc"
+[[ ! -e $TEMPORAL/home/.zshrc ]]
 grep -Fqx 'dnf group install -y development-tools' "$TEMPORAL/sudo.log"

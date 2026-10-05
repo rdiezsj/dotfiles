@@ -97,7 +97,7 @@ ejecutar_instalador_remoto() {
 
   local temporal
   temporal=$(mktemp -d)
-  if ! git clone --quiet --depth 1 --branch "$REFERENCIA" "$REMOTO" "$temporal"; then
+  if ! git clone --quiet --depth 1 --branch "$REFERENCIA" --recurse-submodules "$REMOTO" "$temporal"; then
     rm -rf "$temporal"
     return 1
   fi
@@ -129,6 +129,8 @@ ejecutar_checkout_local() {
   # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/fuentes-externas.sh"
   # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/scripts/lib/zsh-terminal.sh"
+  # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/catalogo-software.sh"
   # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/multimedia-nvidia.sh"
@@ -145,8 +147,10 @@ ejecutar_checkout_local() {
   mostrar_mensaje '[>] Detectar NVIDIA, codecs multimedia y requisitos de reinicio de forma condicionada.'
   mostrar_mensaje '[>] Crear scaffold, plantillas Nautilus y configuración mínima de Dotbot.'
   mostrar_mensaje '[>] Instalar Bitwarden CLI y ofrecer la configuración opcional de Vaultwarden.'
+  mostrar_mensaje '[>] Preparar terminal Zsh versionada y solicitar opcionalmente el cambio de shell.'
   if [[ $SIMULACION == true ]]; then
     registrar_resultado omitidos 'Cambios de bootstrap en modo de simulación'
+    registrar_resultado omitidos 'Migración de Zsh y cambio de shell pendientes de una ejecución real'
     mostrar_mensaje 'Simulación completada: no se ha modificado el equipo.'
     mostrar_resumen_final
     return 0
@@ -163,6 +167,8 @@ ejecutar_checkout_local() {
   ejecutar_fase 'Carpetas personales' crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh" || hubo_fallos=true
   ejecutar_fase 'Plantillas de Nautilus' instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates" || hubo_fallos=true
   ejecutar_fase 'Catálogo DNF, Homebrew, Flatpak y AppImage' ejecutar_catalogo_software "$DIRECTORIO_SCRIPT/catalogs" || hubo_fallos=true
+  ejecutar_fase 'Configuración versionada de Zsh' configurar_archivos_zsh "$DIRECTORIO_SCRIPT" || hubo_fallos=true
+  ofrecer_shell_zsh_predeterminada || hubo_fallos=true
   ejecutar_fase 'Multimedia y NVIDIA' configurar_multimedia_y_nvidia "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" || hubo_fallos=true
 
   if command -v bw >/dev/null 2>&1; then
