@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Obtiene una credencial SMTP bajo demanda sin persistirla en disco.
+
+set -euo pipefail
+
+CAMPO=${1:-}
+SERVICIO_SESION_VAULTWARDEN=dotfiles-vaultwarden
+ITEM_VAULTWARDEN=Mail.ionos.es
+
+fallar() {
+  printf '%s\n' "$1" >&2
+  exit 1
+}
+
+[[ $CAMPO == usuario || $CAMPO == contrasena ]] || fallar 'Uso interno inválido para la credencial SMTP.'
+command -v secret-tool >/dev/null 2>&1 || fallar 'No se encontró GNOME Keyring; inicia sesión en Vaultwarden antes de enviar correo.'
+command -v bw >/dev/null 2>&1 || fallar 'No se encontró Bitwarden CLI; ejecuta el bootstrap para instalarlo.'
+
+sesion=$(secret-tool lookup service "$SERVICIO_SESION_VAULTWARDEN" account "$USER") || \
+  fallar 'Vaultwarden está bloqueado; desbloquéalo antes de enviar correo.'
+[[ -n $sesion ]] || fallar 'Vaultwarden está bloqueado; desbloquéalo antes de enviar correo.'
+
+BW_SESSION="$sesion" bw list folders --raw >/dev/null 2>&1 || \
+  fallar 'La sesión de Vaultwarden no es válida; desbloquéalo antes de enviar correo.'
+
+if [[ $CAMPO == usuario ]]; then
+  valor=$(BW_SESSION="$sesion" bw get username "$ITEM_VAULTWARDEN") || \
+    fallar 'No se pudo obtener el usuario de Mail.ionos.es en Vaultwarden.'
+else
+  valor=$(BW_SESSION="$sesion" bw get password "$ITEM_VAULTWARDEN") || \
+    fallar 'No se pudo obtener la contraseña de Mail.ionos.es en Vaultwarden.'
+fi
+
+[[ -n $valor && $valor != null ]] || \
+  fallar 'Mail.ionos.es no contiene una credencial SMTP válida.'
+
+mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/msmtp"
+printf '%s\n' "$valor"

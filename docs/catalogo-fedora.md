@@ -81,9 +81,50 @@ ffmpeg -version
 rpm -q ffmpeg libavcodec-freeworld libdvdcss
 ```
 
-## Alcance aplazado
+## Configuración versionada de aplicaciones
 
-Los ajustes versionables de Terminator, input-remapper, Heynote, Gear Lever y Flameshot quedan aplazados: no se copian configuraciones desde un equipo existente.
+El bootstrap enlaza los siguientes archivos cuando no existe una configuración
+local no gestionada:
+
+- `~/.nanorc`, `~/.vimrc`, `~/.gitconfig` y `~/.gitignore`.
+- `~/.config/terminator/config` y `~/.config/flameshot/flameshot.ini`.
+- `~/.config/Heynote/config.json` y `~/.config/Heynote/Preferences`.
+- `~/.config/input-remapper-2/config.json`.
+- `~/.config/msmtp/config`.
+
+Nano y Vim muestran números de línea, sangrado y tabulaciones como espacios,
+pero dejan el tamaño de tabulación comentado hasta decidir si será de 2 o 4.
+Flameshot no fija un directorio de guardado. Edita los comentarios de sus
+ficheros versionados y vuelve a ejecutar el bootstrap para aplicar esos valores
+en otro equipo.
+
+Input Remapper 2 parte de un `autoload` vacío. Tras crear un preset para el
+dispositivo real, asígnalo explícitamente desde la interfaz de la aplicación.
+El bootstrap habilita `input-remapper.service`, pero no activa ningún remapeo
+por sí mismo.
+
+`msmtp` se instala por DNF y recibe la cuenta IONOS versionada en
+`~/.config/msmtp/config`, sin usuario, contraseña ni sesión. Al enviar, los
+helpers `~/.dotfiles/bin/msmtp-obtener-usuario` y
+`~/.dotfiles/bin/msmtp-obtener-contrasena` consultan bajo demanda el ítem
+`Mail.ionos.es` mediante la sesión almacenada en GNOME Keyring. El registro se
+guarda en `~/.local/state/msmtp/msmtp.log` y se crea al primer envío.
+
+Para habilitar el envío, configura y desbloquea Vaultwarden desde el bootstrap:
+
+```bash
+cd ~/.dotfiles
+./bootstrap --vault-server https://tu-servidor
+```
+
+Si no hay sesión válida, el envío falla sin exponer valores y el bootstrap
+sigue siendo correcto. No edites el enlace `~/.config/msmtp/config` para
+guardar secretos.
+
+Gear Lever conserva como referencia `templates/gearlever/config.template`. No
+se enlaza su sandbox Flatpak ni se versionan los AppImages importados, rutas,
+inventario o estado de actualizaciones. Heynote también excluye notas, buffers,
+sesiones y cachés: solo se versionan los dos ficheros indicados arriba.
 
 ## Validación dependiente de Fedora real
 

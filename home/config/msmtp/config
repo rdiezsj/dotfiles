@@ -1,0 +1,14 @@
+# Cuenta IONOS para msmtp. Las credenciales nunca se guardan en este fichero.
+# Se obtienen bajo demanda del ítem Mail.ionos.es de Vaultwarden.
+
+account default
+host smtp.ionos.es
+port 587
+from fedora_desktop@rdiez.es
+auth on
+eval ~/.dotfiles/bin/msmtp-obtener-usuario
+passwordeval ~/.dotfiles/bin/msmtp-obtener-contrasena
+tls on
+tls_starttls on
+tls_trust_file system
+logfile ~/.local/state/msmtp/msmtp.log

@@ -17,6 +17,30 @@ destino_zsh_gestionado() {
   [[ -L $destino && $(readlink -f "$destino") == $(readlink -f "$origen") ]]
 }
 
+verificar_conflictos_configuraciones_aplicacion() {
+  local raiz=$1
+  local destino
+  local -a destinos=(
+    "$HOME/.nanorc"
+    "$HOME/.vimrc"
+    "$HOME/.gitconfig"
+    "$HOME/.gitignore"
+    "$HOME/.config/terminator/config"
+    "$HOME/.config/flameshot/flameshot.ini"
+    "$HOME/.config/Heynote/config.json"
+    "$HOME/.config/Heynote/Preferences"
+    "$HOME/.config/input-remapper-2/config.json"
+    "$HOME/.config/msmtp/config"
+  )
+
+  for destino in "${destinos[@]}"; do
+    if [[ -e $destino || -L $destino ]] && ! destino_zsh_gestionado "$raiz" "$destino"; then
+      printf 'Conflicto de configuración: %s no está gestionado por los dotfiles.\n' "$destino" >&2
+      return 1
+    fi
+  done
+}
+
 preparar_migracion_zsh() {
   local raiz=$1
   local destino relativo
@@ -103,10 +127,11 @@ configurar_archivos_zsh() {
   local raiz=$1
   preparar_dotbot_zsh "$raiz" || return 1
   preparar_migracion_zsh "$raiz" || return 1
+  verificar_conflictos_configuraciones_aplicacion "$raiz" || return 1
   if ejecutar_dotbot_zsh "$raiz"; then
     configurar_plugins_sheldon || return 1
     if declare -F registrar_resultado >/dev/null; then
-      registrar_resultado instalados 'Zsh: archivos versionados enlazados mediante Dotbot'
+      registrar_resultado instalados 'Configuración: archivos versionados enlazados mediante Dotbot'
     fi
     return 0
   fi

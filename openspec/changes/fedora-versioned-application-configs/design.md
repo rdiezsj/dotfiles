@@ -19,8 +19,8 @@ AppImage. Ver `proposal.md` para la motivación.
 
 **Non-Goals:**
 
-- No configurar una cuenta SMTP, recuperar secretos ni crear un servicio de
-  envío de correo.
+- No convertir Vaultwarden en un requisito del bootstrap ni crear un servicio
+  de envío de correo.
 - No copiar notas o buffers de Heynote ni estado del sandbox de Gear Lever.
 - No activar un preset de Input Remapper para un hardware no identificado.
 - No configurar atajos de GNOME para Flameshot ni una interfaz gráfica para
@@ -45,12 +45,24 @@ mezclan configuración con datos locales.
 Nano, Vim y Flameshot recibirán una configuración funcional que omite valores
 personales no decididos. Los puntos de extensión quedarán documentados en el
 propio archivo o en una plantilla versionada, sin introducir texto inválido en
-la configuración activa. La plantilla de msmtp no tendrá destino Dotbot ni se
-materializará hasta completar los parámetros SMTP.
+la configuración activa. msmtp tendrá un fichero skeleton versionado y
+enlazado, pero sin una cuenta SMTP configurada.
 
 Así el bootstrap sigue siendo no interactivo para esos valores. Pedirlos en
 cada instalación se descarta porque contradice la mínima intervención humana;
 usar valores inventados se descarta porque cambiaría preferencias personales.
+
+### Cuenta IONOS y consulta diferida de Vaultwarden
+
+La configuración activa de msmtp declarará el host, puerto, remitente y TLS de
+IONOS. El usuario se resolverá mediante `eval` y la contraseña mediante
+`passwordeval`; ambos helpers consultarán el ítem exacto `Mail.ionos.es` con la
+sesión almacenada en GNOME Keyring. Los helpers escribirán diagnósticos solo en
+stderr y devolverán en stdout únicamente el valor que msmtp consume.
+
+Vaultwarden no será obligatorio: una sesión ausente impide enviar correo, pero
+no invalida el bootstrap. Hacer obligatorio el login se descarta porque añade
+una intervención ajena a la preparación base de la estación.
 
 ### Input Remapper declarativo, sin autoload inicial
 
@@ -75,8 +87,10 @@ inventario de AppImages ni rutas de equipo.
   los dos archivos confirmados y una prueba verifica sus rutas exactas.
 - [Preset Input Remapper no portable] → El autoload queda vacío y el servicio
   no se asocia a dispositivos de forma automática.
-- [msmtp requiere secretos] → Solo se instala el binario y se versiona una
-  plantilla; no se crea ninguna configuración operativa.
+- [Vaultwarden bloqueado al enviar] → Los helpers fallan sin exponer secretos y
+  muestran la acción para iniciar o desbloquear una sesión válida.
+- [Archivo de log no escribible] → Se usa `~/.local/state/msmtp/msmtp.log` y
+  se crea su directorio de estado de usuario bajo demanda.
 - [Tema de Gear Lever no estable] → Se conserva como plantilla no aplicada
   hasta verificar su formato y ausencia de estado local.
 

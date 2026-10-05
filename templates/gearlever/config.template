@@ -1,0 +1,6 @@
+# Plantilla no activa para Gear Lever.
+# No se enlaza al sandbox Flatpak hasta verificar el formato de una preferencia
+# portable sin AppImages integrados, rutas locales ni estado de actualizaciones.
+
+[Preferencias]
+# tema = system

@@ -34,10 +34,19 @@ mostrar_bloque_catalogo 'APPIMAGE'
 
 rpm() { return 1; }
 sudo() {
-  [[ $1 == dnf && $2 == install && $3 == -y && $4 == gnome-tweaks ]]
+  case $1:$2:$3:$4 in
+    dnf:install:-y:gnome-tweaks|dnf:install:-y:nano|dnf:install:-y:msmtp|dnf:install:-y:flameshot) return 0 ;;
+  esac
+  return 1
 }
 instalar_paquete_dnf gnome-tweaks
 grep -Fqx 'instalados:DNF: gnome-tweaks instalado' "$registro"
+instalar_paquete_dnf nano
+instalar_paquete_dnf msmtp
+instalar_paquete_dnf flameshot
+grep -Fqx 'instalados:DNF: nano instalado' "$registro"
+grep -Fqx 'instalados:DNF: msmtp instalado' "$registro"
+grep -Fqx 'instalados:DNF: flameshot instalado' "$registro"
 
 flatpak() {
   case $1 in
@@ -57,6 +66,19 @@ systemctl() {
 }
 habilitar_syncthing_usuario
 grep -Fqx 'instalados:Syncthing: servicio de usuario habilitado e iniciado' "$registro"
+
+rpm() { [[ $1 == -q && $2 == input-remapper ]]; }
+systemctl() {
+  [[ $1 == is-enabled && $2 == --quiet && $3 == input-remapper.service ]] && return 1
+  [[ $1 == enable && $2 == --now && $3 == input-remapper.service ]]
+}
+sudo() { "$@"; }
+habilitar_input_remapper_sistema
+grep -Fqx 'instalados:Input Remapper: servicio de sistema habilitado e iniciado' "$registro"
+
+systemctl() { [[ $1 == is-enabled && $2 == --quiet && $3 == input-remapper.service ]]; }
+habilitar_input_remapper_sistema
+grep -Fqx 'presentes:Input Remapper: servicio de sistema ya habilitado' "$registro"
 
 origen="$TEMPORAL/origen"
 printf 'appimage de prueba' >"$origen"

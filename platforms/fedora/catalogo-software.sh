@@ -186,6 +186,23 @@ habilitar_syncthing_usuario() {
   fi
 }
 
+habilitar_input_remapper_sistema() {
+  if ! rpm -q input-remapper >/dev/null 2>&1; then
+    registrar_catalogo omitidos 'Input Remapper: servicio no habilitado porque el paquete no está instalado'
+    return 0
+  fi
+  if systemctl is-enabled --quiet input-remapper.service >/dev/null 2>&1; then
+    registrar_catalogo presentes 'Input Remapper: servicio de sistema ya habilitado'
+    return 0
+  fi
+  if sudo systemctl enable --now input-remapper.service; then
+    registrar_catalogo instalados 'Input Remapper: servicio de sistema habilitado e iniciado'
+    return 0
+  fi
+  registrar_catalogo fallidos 'Input Remapper: no se pudo habilitar el servicio de sistema'
+  return 1
+}
+
 ejecutar_catalogo_software() {
   local directorio_catalogos=$1
   local paquete

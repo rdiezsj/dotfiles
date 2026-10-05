@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Devuelve la contraseña SMTP bajo demanda a msmtp.
+
+set -euo pipefail
+
+directorio=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+exec "$directorio/msmtp-obtener-credencial" contrasena

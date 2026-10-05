@@ -57,7 +57,7 @@ ejecutar_dotbot_zsh() {
 }
 
 configurar_archivos_zsh "$RAIZ"
-for relativo in .zshrc .zsh_aliases .zsh_functions .profile .zprofile .config/starship.toml .config/sheldon/plugins.toml; do
+for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .config/starship.toml .config/sheldon/plugins.toml .config/terminator/config .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
   [[ -L $HOME/$relativo ]]
   if [[ $relativo == .config/* ]]; then
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/config/${relativo#.config/}" ]]
@@ -71,7 +71,7 @@ done
 [[ ! -L $HOME/.local/share/sheldon/plugins.resaltado.lock ]]
 
 configurar_archivos_zsh "$RAIZ"
-[[ $(grep -Fc 'Zsh: archivos versionados enlazados mediante Dotbot' "$registro") == 2 ]]
+[[ $(grep -Fc 'Configuración: archivos versionados enlazados mediante Dotbot' "$registro") == 2 ]]
 grep -Fqx 'instalados:Sheldon: plugins Zsh materializados en el estado local' "$registro"
 grep -Fqx 'presentes:Sheldon: estado local de plugins ya materializado' "$registro"
 zsh -dfic 'source "$1"; typeset -f extract | grep -Fq "Extract: no existe un archivo válido"' zsh "$HOME/.zshrc"
@@ -104,6 +104,14 @@ respaldo=$(find "$HOME/.dotfiles-backups" -type f -name .zshrc -print -quit)
 [[ -n $respaldo ]]
 grep -Fqx 'configuración anterior' "$respaldo"
 [[ -L $HOME/.zshrc ]]
+
+rm "$HOME/.gitconfig"
+printf '%s\n' '[user]' '  name = Configuración local' >"$HOME/.gitconfig"
+if configurar_archivos_zsh "$RAIZ" >/dev/null 2>&1; then
+  printf '%s\n' 'La configuración local no gestionada no detuvo Dotbot.' >&2
+  exit 1
+fi
+grep -Fqx '[user]' "$HOME/.gitconfig"
 
 printf '%s\n' '#!/usr/bin/env bash' 'exit 0' >"$TEMPORAL/bin/zsh"
 chmod +x "$TEMPORAL/bin/zsh"

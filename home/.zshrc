@@ -1,6 +1,6 @@
 # Configuración interactiva versionada de Zsh.
 
-[[ -o interactive ]] || return
+[[ -o interactive ]] || return 0
 
 if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"

@@ -5,6 +5,10 @@
       force: false
 
 - link:
+    ~/.nanorc: home/.nanorc
+    ~/.vimrc: home/.vimrc
+    ~/.gitconfig: home/.gitconfig
+    ~/.gitignore: home/.gitignore
     ~/.zshrc: home/.zshrc
     ~/.zsh_aliases: home/.zsh_aliases
     ~/.zsh_functions: home/.zsh_functions
@@ -12,5 +16,11 @@
     ~/.zprofile: home/.zprofile
     ~/.config/starship.toml: home/config/starship.toml
     ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
+    ~/.config/terminator/config: home/config/terminator/config
+    ~/.config/flameshot/flameshot.ini: home/config/flameshot/flameshot.ini
+    ~/.config/Heynote/config.json: home/config/Heynote/config.json
+    ~/.config/Heynote/Preferences: home/config/Heynote/Preferences
+    ~/.config/input-remapper-2/config.json: home/config/input-remapper-2/config.json
+    ~/.config/msmtp/config: home/config/msmtp/config
 
 - clean: []

@@ -1,0 +1,14 @@
+## Configuración base de Nano para los dotfiles personales.
+
+set autoindent
+set atblanks
+set constantshow
+set historylog
+set indicator
+set linenumbers
+set mouse
+set softwrap
+set tabstospaces
+set trimblanks
+
+set tabsize 4

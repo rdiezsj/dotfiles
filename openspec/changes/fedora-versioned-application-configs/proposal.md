@@ -12,8 +12,11 @@ locales, las credenciales y las configuraciones dependientes del hardware.
 - Versionar y enlazar mediante Dotbot las configuraciones portables de Nano,
   Vim, Git, Terminator, Flameshot, Heynote e Input Remapper 2.
 - Añadir `nano`, `flameshot` y `msmtp` al catálogo DNF declarativo.
-- Instalar `msmtp` para que su ejecutable esté disponible en el sistema, pero
-  versionar únicamente una plantilla sin valores de cuenta ni credenciales.
+- Instalar `msmtp` para que su ejecutable esté disponible en el sistema y
+  versionar una configuración skeleton activa sin valores de cuenta ni
+  credenciales.
+- Declarar la cuenta SMTP IONOS sin secretos y recuperar bajo demanda el
+  usuario y la contraseña desde el ítem de Vaultwarden `Mail.ionos.es`.
 - Mantener las decisiones aún personales como plantillas: tamaño de tabulación
   de Nano y Vim, ruta de guardado de Flameshot y parámetros SMTP.
 - Versionar exclusivamente `config.json` y `Preferences` de Heynote; no incluir

@@ -26,6 +26,29 @@ Si el inventario PCI detecta NVIDIA, se instalan los controladores RPM Fusion y 
 
 La configuración Zsh versionada carga Starship, fzf y los plugins declarados por Sheldon: completions, autosuggestions, autopair, resaltado de sintaxis, `sudo` y `extract`. Declara `DOTFILES=~/.dotfiles`, añade sin duplicados los directorios existentes `~/.local/bin`, `~/.dotfiles/bin` y `~/.krew/bin`, y deja las rutas de Homebrew a `brew shellenv`. Activa el modo Emacs, una interfaz compacta para el historial con fzf y el completado explícito de kubectl. `plugins.toml` contiene SHA fijados; los clones, lockfiles y demás caché de Sheldon se mantienen exclusivamente en `~/.local/share/sheldon/` y no se versionan. Tras el bootstrap, abre una sesión Zsh nueva y verifica `starship --version`, `sheldon --version`, `fzf --version`, `helm version --short` y `kubectl version --client`.
 
+## Configuración de aplicaciones
+
+Dotbot enlaza Nano, Vim, Git, Terminator, Flameshot, Heynote e Input Remapper
+2. Si uno de sus destinos ya existe y no es un enlace gestionado, el bootstrap
+detiene esa fase y conserva el archivo local. La configuración activa no incluye
+credenciales, cachés, buffers ni sesiones.
+
+Las preferencias pendientes se mantienen como comentarios o plantillas para no
+pedir datos durante el bootstrap: el tamaño de tabulación de Nano y Vim y la
+ruta de capturas de Flameshot. `msmtp` se instala desde DNF y queda enlazado
+con la cuenta IONOS en `~/.config/msmtp/config`, sin usuario, contraseña ni
+sesión. Al enviar correo, consulta bajo demanda el ítem `Mail.ionos.es` de
+Vaultwarden mediante la sesión de GNOME Keyring; si la bóveda está bloqueada,
+el envío falla sin afectar al bootstrap. `templates/gearlever/config.template`
+sigue siendo solo una guía: el sandbox Flatpak de Gear Lever, los AppImages
+importados y su estado de actualizaciones no se versionan.
+
+Heynote enlaza únicamente `~/.config/Heynote/config.json` y
+`~/.config/Heynote/Preferences`; sus notas y buffers permanecen locales. Input
+Remapper 2 deja el autoload vacío y habilita su servicio de sistema, por lo que
+un preset solo debe asociarse manualmente después de identificar el dispositivo
+en el equipo destino.
+
 Para actualizar un plugin, revisa primero la nueva revisión Git, reemplaza exclusivamente su SHA en `~/.config/sheldon/plugins.toml` desde el repositorio y revisa el diff. Después materializa de forma explícita el estado local y reinicia Zsh:
 
 ```bash

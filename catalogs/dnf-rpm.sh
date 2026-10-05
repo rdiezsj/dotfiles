@@ -13,10 +13,13 @@ PAQUETES_DNF=(
   vlc
   syncthing
   terminator
+  nano
   vim-enhanced
   wl-clipboard
   pipx
   input-remapper
+  msmtp
+  flameshot
   code
   firefox
 )
@@ -32,10 +35,13 @@ declare -gA DESCRIPCIONES_DNF=(
   [vlc]='Reproductor multimedia VLC'
   [syncthing]='Sincronización de archivos entre dispositivos'
   [terminator]='Terminal Terminator'
+  [nano]='Editor de texto Nano'
   [vim-enhanced]='Editor Vim'
   [wl-clipboard]='Portapapeles para Wayland'
   [pipx]='Instalación aislada de aplicaciones Python'
   [input-remapper]='Remapeo de dispositivos de entrada'
+  [msmtp]='Cliente SMTP compatible con sendmail'
+  [flameshot]='Capturas de pantalla Flameshot'
   [code]='Visual Studio Code desde Microsoft'
   [firefox]='Firefox desde los repositorios DNF de Fedora'
 )

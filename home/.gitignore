@@ -1,0 +1,16 @@
+# Metadatos de macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Metadatos de Windows
+Desktop.ini
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# Archivos temporales de editores
+*.swp
+*.swo
+*~

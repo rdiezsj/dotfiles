@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Devuelve para msmtp la directiva de usuario obtenida desde Vaultwarden.
+
+set -euo pipefail
+
+directorio=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+usuario=$("$directorio/msmtp-obtener-credencial" usuario)
+usuario=${usuario//\\/\\\\}
+usuario=${usuario//\"/\\\"}
+printf 'user "%s"\n' "$usuario"
