@@ -6,7 +6,7 @@ El bootstrap ya instala Zsh y Homebrew, pero la estación no obtiene todavía un
 
 ## What Changes
 
-- Declarar e instalar mediante Homebrew Starship, `zsh-completions`, fzf, Helm, `kubernetes-cli`, kubectx y tldr, con comprobaciones idempotentes por fórmula.
+- Declarar e instalar mediante Homebrew Starship, `zsh-completions`, fzf, Helm, `kubernetes-cli` y kubectx, con comprobaciones idempotentes por fórmula.
 - Versionar `.zshrc`, `.zsh_aliases`, `.profile`, `.zprofile` y `home/config/starship.toml`; Dotbot enlazará este último en `~/.config/starship.toml` mediante una migración con respaldo recuperable de destinos existentes.
 - Activar Homebrew, historial, alias, completado de Zsh, fzf y Starship en nuevas sesiones Zsh.
 - Ofrecer el cambio de shell predeterminada a Zsh exclusivamente tras una confirmación humana explícita; la negativa no hará fallar el bootstrap.

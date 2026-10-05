@@ -22,7 +22,7 @@ Zsh, Homebrew y su bloque de entorno ya forman parte del bootstrap. El catálogo
 
 ### Fórmulas Homebrew declarativas
 
-El catálogo enumerará `starship`, `zsh-completions`, `fzf`, `helm`, `kubernetes-cli`, `kubectx` y `tldr`. El ejecutor comprobará cada fórmula antes de instalarla y continuará con las restantes si una falla, dejando el detalle en el resumen.
+El catálogo enumerará `starship`, `zsh-completions`, `fzf`, `helm`, `kubernetes-cli` y `kubectx`. El ejecutor comprobará cada fórmula antes de instalarla y continuará con las restantes si una falla, dejando el detalle en el resumen.
 
 Alternativa descartada: instalar un único lote sin estado por fórmula. Impediría una reejecución informativa y aislar fallos.
 

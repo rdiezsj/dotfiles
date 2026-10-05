@@ -14,7 +14,7 @@ El sistema SHALL mantener catálogos Bash diferenciados para DNF/RPM, Flatpak, H
 - **THEN** instala únicamente los elementos declarados por ese gestor
 
 ### Requirement: Homebrew y fuentes externas esenciales
-El sistema SHALL instalar Homebrew, su grupo `development-tools` requerido en Fedora y configurar las fuentes externas declaradas necesarias para el bootstrap, verificando su origen. Tras la instalación SHALL activar Homebrew en la sesión actual y mantener un bloque idempotente para Bash sin reemplazar contenido ajeno. SHALL instalar de forma idempotente las fórmulas declaradas Firefox PWA, Starship, `zsh-completions`, fzf, Helm, `kubernetes-cli`, kubectx y tldr; Zsh activará Homebrew desde sus archivos versionados.
+El sistema SHALL instalar Homebrew, su grupo `development-tools` requerido en Fedora y configurar las fuentes externas declaradas necesarias para el bootstrap, verificando su origen. Tras la instalación SHALL activar Homebrew en la sesión actual y mantener un bloque idempotente para Bash sin reemplazar contenido ajeno. SHALL instalar de forma idempotente las fórmulas declaradas Firefox PWA, Starship, `zsh-completions`, fzf, Helm, `kubernetes-cli` y kubectx; Zsh activará Homebrew desde sus archivos versionados.
 
 #### Scenario: Fuente externa declarada
 - **WHEN** el bootstrap requiere una fuente externa esencial

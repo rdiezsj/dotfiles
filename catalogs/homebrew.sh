@@ -9,5 +9,4 @@ PAQUETES_HOMEBREW=(
   helm
   kubernetes-cli
   kubectx
-  tldr
 )

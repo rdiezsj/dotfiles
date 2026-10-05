@@ -2,7 +2,7 @@
 
 ## 1. Catálogo Homebrew para terminal
 
-- [x] 1.1 Ampliar el catálogo Homebrew, que ya declara `firefoxpwa`, con `starship`, `zsh-completions`, `fzf`, `helm`, `kubernetes-cli`, `kubectx` y `tldr`; verificar sintaxis y ausencia de duplicados.
+- [x] 1.1 Ampliar el catálogo Homebrew, que ya declara `firefoxpwa`, con `starship`, `zsh-completions`, `fzf`, `helm`, `kubernetes-cli` y `kubectx`; verificar sintaxis y ausencia de duplicados.
 - [x] 1.2 Ampliar el ejecutor idempotente existente por fórmula para las herramientas de terminal, con resultados instalados, presentes y fallidos; verificar primera y segunda ejecución mediante un doble de `brew`.
 - [x] 1.3 Actualizar la documentación del catálogo y del README con las fórmulas, su origen Homebrew y la verificación posterior; comprobar que los comandos documentados son válidos.
 
