@@ -3,7 +3,7 @@
 set -euo pipefail
 
 RAIZ=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
-for catalogo in dnf-rpm flatpak homebrew appimage firefoxpwa; do
+for catalogo in dnf-rpm flatpak homebrew appimage; do
   archivo="$RAIZ/catalogs/$catalogo.sh"
   test -f "$archivo"
   grep -q '^# ' "$archivo"
@@ -17,7 +17,7 @@ source "$RAIZ/catalogs/flatpak.sh"
 # shellcheck source=/dev/null
 source "$RAIZ/catalogs/appimage.sh"
 # shellcheck source=/dev/null
-source "$RAIZ/catalogs/firefoxpwa.sh"
+source "$RAIZ/catalogs/homebrew.sh"
 
 [[ $(printf '%s\n' "${PAQUETES_DNF[@]}" | sort -u | wc -l) -eq ${#PAQUETES_DNF[@]} ]]
 [[ $(printf '%s\n' "${PAQUETES_FLATPAK[@]}" | sort -u | wc -l) -eq ${#PAQUETES_FLATPAK[@]} ]]
@@ -27,4 +27,5 @@ for appimage in "${PAQUETES_APPIMAGE[@]}"; do
   [[ ${APPIMAGE_SHA256[$appimage]} =~ ^[[:xdigit:]]{64}$ ]]
 done
 ! printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq firefoxpwa
-firefoxpwa_declaracion_valida
+[[ ${PAQUETES_HOMEBREW[*]} == firefoxpwa ]]
+[[ $(printf '%s\n' "${PAQUETES_HOMEBREW[@]}" | sort -u | wc -l) -eq ${#PAQUETES_HOMEBREW[@]} ]]

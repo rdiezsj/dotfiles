@@ -2,13 +2,13 @@
 
 ## Why
 
-El repositorio Packagecloud declarado para Firefox PWA no publica el paquete RPM, por lo que el catálogo termina con `firefoxpwa` fallido. La release oficial de PWAsForFirefox sí publica un RPM para Fedora x86_64, que permite mantener una instalación reproducible y verificable.
+El repositorio Packagecloud declarado para Firefox PWA no publica el paquete RPM y la descarga directa de la release no ha resultado operativa en Fedora. Homebrew publica la fórmula `firefoxpwa` con botella para Linux x86_64, por lo que ofrece una instalación integrada con una fuente ya esencial para el bootstrap.
 
 ## What Changes
 
-- Sustituir el repositorio RPM vacío de Packagecloud por la descarga directa de un RPM oficial de GitHub Releases.
-- Declarar versión, URL y SHA-256 del RPM de Firefox PWA y comprobar la suma antes de instalarlo mediante DNF.
-- Hacer la instalación idempotente: informar como presente cuando la versión declarada ya esté instalada y actualizarla solo al modificar el catálogo versionado.
+- Sustituir el repositorio RPM vacío de Packagecloud por la fórmula `firefoxpwa` de Homebrew.
+- Declarar Firefox PWA en el catálogo Homebrew e instalarlo de forma idempotente tras preparar Homebrew.
+- Informar de los estados instalado, presente o fallido de la fórmula sin detener el resto del catálogo.
 - Dejar de declarar Packagecloud en nuevas instalaciones y adaptar la documentación y las pruebas unitarias, sin modificar repositorios locales existentes.
 
 ## Capabilities
@@ -19,10 +19,10 @@ Ninguna.
 
 ### Modified Capabilities
 
-- `fedora-software-catalog`: Firefox PWA pasa de ser un paquete resuelto desde un repositorio DNF a un RPM oficial de release descargado y verificado.
-- `package-sources`: la fuente externa de Firefox PWA se declara como un artefacto de release con suma SHA-256, sin configurar Packagecloud.
+- `fedora-software-catalog`: Firefox PWA pasa de ser un paquete resuelto desde un repositorio DNF a una fórmula Homebrew idempotente.
+- `package-sources`: Firefox PWA se declara en el catálogo Homebrew, sin configurar Packagecloud ni descargar RPMs directamente.
 
 ## Impact
 
-- Afecta `catalogs/dnf-rpm.sh`, `platforms/fedora/fuentes-externas.sh`, `platforms/fedora/catalogo-software.sh`, sus pruebas unitarias y la documentación del catálogo.
+- Afecta `catalogs/dnf-rpm.sh`, `catalogs/homebrew.sh`, `platforms/fedora/fuentes-externas.sh`, `platforms/fedora/catalogo-software.sh`, sus pruebas unitarias y la documentación del catálogo.
 - Deja sin uso la plantilla `platforms/fedora/repos/firefoxpwa.repo`, que podrá retirarse del repositorio sin ejecutar ninguna operación sobre los repositorios locales; no introduce secretos ni cachés versionados.

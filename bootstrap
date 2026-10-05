@@ -162,7 +162,7 @@ ejecutar_checkout_local() {
   ejecutar_fase 'Homebrew y herramientas de compilación' instalar_homebrew || hubo_fallos=true
   ejecutar_fase 'Carpetas personales' crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh" || hubo_fallos=true
   ejecutar_fase 'Plantillas de Nautilus' instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates" || hubo_fallos=true
-  ejecutar_fase 'Catálogo DNF, Flatpak y AppImage' ejecutar_catalogo_software "$DIRECTORIO_SCRIPT/catalogs" || hubo_fallos=true
+  ejecutar_fase 'Catálogo DNF, Homebrew, Flatpak y AppImage' ejecutar_catalogo_software "$DIRECTORIO_SCRIPT/catalogs" || hubo_fallos=true
   ejecutar_fase 'Multimedia y NVIDIA' configurar_multimedia_y_nvidia "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" || hubo_fallos=true
 
   if command -v bw >/dev/null 2>&1; then

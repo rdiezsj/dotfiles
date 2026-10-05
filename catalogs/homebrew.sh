@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-# Fórmulas Homebrew reservadas para el catálogo posterior al bootstrap.
-PAQUETES_HOMEBREW=()
+# Fórmulas Homebrew aprobadas para la estación Fedora.
+PAQUETES_HOMEBREW=(
+  firefoxpwa
+)

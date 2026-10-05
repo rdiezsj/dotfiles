@@ -18,7 +18,7 @@ Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bo
 
 ## Catálogo base de software
 
-Tras validar fuentes, el bootstrap instala el catálogo Fedora desde DNF, Flathub y AppImage. Incluye VS Code desde el repositorio oficial de Microsoft, Firefox desde DNF y Firefox PWA desde un RPM oficial de GitHub Releases con versión y SHA-256 fijados, ONLYOFFICE desde Flathub, multimedia RPM Fusion y soporte DVD. Elimina únicamente las variantes declaradas que entran en conflicto: Firefox Snap/Flatpak, LibreOffice y FreeOffice.
+Tras validar fuentes, el bootstrap instala el catálogo Fedora desde DNF, Homebrew, Flathub y AppImage. Incluye VS Code desde el repositorio oficial de Microsoft, Firefox desde DNF y Firefox PWA desde Homebrew, ONLYOFFICE desde Flathub, multimedia RPM Fusion y soporte DVD. Elimina únicamente las variantes declaradas que entran en conflicto: Firefox Snap/Flatpak, LibreOffice y FreeOffice.
 
 Heynote y Nextcloud Desktop se descargan en `~/Apps` con versión y SHA-256 fijados. Si ya hay un archivo distinto en una de esas rutas, se conserva y el resumen informa del conflicto. Cuando un AppImage queda verificado, el resumen indica su ruta para importarlo manualmente en Gear Lever.
 

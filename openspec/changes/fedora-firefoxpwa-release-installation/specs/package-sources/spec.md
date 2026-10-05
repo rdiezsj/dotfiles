@@ -2,13 +2,13 @@
 
 ## ADDED Requirements
 
-### Requirement: Artefacto externo verificable de Firefox PWA
-El sistema SHALL declarar la versión, URL oficial y SHA-256 de Firefox PWA como un artefacto externo versionado. SHALL descargarlo temporalmente y verificarlo antes de solicitar su instalación mediante DNF.
+### Requirement: Fórmula Homebrew de Firefox PWA
+El sistema SHALL declarar `firefoxpwa` en el catálogo Homebrew y comprobar mediante Homebrew si la fórmula está instalada antes de instalarla.
 
-#### Scenario: Declaración válida de release
-- **WHEN** la URL declarada pertenece a una release oficial y el archivo coincide con su SHA-256
-- **THEN** el bootstrap permite instalar el RPM descargado
+#### Scenario: Fórmula declarada
+- **WHEN** se inspecciona el catálogo Homebrew
+- **THEN** incluye `firefoxpwa` como fórmula gestionada para Fedora
 
-#### Scenario: Declaración de release no válida
-- **WHEN** la URL no pertenece al origen oficial o el archivo no coincide con su SHA-256
-- **THEN** el bootstrap no instala el RPM y comunica el fallo de verificación
+#### Scenario: Homebrew no disponible
+- **WHEN** Homebrew no queda disponible tras su fase de instalación
+- **THEN** Firefox PWA queda registrado como fallido sin detener el resto del catálogo

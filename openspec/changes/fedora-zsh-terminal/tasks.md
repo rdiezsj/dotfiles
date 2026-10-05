@@ -2,8 +2,8 @@
 
 ## 1. Catálogo Homebrew para terminal
 
-- [ ] 1.1 Declarar en español las fórmulas `starship`, `zsh-completions`, `fzf`, `helm`, `kubernetes-cli`, `kubectx` y `tldr` en el catálogo Homebrew; verificar sintaxis y ausencia de duplicados.
-- [ ] 1.2 Implementar el ejecutor idempotente por fórmula, con resultados instalados, presentes y fallidos; verificar primera y segunda ejecución mediante un doble de `brew`.
+- [ ] 1.1 Ampliar el catálogo Homebrew, que ya declara `firefoxpwa`, con `starship`, `zsh-completions`, `fzf`, `helm`, `kubernetes-cli`, `kubectx` y `tldr`; verificar sintaxis y ausencia de duplicados.
+- [ ] 1.2 Ampliar el ejecutor idempotente existente por fórmula para las herramientas de terminal, con resultados instalados, presentes y fallidos; verificar primera y segunda ejecución mediante un doble de `brew`.
 - [ ] 1.3 Actualizar la documentación del catálogo y del README con las fórmulas, su origen Homebrew y la verificación posterior; comprobar que los comandos documentados son válidos.
 
 ## 2. Configuración versionada y migración Dotbot
