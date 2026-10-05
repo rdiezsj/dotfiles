@@ -2,16 +2,16 @@
 
 El bootstrap declara los paquetes por su gestor para que el origen y la actualización sean trazables:
 
-- DNF/RPM: paquetes de Fedora, VS Code desde Microsoft y Firefox PWA desde su repositorio oficial.
+- DNF/RPM: paquetes de Fedora, VS Code desde Microsoft y Firefox PWA desde un RPM oficial de GitHub Releases verificado.
 - Flatpak: aplicaciones de escritorio por usuario desde Flathub.
 - AppImage: Heynote 2.9.1 y Nextcloud Desktop 34.0.4 en `~/Apps`, con SHA-256 fijado.
 
-Los catálogos están en `catalogs/dnf-rpm.sh`, `catalogs/flatpak.sh` y `catalogs/appimage.sh`. No contienen datos personales ni secretos.
+Los catálogos están en `catalogs/dnf-rpm.sh`, `catalogs/firefoxpwa.sh`, `catalogs/flatpak.sh` y `catalogs/appimage.sh`. No contienen datos personales ni secretos.
 
 ## Orígenes validados
 
 - [VS Code para Linux](https://code.visualstudio.com/docs/setup/linux): repositorio RPM oficial de Microsoft.
-- [PWAsForFirefox](https://pwasforfirefox.filips.si/installation/native/): repositorio oficial `rpm_any` de sus paquetes RPM.
+- [PWAsForFirefox](https://github.com/filips123/PWAsForFirefox/releases): release oficial de GitHub; el catálogo fija la versión y SHA-256 del RPM x86_64. Para actualizarlo se revisa una nueva release y se modifica ese catálogo.
 - [RPM Fusion](https://rpmfusion.org/): Free, Nonfree y Free tainted para multimedia y DVD.
 - [Flathub](https://flathub.org/): remoto Flatpak por usuario.
 - [Heynote 2.9.1](https://github.com/heyman/heynote/releases/tag/v2.9.1) y [descargas de Nextcloud Desktop](https://download.nextcloud.com/desktop/releases/Linux/): binarios AppImage fijados en el catálogo.
@@ -39,6 +39,14 @@ systemctl --user status syncthing.service
 ```
 
 Es un servicio de usuario, no un demonio global ejecutado como `root`; por ello usa el HOME y los permisos de quien ejecutó el bootstrap. Se inicia con la sesión gráfica. Si se requiere que continúe sin iniciar sesión, habilita explícitamente `linger` más adelante.
+
+Comprueba la instalación de Firefox PWA desde el RPM verificado:
+
+```bash
+rpm -q firefoxpwa
+```
+
+La versión mostrada debe coincidir con la declarada en `catalogs/firefoxpwa.sh`. En Fedora x86_64, una segunda ejecución del bootstrap debe informarla como ya presente.
 
 Comprueba la variante completa de FFmpeg y los codecs:
 

@@ -13,6 +13,8 @@ source "$RAIZ/platforms/fedora/catalogo-software.sh"
 # shellcheck source=/dev/null
 source "$RAIZ/catalogs/appimage.sh"
 # shellcheck source=/dev/null
+source "$RAIZ/catalogs/firefoxpwa.sh"
+# shellcheck source=/dev/null
 source "$RAIZ/catalogs/flatpak.sh"
 
 registro=$(mktemp)
@@ -74,6 +76,44 @@ if instalar_appimage invalido; then
 fi
 [[ ! -e $HOME/Apps/Invalido.AppImage ]]
 grep -Fqx 'fallidos:AppImage: suma SHA-256 inválida para Invalido.AppImage' "$registro"
+
+contenido_firefoxpwa='rpm de prueba Firefox PWA'
+sha_firefoxpwa=$(printf '%s' "$contenido_firefoxpwa" | sha256sum | awk '{print $1}')
+FIREFOXPWA_SHA256=$sha_firefoxpwa
+uname() { printf '%s\n' x86_64; }
+rpm() { return 1; }
+curl() { printf '%s' "$contenido_firefoxpwa" >"$6"; }
+sudo() { [[ $1 == dnf && $2 == install && $3 == -y && -f $4 ]]; }
+instalar_firefoxpwa
+grep -Fqx 'instalados:Firefox PWA: 2.20.0-1.x86_64 instalado' "$registro"
+
+rpm() {
+  [[ $1 == -q && $2 == --qf && $4 == firefoxpwa ]] || return 1
+  printf '%s' '2.20.0-1.x86_64'
+}
+instalar_firefoxpwa
+grep -Fqx 'presentes:Firefox PWA: 2.20.0-1.x86_64 ya estaba instalado' "$registro"
+
+rpm() { return 1; }
+curl() { return 1; }
+if instalar_firefoxpwa; then
+  exit 1
+fi
+grep -Fqx 'fallidos:Firefox PWA: no se pudo descargar el RPM oficial' "$registro"
+
+curl() { printf '%s' "$contenido_firefoxpwa" >"$6"; }
+FIREFOXPWA_SHA256=$(printf '0%.0s' {1..64})
+if instalar_firefoxpwa; then
+  exit 1
+fi
+grep -Fqx 'fallidos:Firefox PWA: suma SHA-256 inválida' "$registro"
+
+FIREFOXPWA_SHA256=$sha_firefoxpwa
+sudo() { return 1; }
+if instalar_firefoxpwa; then
+  exit 1
+fi
+grep -Fqx 'fallidos:Firefox PWA: no se pudo instalar el RPM verificado' "$registro"
 
 operaciones="$TEMPORAL/operaciones"
 flatpak() {

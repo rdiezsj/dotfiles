@@ -21,7 +21,5 @@ if url_repositorio_vscode_valida 'https://packages.microsoft.com/yumrepos/code';
 fi
 grep -Fqx 'baseurl=https://packages.microsoft.com/yumrepos/vscode' "$RAIZ/platforms/fedora/repos/vscode.repo"
 grep -Fqx 'gpgcheck=1' "$RAIZ/platforms/fedora/repos/vscode.repo"
-url_firefoxpwa_valida 'https://packagecloud.io/filips/FirefoxPWA/gpgkey'
-grep -Fqx 'baseurl=https://packagecloud.io/filips/FirefoxPWA/rpm_any/rpm_any/$basearch' "$RAIZ/platforms/fedora/repos/firefoxpwa.repo"
-grep -Fqx 'repo_gpgcheck=1' "$RAIZ/platforms/fedora/repos/firefoxpwa.repo"
-grep -Fqx 'gpgcheck=1' "$RAIZ/platforms/fedora/repos/firefoxpwa.repo"
+! grep -Eqi 'firefoxpwa|packagecloud' "$RAIZ/platforms/fedora/fuentes-externas.sh"
+[[ ! -e $RAIZ/platforms/fedora/repos/firefoxpwa.repo ]]

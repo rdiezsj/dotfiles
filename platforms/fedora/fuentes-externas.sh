@@ -18,10 +18,6 @@ url_clave_microsoft_valida() {
   [[ $1 == https://packages.microsoft.com/keys/microsoft.asc ]]
 }
 
-url_firefoxpwa_valida() {
-  [[ $1 == https://packagecloud.io/filips/FirefoxPWA/gpgkey ]]
-}
-
 configurar_fuentes_catalogo() {
   local directorio_plataforma=$1
   local archivo_compatibilidad=$2
@@ -41,16 +37,6 @@ configurar_fuentes_catalogo() {
     printf '%s\n' 'Repositorio oficial de Microsoft configurado con comprobación GPG.'
   fi
 
-  if ! url_firefoxpwa_valida 'https://packagecloud.io/filips/FirefoxPWA/gpgkey'; then
-    printf '%s\n' 'La clave declarada de Firefox PWA no es válida.' >&2
-    return 1
-  fi
-  if [[ ! -f /etc/yum.repos.d/firefoxpwa.repo ]] || ! grep -Fqx 'gpgcheck=1' /etc/yum.repos.d/firefoxpwa.repo; then
-    sudo install -Dm0644 "$directorio_plataforma/repos/firefoxpwa.repo" /etc/yum.repos.d/firefoxpwa.repo
-    printf '%s\n' 'Repositorio de Firefox PWA configurado con comprobación GPG.'
-  else
-    printf '%s\n' 'Repositorio de Firefox PWA ya está configurado.'
-  fi
 }
 
 ruta_brew() {

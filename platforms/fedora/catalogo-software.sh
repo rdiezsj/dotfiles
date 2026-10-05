@@ -17,6 +17,8 @@ cargar_catalogos_software() {
   # shellcheck source=/dev/null
   source "$directorio_catalogos/dnf-rpm.sh"
   # shellcheck source=/dev/null
+  source "$directorio_catalogos/firefoxpwa.sh"
+  # shellcheck source=/dev/null
   source "$directorio_catalogos/flatpak.sh"
   # shellcheck source=/dev/null
   source "$directorio_catalogos/appimage.sh"
@@ -32,6 +34,43 @@ instalar_paquete_dnf() {
     registrar_catalogo instalados "DNF: $paquete instalado"
   else
     registrar_catalogo fallidos "DNF: no se pudo instalar $paquete"
+    return 1
+  fi
+}
+
+instalar_firefoxpwa() {
+  local instalado temporal esperado
+  if [[ $(uname -m) != "$FIREFOXPWA_ARQUITECTURA" ]]; then
+    registrar_catalogo omitidos "Firefox PWA: arquitectura $(uname -m) no compatible"
+    return 0
+  fi
+  if ! firefoxpwa_declaracion_valida; then
+    registrar_catalogo fallidos 'Firefox PWA: declaración de release no válida'
+    return 1
+  fi
+  esperado="${FIREFOXPWA_VERSION}.${FIREFOXPWA_ARQUITECTURA}"
+  instalado=$(rpm -q --qf '%{VERSION}-%{RELEASE}.%{ARCH}' firefoxpwa 2>/dev/null || true)
+  if [[ $instalado == "$esperado" ]]; then
+    registrar_catalogo presentes "Firefox PWA: $esperado ya estaba instalado"
+    return 0
+  fi
+  temporal=$(mktemp)
+  if ! curl --fail --location --retry 3 --output "$temporal" "$FIREFOXPWA_URL"; then
+    rm -f "$temporal"
+    registrar_catalogo fallidos 'Firefox PWA: no se pudo descargar el RPM oficial'
+    return 1
+  fi
+  if ! printf '%s  %s\n' "$FIREFOXPWA_SHA256" "$temporal" | sha256sum -c - >/dev/null; then
+    rm -f "$temporal"
+    registrar_catalogo fallidos 'Firefox PWA: suma SHA-256 inválida'
+    return 1
+  fi
+  if sudo dnf install -y "$temporal"; then
+    rm -f "$temporal"
+    registrar_catalogo instalados "Firefox PWA: $esperado instalado"
+  else
+    rm -f "$temporal"
+    registrar_catalogo fallidos 'Firefox PWA: no se pudo instalar el RPM verificado'
     return 1
   fi
 }
@@ -148,6 +187,7 @@ ejecutar_catalogo_software() {
   for paquete in "${PAQUETES_DNF[@]}"; do
     instalar_paquete_dnf "$paquete" || true
   done
+  instalar_firefoxpwa || true
   configurar_flathub
   for paquete in "${PAQUETES_FLATPAK[@]}"; do
     instalar_paquete_flatpak "$paquete" || true

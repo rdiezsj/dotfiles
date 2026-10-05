@@ -158,7 +158,7 @@ ejecutar_checkout_local() {
   local hubo_fallos=false
   ejecutar_fase 'Dependencias mínimas' instalar_dependencias_minimas || hubo_fallos=true
   ejecutar_fase 'RPM Fusion Free y Nonfree' configurar_rpm_fusion "$DIRECTORIO_SCRIPT/catalogs/fuentes-externas.sh" || hubo_fallos=true
-  ejecutar_fase 'Repositorio oficial de Microsoft y Firefox PWA' configurar_fuentes_catalogo "$DIRECTORIO_SCRIPT/platforms/fedora" "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" || hubo_fallos=true
+  ejecutar_fase 'Repositorio oficial de Microsoft' configurar_fuentes_catalogo "$DIRECTORIO_SCRIPT/platforms/fedora" "$DIRECTORIO_SCRIPT/platforms/fedora/compatibility.env" || hubo_fallos=true
   ejecutar_fase 'Homebrew y herramientas de compilación' instalar_homebrew || hubo_fallos=true
   ejecutar_fase 'Carpetas personales' crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh" || hubo_fallos=true
   ejecutar_fase 'Plantillas de Nautilus' instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates" || hubo_fallos=true

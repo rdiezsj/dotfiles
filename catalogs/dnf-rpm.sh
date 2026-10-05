@@ -17,7 +17,6 @@ PAQUETES_DNF=(
   input-remapper
   code
   firefox
-  firefoxpwa
 )
 
 declare -gA DESCRIPCIONES_DNF=(
@@ -35,5 +34,4 @@ declare -gA DESCRIPCIONES_DNF=(
   [input-remapper]='Remapeo de dispositivos de entrada'
   [code]='Visual Studio Code desde Microsoft'
   [firefox]='Firefox desde los repositorios DNF de Fedora'
-  [firefoxpwa]='Componente nativo de PWAs para Firefox'
 )
