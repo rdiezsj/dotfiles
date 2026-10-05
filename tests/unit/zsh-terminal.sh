@@ -121,3 +121,12 @@ grep -Fqx -- "-s $TEMPORAL/bin/zsh prueba" "$TEMPORAL/chsh"
 getent() { printf 'prueba:x:1000:1000::/home/prueba:%s\n' "$TEMPORAL/bin/zsh"; }
 ofrecer_shell_zsh_predeterminada
 grep -Fqx 'presentes:Zsh ya es la shell predeterminada' "$registro"
+
+exec() { printf '%s\n' "$*" >>"$TEMPORAL/exec-zsh"; }
+confirmar_recarga_sesion_zsh() { return 1; }
+ofrecer_recarga_sesion_zsh
+[[ ! -e $TEMPORAL/exec-zsh ]]
+
+confirmar_recarga_sesion_zsh() { return 0; }
+ofrecer_recarga_sesion_zsh
+grep -Fqx "$TEMPORAL/bin/zsh -l" "$TEMPORAL/exec-zsh"

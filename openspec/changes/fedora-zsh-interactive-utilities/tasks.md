@@ -24,3 +24,7 @@
 
 - [x] 5.1 Declarar `DOTFILES`, deduplicar `path`/`PATH` y añadir solo rutas personales existentes; configurar modo Emacs y opciones FZF idempotentes; verificar que no incluye rutas macOS ni duplica Linuxbrew.
 - [x] 5.2 Cargar el completado de kubectl después de `compinit`, actualizar la documentación y ampliar las pruebas unitarias para entorno, fzf y kubectl; verificar `./scripts/check.sh`, `zsh -n`, `git diff --check` y validación estricta OpenSpec.
+
+## 6. Recarga opcional de la sesión
+
+- [x] 6.1 Ofrecer `exec zsh -l` únicamente después del resumen final de un bootstrap correcto, con confirmación independiente; verificar aceptación, rechazo, simulación e incidencias mediante pruebas unitarias.

@@ -53,3 +53,14 @@ La configuración SHALL declarar `DOTFILES` con valor predeterminado `~/.dotfile
 #### Scenario: Kubectl instalado
 - **WHEN** `kubectl` está disponible tras inicializar completions
 - **THEN** sus subcomandos y recursos se completan mediante su definición Zsh
+
+### Requirement: Recarga opcional de la sesión
+El bootstrap SHALL mostrar el resumen final antes de ofrecer, solo si no hubo fallos, abrir una Zsh de inicio de sesión. SHALL requerir una confirmación independiente y ejecutar `exec zsh -l` únicamente tras aceptarla.
+
+#### Scenario: Bootstrap correcto
+- **WHEN** todas las fases terminan sin fallos y ya se mostró el resumen final
+- **THEN** pregunta si debe abrir Zsh y conserva la Bash actual si la respuesta se rechaza
+
+#### Scenario: Bootstrap con incidencias o simulación
+- **WHEN** el bootstrap termina con fallos o se ejecuta en simulación
+- **THEN** no ofrece ni ejecuta la recarga de sesión

@@ -147,3 +147,27 @@ ofrecer_shell_zsh_predeterminada() {
   registrar_resultado fallidos 'Zsh: no se pudo cambiar la shell predeterminada'
   return 1
 }
+
+confirmar_recarga_sesion_zsh() {
+  local respuesta
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
+    gum confirm '¿Abrir ahora una nueva sesión Zsh para aplicar la configuración?'
+    return
+  fi
+  read -r -p '--> ¿Abrir ahora una nueva sesión Zsh para aplicar la configuración? [s/N] ' respuesta
+  [[ ${respuesta,,} == s || ${respuesta,,} == si || ${respuesta,,} == sí ]]
+}
+
+ofrecer_recarga_sesion_zsh() {
+  local zsh_actual
+  zsh_actual=$(command -v zsh) || {
+    printf '%s\n' 'No se encontró Zsh; se mantiene la sesión actual.' >&2
+    return 0
+  }
+  if ! confirmar_recarga_sesion_zsh; then
+    printf '%s\n' 'Se mantiene la sesión actual; abre una nueva terminal para aplicar Zsh.'
+    return 0
+  fi
+  printf '%s\n' 'Abriendo una nueva sesión Zsh de inicio de sesión.'
+  exec "$zsh_actual" -l
+}

@@ -36,6 +36,8 @@ exec zsh
 
 No ejecutes `sheldon lock --update` desde el arranque de Zsh ni como parte de una actualización rutinaria del bootstrap.
 
+Cuando el bootstrap finaliza sin incidencias y ya ha mostrado el resumen, ofrece abrir una nueva sesión con `exec zsh -l`. Aceptar reemplaza únicamente la Bash desde la que se lanzó el bootstrap; rechazarla conserva la sesión actual.
+
 Zsh incluye también dos utilidades de archivos. `extract archivo.tar.gz` extrae tar, ZIP o 7z en un directorio homónimo sin borrar el original. `compress carpeta` abre un asistente Gum para elegir formato (`tar.gz`, `tar.xz`, ZIP o 7z), nivel, destino y división opcional en bloques. Si se generan partes, recompón el archivo antes de extraerlo:
 
 ```bash

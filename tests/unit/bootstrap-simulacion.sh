@@ -17,6 +17,7 @@ salida=$(DOTFILES_DISABLE_GUM=true DOTFILES_OS_RELEASE="$TEMPORAL/os-release" DO
 [[ $salida == *'Simulación completada: no se ha modificado el equipo.'* ]]
 [[ $salida == *'| RESUMEN FINAL'* ]]
 [[ $salida == *'Omitidos:'* ]]
+[[ $salida != *'Abrir ahora una nueva sesión Zsh'* ]]
 
 salida_remota=$(printf 'n\n' | bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
 [[ $salida_remota == *'DOTFILES FEDORA -- PLAN INICIAL'* ]]

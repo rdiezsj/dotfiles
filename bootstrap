@@ -195,11 +195,13 @@ ejecutar_checkout_local() {
   registrar_resultado instalados 'Dependencias mínimas comprobadas mediante DNF'
   if [[ $hubo_fallos == true || ${#RESULTADOS_FALLIDOS[@]} -gt 0 ]]; then
     printf '%s\n' '[!] Plan completado con incidencias; consulta el resumen.' >&2
+    mostrar_resumen_final
+    return 1
   else
     printf '%s\n' '[OK] Plan completado.'
   fi
   mostrar_resumen_final
-  [[ $hubo_fallos == false && ${#RESULTADOS_FALLIDOS[@]} -eq 0 ]]
+  ofrecer_recarga_sesion_zsh
 }
 
 if [[ -n $DIRECTORIO_SCRIPT && -f "$DIRECTORIO_SCRIPT/scripts/lib/validar-entorno-fedora.sh" ]]; then
