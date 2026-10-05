@@ -76,6 +76,27 @@ grep -Fqx 'instalados:Sheldon: plugins Zsh materializados en el estado local' "$
 grep -Fqx 'presentes:Sheldon: estado local de plugins ya materializado' "$registro"
 zsh -dfic 'source "$1"; typeset -f extract | grep -Fq "Extract: no existe un archivo válido"' zsh "$HOME/.zshrc"
 
+mkdir -p "$HOME/.local/bin" "$HOME/.dotfiles/bin" "$HOME/.krew/bin"
+zsh -dfic '
+  sheldon() { [[ ${@: -1} == source ]] && print -r -- "extract() { :; }"; }
+  fzf() { [[ $1 == --zsh ]] && print -r -- ":"; }
+  starship() { [[ $1 == init ]] && print -r -- ":"; }
+  kubectl() { [[ $1 == completion && $2 == zsh ]] && print -r -- "typeset -g KUBECTL_COMPLETION_PRUEBA=si"; }
+  source "$1"
+  [[ $DOTFILES == "$HOME/.dotfiles" ]]
+  [[ $(print -l -- $path | grep -Fxc "$HOME/.local/bin") == 1 ]]
+  [[ $(print -l -- $path | grep -Fxc "$HOME/.dotfiles/bin") == 1 ]]
+  [[ $(print -l -- $path | grep -Fxc "$HOME/.krew/bin") == 1 ]]
+  [[ $PATH != *"/opt/homebrew/bin"* ]]
+  [[ " $FZF_DEFAULT_OPTS " == *" --height 40% "* ]]
+  [[ " $FZF_DEFAULT_OPTS " == *" --layout=reverse "* ]]
+  [[ " $FZF_DEFAULT_OPTS " == *" --border "* ]]
+  [[ $(bindkey -M main "^A") == *beginning-of-line* ]]
+  [[ $KUBECTL_COMPLETION_PRUEBA == si ]]
+  source "$1"
+  [[ $(print -l -- $path | grep -Fxc "$HOME/.local/bin") == 1 ]]
+' zsh "$HOME/.zshrc"
+
 rm "$HOME/.zshrc"
 printf '%s\n' 'configuración anterior' >"$HOME/.zshrc"
 configurar_archivos_zsh "$RAIZ"

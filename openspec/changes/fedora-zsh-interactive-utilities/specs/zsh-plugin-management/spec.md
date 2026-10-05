@@ -38,3 +38,18 @@ El sistema SHALL documentar la actualización de SHA como operación explícita 
 #### Scenario: Arranque repetido
 - **WHEN** se abre una segunda shell sin cambios en la configuración
 - **THEN** Sheldon reutiliza el estado local y no descarga ni reinstala plugins innecesariamente
+
+### Requirement: Entorno Zsh interactivo
+La configuración SHALL declarar `DOTFILES` con valor predeterminado `~/.dotfiles`, deduplicar `path` y `PATH`, y añadir únicamente directorios existentes de `~/.local/bin`, `~/.dotfiles/bin` y `~/.krew/bin`. SHALL activar `bindkey -e`, conservar opciones FZF preexistentes y añadir `--height 40%`, `--layout=reverse` y `--border`. SHALL cargar el completado de kubectl después de `compinit` cuando `kubectl` esté disponible.
+
+#### Scenario: Directorios personales disponibles
+- **WHEN** una shell interactiva se inicia y existen directorios personales de binarios
+- **THEN** aparecen una sola vez en `PATH`, `DOTFILES` referencia el repositorio y Homebrew conserva la gestión de sus propias rutas
+
+#### Scenario: Búsqueda de historial con fzf
+- **WHEN** fzf está disponible en una shell interactiva
+- **THEN** Ctrl+R usa el enlace de fzf en modo de edición Emacs con la interfaz compacta configurada
+
+#### Scenario: Kubectl instalado
+- **WHEN** `kubectl` está disponible tras inicializar completions
+- **THEN** sus subcomandos y recursos se completan mediante su definición Zsh

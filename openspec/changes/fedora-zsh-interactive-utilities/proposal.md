@@ -10,6 +10,7 @@ La configuración Zsh actual ya integra fzf y Starship, pero todavía no ofrece 
 - Gestionar con Sheldon todos los plugins Zsh declarados: completions, autosuggestions, autopair y syntax highlighting, además de las capacidades `sudo` y `extract`; `compress` será una utilidad local.
 - Mantener fzf y las integraciones nativas de kubectl fuera del gestor de plugins porque ya las proporcionan sus propias herramientas.
 - Añadir `compress` como asistente Gum sencillo para formato, división por bloques y opciones compatibles; `extract` seguirá siendo una función directa.
+- Completar la experiencia interactiva con `DOTFILES`, rutas de usuario deduplicadas, el aspecto de fzf y completado explícito de kubectl.
 - Integrar la inicialización y actualización controlada de plugins en el bootstrap, con modo simulación, idempotencia y resumen.
 - Documentar cómo actualizar referencias, regenerar el estado local de Sheldon y recomponer archivos divididos.
 

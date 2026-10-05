@@ -72,6 +72,8 @@ cat respaldo.tar.xz.part-* > respaldo.tar.xz
 extract respaldo.tar.xz
 ```
 
+Zsh define `DOTFILES=~/.dotfiles` y añade solo si existen `~/.local/bin`, `~/.dotfiles/bin` y `~/.krew/bin`, eliminando duplicados mediante `typeset -U`. Las rutas de Homebrew las configura `brew shellenv`; no se añaden rutas de macOS ni rutas adicionales de fzf. El historial de fzf usa modo Emacs con `--height 40% --layout=reverse --border`, y `kubectl completion zsh` se carga después de `compinit`.
+
 Comprueba la variante completa de FFmpeg y los codecs:
 
 ```bash

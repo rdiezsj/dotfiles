@@ -28,8 +28,10 @@ cp "$RAIZ/platforms/fedora/catalogo-software.sh" "$TEMPORAL/remoto/platforms/fed
 cp "$RAIZ/platforms/fedora/multimedia-nvidia.sh" "$TEMPORAL/remoto/platforms/fedora/multimedia-nvidia.sh"
 cp "$RAIZ/scripts/lib/zsh-terminal.sh" "$TEMPORAL/remoto/scripts/lib/zsh-terminal.sh"
 git -C "$TEMPORAL/remoto" add bootstrap platforms/fedora/catalogo-software.sh platforms/fedora/multimedia-nvidia.sh scripts/lib/zsh-terminal.sh
-git -C "$TEMPORAL/remoto" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
-  commit --quiet -m 'Actualiza bootstrap para la prueba remota'
+if ! git -C "$TEMPORAL/remoto" diff --cached --quiet; then
+  git -C "$TEMPORAL/remoto" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
+    commit --quiet -m 'Actualiza bootstrap para la prueba remota'
+fi
 
 salida_remota=$(printf 's\nn\n' | DOTFILES_DISABLE_GUM=true \
   DOTFILES_REMOTE="file://$TEMPORAL/remoto" \

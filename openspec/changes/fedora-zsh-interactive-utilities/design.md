@@ -35,6 +35,10 @@ El bootstrap ejecutará `sheldon lock` para materializar localmente las revision
 
 La configuración cargará primero completions y funciones de edición, después autosuggestions y por último syntax highlighting. La inicialización quedará condicionada a una shell interactiva y a la existencia de Sheldon; si falta, se mostrará una advertencia breve sin romper shells no interactivas.
 
+### Entorno interactivo y completado
+
+Zsh declarará `DOTFILES` con el valor predeterminado `~/.dotfiles` y normalizará `path`/`PATH` con `typeset -U`. Solo añadirá directorios existentes y propios de Fedora: `~/.local/bin`, `~/.dotfiles/bin` y `~/.krew/bin`. Homebrew ya configura sus rutas mediante `brew shellenv`, por lo que no se duplicarán rutas Linuxbrew, fzf ni la ruta de macOS. Se activará el modo de edición Emacs, se preservarán opciones FZF externas y se añadirán las opciones de interfaz solicitadas. Tras `compinit`, Zsh cargará el completado de kubectl si está instalado.
+
 ### Utilidad `extract`
 
 Se implementará como función local versionada que valida una entrada única, identifica tar/zip/7z mediante herramientas disponibles y extrae en un directorio de destino derivado, sin eliminar originales ni sobrescribir sin confirmación.
