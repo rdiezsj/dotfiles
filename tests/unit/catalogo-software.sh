@@ -22,6 +22,16 @@ registrar_resultado() {
   printf '%s:%s\n' "$1" "$2" >>"$registro"
 }
 
+bloques=$(mktemp)
+mostrar_fase() {
+  printf '%s\n' "$1" >>"$bloques"
+}
+mostrar_bloque_catalogo 'DNF/RPM'
+mostrar_bloque_catalogo 'HOMEBREW'
+mostrar_bloque_catalogo 'FLATPAK'
+mostrar_bloque_catalogo 'APPIMAGE'
+[[ $(paste -sd '|' "$bloques") == 'CATÁLOGO DNF/RPM|CATÁLOGO HOMEBREW|CATÁLOGO FLATPAK|CATÁLOGO APPIMAGE' ]]
+
 rpm() { return 1; }
 sudo() {
   [[ $1 == dnf && $2 == install && $3 == -y && $4 == gnome-tweaks ]]

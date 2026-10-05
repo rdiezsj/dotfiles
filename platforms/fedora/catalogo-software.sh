@@ -12,6 +12,15 @@ registrar_catalogo() {
   fi
 }
 
+mostrar_bloque_catalogo() {
+  local gestor=$1
+  if declare -F mostrar_fase >/dev/null; then
+    mostrar_fase "CATÁLOGO $gestor"
+  else
+    printf '\n[>] CATÁLOGO %s\n' "$gestor"
+  fi
+}
+
 cargar_catalogos_software() {
   local directorio_catalogos=$1
   # shellcheck source=/dev/null
@@ -113,13 +122,21 @@ retirar_suites_ofimaticas_dnf() {
   fi
 }
 
-reconciliar_aplicaciones_exclusivas() {
-  local paquete
+reconciliar_aplicaciones_exclusivas_dnf() {
   retirar_firefox_snap_si_existe
+  retirar_suites_ofimaticas_dnf
+}
+
+reconciliar_aplicaciones_exclusivas_flatpak() {
+  local paquete
   for paquete in "${FLATPAK_EXCLUIDOS[@]}"; do
     retirar_flatpak_si_existe "$paquete"
   done
-  retirar_suites_ofimaticas_dnf
+}
+
+reconciliar_aplicaciones_exclusivas() {
+  reconciliar_aplicaciones_exclusivas_dnf
+  reconciliar_aplicaciones_exclusivas_flatpak
 }
 
 instalar_appimage() {
@@ -173,19 +190,28 @@ ejecutar_catalogo_software() {
   local directorio_catalogos=$1
   local paquete
   cargar_catalogos_software "$directorio_catalogos"
-  reconciliar_aplicaciones_exclusivas
+
+  mostrar_bloque_catalogo 'DNF/RPM'
+  reconciliar_aplicaciones_exclusivas_dnf
   for paquete in "${PAQUETES_DNF[@]}"; do
     instalar_paquete_dnf "$paquete" || true
   done
+  habilitar_syncthing_usuario
+
+  mostrar_bloque_catalogo 'HOMEBREW'
   for paquete in "${PAQUETES_HOMEBREW[@]}"; do
     instalar_paquete_homebrew "$paquete" || true
   done
+
+  mostrar_bloque_catalogo 'FLATPAK'
+  reconciliar_aplicaciones_exclusivas_flatpak
   configurar_flathub
   for paquete in "${PAQUETES_FLATPAK[@]}"; do
     instalar_paquete_flatpak "$paquete" || true
   done
+
+  mostrar_bloque_catalogo 'APPIMAGE'
   for paquete in "${PAQUETES_APPIMAGE[@]}"; do
     instalar_appimage "$paquete" || true
   done
-  habilitar_syncthing_usuario
 }
