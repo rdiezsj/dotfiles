@@ -121,9 +121,9 @@ Si no hay sesión válida, el envío falla sin exponer valores y el bootstrap
 sigue siendo correcto. No edites el enlace `~/.config/msmtp/config` para
 guardar secretos.
 
-Gear Lever conserva como referencia `templates/gearlever/config.template`. No
-se enlaza su sandbox Flatpak ni se versionan los AppImages importados, rutas,
-inventario o estado de actualizaciones. Heynote también excluye notas, buffers,
+Gear Lever no tiene configuración ni plantilla versionada. Su sandbox Flatpak,
+los AppImages importados, las rutas, el inventario y el estado de
+actualizaciones permanecen locales. Heynote también excluye notas, buffers,
 sesiones y cachés: solo se versionan los dos ficheros indicados arriba.
 
 ## Validación dependiente de Fedora real

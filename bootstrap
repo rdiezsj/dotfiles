@@ -148,7 +148,7 @@ ejecutar_checkout_local() {
   mostrar_mensaje '[>] Crear scaffold, plantillas Nautilus y configuración mínima de Dotbot.'
   mostrar_mensaje '[>] Instalar Bitwarden CLI y ofrecer la configuración opcional de Vaultwarden.'
   mostrar_mensaje '[>] Aplicar configuraciones versionadas y solicitar opcionalmente el cambio de shell Zsh.'
-  mostrar_mensaje '[>] Configurar la cuenta SMTP IONOS bajo demanda y mantener la plantilla de Gear Lever como referencia.'
+  mostrar_mensaje '[>] Configurar la cuenta SMTP IONOS bajo demanda.'
   if [[ $SIMULACION == true ]]; then
     registrar_resultado omitidos 'Cambios de bootstrap en modo de simulación'
     registrar_resultado omitidos 'Migración de Zsh y cambio de shell pendientes de una ejecución real'
@@ -171,7 +171,6 @@ ejecutar_checkout_local() {
   if ejecutar_fase 'Configuración versionada' configurar_archivos_zsh "$DIRECTORIO_SCRIPT"; then
     ejecutar_fase 'Servicio de Input Remapper' habilitar_input_remapper_sistema || hubo_fallos=true
     registrar_resultado presentes 'SMTP IONOS: credenciales obtenidas bajo demanda desde Vaultwarden'
-    registrar_resultado pendientes 'Gear Lever: plantilla disponible para personalización posterior'
   else
     hubo_fallos=true
   fi

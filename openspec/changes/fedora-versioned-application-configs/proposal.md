@@ -23,8 +23,9 @@ locales, las credenciales y las configuraciones dependientes del hardware.
   buffers, notas, sesiones ni cachés.
 - Versionar presets explícitos de Input Remapper 2, sin habilitar un autoload
   ligado a un dispositivo físico hasta que se complete localmente.
-- Tratar Gear Lever como una configuración curada: no enlazar su sandbox
-  Flatpak ni el inventario de AppImages, rutas o estado de actualizaciones.
+- Excluir por completo la configuración de Gear Lever: no versionar ni enlazar
+  su sandbox Flatpak, inventario de AppImages, rutas, estado de actualizaciones
+  ni plantillas de preferencias.
 
 ## Capabilities
 

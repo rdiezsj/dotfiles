@@ -39,9 +39,9 @@ ruta de capturas de Flameshot. `msmtp` se instala desde DNF y queda enlazado
 con la cuenta IONOS en `~/.config/msmtp/config`, sin usuario, contraseña ni
 sesión. Al enviar correo, consulta bajo demanda el ítem `Mail.ionos.es` de
 Vaultwarden mediante la sesión de GNOME Keyring; si la bóveda está bloqueada,
-el envío falla sin afectar al bootstrap. `templates/gearlever/config.template`
-sigue siendo solo una guía: el sandbox Flatpak de Gear Lever, los AppImages
-importados y su estado de actualizaciones no se versionan.
+el envío falla sin afectar al bootstrap. Gear Lever gestiona de forma local su
+sandbox Flatpak, los AppImages importados y el estado de actualizaciones; esos
+datos no se versionan ni se enlazan.
 
 Heynote enlaza únicamente `~/.config/Heynote/config.json` y
 `~/.config/Heynote/Preferences`; sus notas y buffers permanecen locales. Input

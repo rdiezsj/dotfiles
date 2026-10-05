@@ -72,12 +72,12 @@ dispositivo real. El servicio de Input Remapper se habilitará solo cuando la
 configuración base haya sido aplicada correctamente, sin que ello active una
 asociación de hardware.
 
-### Gear Lever como plantilla de configuración curada
+### Gear Lever fuera de la configuración versionada
 
-Se añadirá una plantilla documentada para la configuración de Gear Lever, no
-un enlace al directorio Flatpak. Antes de promover una preferencia a
-configuración activa se verificará en una instalación real que no contiene
-inventario de AppImages ni rutas de equipo.
+Gear Lever no tendrá archivo, plantilla ni enlace gestionado. Su sandbox
+Flatpak mezcla preferencias con rutas, inventario de AppImages y estado de
+actualizaciones, por lo que la aplicación seguirá gestionando esos datos solo
+en la estación local.
 
 ## Risks / Trade-offs
 
@@ -91,8 +91,8 @@ inventario de AppImages ni rutas de equipo.
   muestran la acción para iniciar o desbloquear una sesión válida.
 - [Archivo de log no escribible] → Se usa `~/.local/state/msmtp/msmtp.log` y
   se crea su directorio de estado de usuario bajo demanda.
-- [Tema de Gear Lever no estable] → Se conserva como plantilla no aplicada
-  hasta verificar su formato y ausencia de estado local.
+- [Estado local de Gear Lever] → No se versiona ni se enlaza; los AppImages se
+  importan manualmente desde `~/Apps`.
 
 ## Migration Plan
 

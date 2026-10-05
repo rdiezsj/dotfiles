@@ -14,8 +14,7 @@ for archivo in \
   home/config/Heynote/config.json \
   home/config/Heynote/Preferences \
   home/config/input-remapper-2/config.json \
-  home/config/msmtp/config \
-  templates/gearlever/config.template; do
+  home/config/msmtp/config; do
   [[ -f $RAIZ/$archivo ]]
 done
 
@@ -30,8 +29,9 @@ grep -Fqx 'eval ~/.dotfiles/bin/msmtp-obtener-usuario' "$RAIZ/home/config/msmtp/
 grep -Fqx 'passwordeval ~/.dotfiles/bin/msmtp-obtener-contrasena' "$RAIZ/home/config/msmtp/config"
 grep -Fqx 'logfile ~/.local/state/msmtp/msmtp.log' "$RAIZ/home/config/msmtp/config"
 ! rg -n -i '^(user|password)[[:space:]]|BW_SESSION|token[[:space:]]*=' "$RAIZ/home/config/msmtp/config"
-! rg -n -i '(password\s*=\s*[^<]|token\s*=|secret\s*=)' "$RAIZ/home" "$RAIZ/templates"
+! rg -n -i '(password\s*=\s*[^<]|token\s*=|secret\s*=)' "$RAIZ/home"
 ! rg -F 'gearlever' "$RAIZ/install.conf.yaml"
+[[ ! -d $RAIZ/templates ]]
 
 for destino in \
   '~/.nanorc: home/.nanorc' \
