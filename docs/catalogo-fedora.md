@@ -11,7 +11,7 @@ Los catálogos están en `catalogs/dnf-rpm.sh`, `catalogs/flatpak.sh` y `catalog
 ## Orígenes validados
 
 - [VS Code para Linux](https://code.visualstudio.com/docs/setup/linux): repositorio RPM oficial de Microsoft.
-- [PWAsForFirefox](https://pwasforfirefox.filips.si/installation/native/): repositorio oficial de sus paquetes RPM.
+- [PWAsForFirefox](https://pwasforfirefox.filips.si/installation/native/): repositorio oficial `rpm_any` de sus paquetes RPM.
 - [RPM Fusion](https://rpmfusion.org/): Free, Nonfree y Free tainted para multimedia y DVD.
 - [Flathub](https://flathub.org/): remoto Flatpak por usuario.
 - [Heynote 2.9.1](https://github.com/heyman/heynote/releases/tag/v2.9.1) y [descargas de Nextcloud Desktop](https://download.nextcloud.com/desktop/releases/Linux/): binarios AppImage fijados en el catálogo.

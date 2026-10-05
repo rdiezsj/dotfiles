@@ -12,29 +12,28 @@ registrar_multimedia() {
   fi
 }
 
-url_rpm_fusion_tainted_valida() {
-  [[ $1 == "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-tainted-${FEDORA_VERSION}.noarch.rpm" ]]
+paquete_rpm_fusion_tainted_valido() {
+  [[ $1 == rpmfusion-free-release-tainted ]]
 }
 
 configurar_rpm_fusion_tainted() {
-  local archivo_compatibilidad=$1
-  local url
-  # shellcheck source=/dev/null
-  source "$archivo_compatibilidad"
-  url="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-tainted-${FEDORA_VERSION}.noarch.rpm"
-  if ! url_rpm_fusion_tainted_valida "$url"; then
-    printf '%s\n' 'El origen RPM Fusion tainted para DVD no es válido.' >&2
+  local paquete=rpmfusion-free-release-tainted
+  if ! paquete_rpm_fusion_tainted_valido "$paquete"; then
+    printf '%s\n' 'El paquete RPM Fusion tainted para DVD no es válido.' >&2
     return 1
   fi
   if rpm -q rpmfusion-free-release-tainted >/dev/null 2>&1; then
     return 0
   fi
-  sudo dnf install -y "$url"
+  sudo dnf install -y "$paquete"
 }
 
 configurar_multimedia() {
-  local archivo_compatibilidad=$1
-  configurar_rpm_fusion_tainted "$archivo_compatibilidad"
+  local dvd_disponible=true
+  if ! configurar_rpm_fusion_tainted; then
+    dvd_disponible=false
+    registrar_multimedia pendientes 'Multimedia: soporte DVD pendiente; no se pudo habilitar RPM Fusion tainted'
+  fi
   if rpm -q ffmpeg-free >/dev/null 2>&1; then
     sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
     registrar_multimedia instalados 'Multimedia: FFmpeg completo sustituye a ffmpeg-free'
@@ -45,8 +44,17 @@ configurar_multimedia() {
     registrar_multimedia instalados 'Multimedia: FFmpeg completo instalado'
   fi
   sudo dnf group upgrade -y multimedia --setopt=install_weak_deps=False
-  sudo dnf install -y libavcodec-freeworld libdvdcss
-  registrar_multimedia instalados 'Multimedia: codecs y soporte DVD comprobados'
+  if [[ $dvd_disponible == true ]]; then
+    if sudo dnf install -y libavcodec-freeworld libdvdcss; then
+      registrar_multimedia instalados 'Multimedia: codecs y soporte DVD comprobados'
+    else
+      registrar_multimedia fallidos 'Multimedia: no se pudieron instalar los codecs y el soporte DVD'
+    fi
+  elif sudo dnf install -y libavcodec-freeworld; then
+    registrar_multimedia instalados 'Multimedia: codecs instalados; soporte DVD pendiente'
+  else
+    registrar_multimedia fallidos 'Multimedia: no se pudieron instalar los codecs'
+  fi
 }
 
 equipo_tiene_nvidia() {
@@ -71,7 +79,6 @@ instalar_nvidia() {
 }
 
 configurar_multimedia_y_nvidia() {
-  local archivo_compatibilidad=$1
-  configurar_multimedia "$archivo_compatibilidad"
+  configurar_multimedia
   instalar_nvidia
 }

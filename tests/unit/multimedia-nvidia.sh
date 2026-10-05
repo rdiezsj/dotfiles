@@ -14,8 +14,8 @@ source "$RAIZ/platforms/fedora/multimedia-nvidia.sh"
 # shellcheck source=/dev/null
 source "$TEMPORAL/compatibility.env"
 
-url_rpm_fusion_tainted_valida 'https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-tainted-44.noarch.rpm'
-if url_rpm_fusion_tainted_valida 'https://example.invalid/tainted.rpm'; then
+paquete_rpm_fusion_tainted_valido rpmfusion-free-release-tainted
+if paquete_rpm_fusion_tainted_valido rpmfusion-free-release-tainted-no-declarado; then
   exit 1
 fi
 
@@ -38,3 +38,17 @@ grep -Fqx 'pendientes:NVIDIA: Secure Boot activo; enrola la clave MOK y reinicia
 lspci() { printf '00:02.0 VGA compatible controller [0300]: Intel Corporation\n'; }
 instalar_nvidia
 grep -Fqx 'omitidos:NVIDIA: no se detectó una GPU NVIDIA; no se modificó el controlador gráfico' "$registro"
+
+: >"$registro"
+operaciones="$TEMPORAL/operaciones"
+rpm() {
+  [[ $1 == -q && $2 == ffmpeg ]] && return 0
+  return 1
+}
+sudo() {
+  printf '%s\n' "$*" >>"$operaciones"
+}
+configurar_multimedia
+grep -Fqx 'dnf install -y rpmfusion-free-release-tainted' "$operaciones"
+grep -Fqx 'dnf install -y libavcodec-freeworld libdvdcss' "$operaciones"
+grep -Fqx 'instalados:Multimedia: codecs y soporte DVD comprobados' "$registro"
