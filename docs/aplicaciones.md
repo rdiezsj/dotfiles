@@ -1,8 +1,11 @@
 # Configuración de aplicaciones
 
-Dotbot enlaza solo los archivos declarados en el repositorio. Si un destino ya
-existe y no es un enlace gestionado, conserva el archivo local y detiene esta
-fase: no usa `force` ni `relink`.
+Dotbot enlaza solo los archivos declarados en el repositorio y no usa `force` ni
+`relink`. Si encuentra un destino local no gestionado, muestra claramente el
+destino que se sobrescribirá y el origen versionado para poder compararlos.
+Solicita confirmación para cada conflicto antes de mover nada. Al aceptar todos,
+guarda las copias locales en `~/.dotfiles-backups/dotbot-<fecha>/` y aplica los
+enlaces; rechazar uno conserva todos los originales y cancela esta fase.
 
 ## Configuración versionada
 

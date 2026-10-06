@@ -15,6 +15,15 @@ Starship usa `~/.config/starship.toml`. Sheldon usa
 lockfiles son estado local en `~/.local/share/sheldon/`. Zsh activa completado
 de kubectl, modo Emacs y fzf con interfaz compacta.
 
+Si `~/.config/sheldon/plugins.toml` ya existe durante el bootstrap, el aviso de
+Dotbot muestra ese destino y `home/config/sheldon/plugins.toml` como origen, y
+pide confirmación antes de reemplazarlo con el enlace. Al aceptar, la copia
+anterior queda en `~/.dotfiles-backups/dotbot-<fecha>/`; al rechazar, no se
+modifica ningún destino de Dotbot. Si Zsh informa de que falta la configuración
+o uno de los perfiles `base` o `resaltado`, resuelve el conflicto indicado y
+vuelve a ejecutar `./bootstrap`: Sheldon materializa ambos perfiles durante esa
+ejecución.
+
 Tras instalar, abre una sesión Zsh nueva y comprueba:
 
 ```bash

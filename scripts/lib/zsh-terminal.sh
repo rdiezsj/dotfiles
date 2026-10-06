@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Migra la configuración de inicio de Zsh sin reemplazar contenido sin respaldo.
+# Enlaza configuración versionada solo después de resolver explícitamente los conflictos.
 
 destino_zsh_gestionado() {
   local raiz=$1
@@ -17,60 +17,90 @@ destino_zsh_gestionado() {
   [[ -L $destino && $(readlink -f "$destino") == $(readlink -f "$origen") ]]
 }
 
-verificar_conflictos_configuraciones_aplicacion() {
-  local raiz=$1
-  local destino
-  local -a destinos=(
-    "$HOME/.nanorc"
-    "$HOME/.vimrc"
-    "$HOME/.gitconfig"
-    "$HOME/.gitignore"
-    "$HOME/.config/terminator/config"
-    "$HOME/.config/flameshot/flameshot.ini"
-    "$HOME/.config/Heynote/config.json"
-    "$HOME/.config/Heynote/Preferences"
-    "$HOME/.config/input-remapper-2/config.json"
-    "$HOME/.config/msmtp/config"
-  )
+listar_destinos_dotbot() {
+  cat <<EOF
+${HOME}/.nanorc
+${HOME}/.vimrc
+${HOME}/.gitconfig
+${HOME}/.gitignore
+${HOME}/.zshrc
+${HOME}/.zsh_aliases
+${HOME}/.zsh_functions
+${HOME}/.profile
+${HOME}/.zprofile
+${HOME}/.config/starship.toml
+${HOME}/.config/sheldon/plugins.toml
+${HOME}/.config/terminator/config
+${HOME}/.config/flameshot/flameshot.ini
+${HOME}/.config/Heynote/config.json
+${HOME}/.config/Heynote/Preferences
+${HOME}/.config/input-remapper-2/config.json
+${HOME}/.config/msmtp/config
+EOF
+}
 
-  for destino in "${destinos[@]}"; do
-    if [[ -e $destino || -L $destino ]] && ! destino_zsh_gestionado "$raiz" "$destino"; then
-      printf 'Conflicto de configuración: %s no está gestionado por los dotfiles.\n' "$destino" >&2
+origen_dotfile() {
+  local raiz=$1
+  local destino=$2
+  local relativo=${destino#"$HOME"/}
+
+  if [[ $relativo == .config/* ]]; then
+    printf '%s\n' "$raiz/home/config/${relativo#.config/}"
+  else
+    printf '%s\n' "$raiz/home/$relativo"
+  fi
+}
+
+confirmar_aplicacion_dotfile() {
+  local destino=$1
+  local origen=$2
+  local respuesta
+
+  printf '\nConflicto de Dotbot detectado.\nDestino que se va a sobrescribir: %s\nDotfile versionado: %s\n' "$destino" "$origen" >&2
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
+    gum confirm "¿Crear un respaldo de $destino y aplicar el dotfile mostrado?"
+    return
+  fi
+  read -r -p '--> ¿Crear respaldo y aplicar este dotfile? [s/N] ' respuesta
+  [[ ${respuesta,,} == s || ${respuesta,,} == si || ${respuesta,,} == sí ]]
+}
+
+resolver_conflictos_dotbot() {
+  local raiz=$1
+  local destino origen relativo respaldo
+  local -a conflictos=()
+  local -a origenes=()
+
+  while IFS= read -r destino; do
+    origen=$(origen_dotfile "$raiz" "$destino")
+    if [[ ! -e $destino && ! -L $destino ]] || destino_zsh_gestionado "$raiz" "$destino"; then
+      continue
+    fi
+    if [[ -d $destino ]]; then
+      printf 'Conflicto de Dotbot: %s es un directorio y no se puede sobrescribir con %s.\n' "$destino" "$origen" >&2
+      return 1
+    fi
+    conflictos+=("$destino")
+    origenes+=("$origen")
+  done < <(listar_destinos_dotbot)
+
+  for ((indice = 0; indice < ${#conflictos[@]}; indice++)); do
+    if ! confirmar_aplicacion_dotfile "${conflictos[indice]}" "${origenes[indice]}"; then
+      printf 'Dotbot no modificó ningún archivo: se rechazó el conflicto en %s.\n' "${conflictos[indice]}" >&2
       return 1
     fi
   done
-}
 
-preparar_migracion_zsh() {
-  local raiz=$1
-  local destino relativo
-  local -a destinos=("$HOME/.zshrc" "$HOME/.zsh_aliases" "$HOME/.zsh_functions" "$HOME/.profile" "$HOME/.zprofile" "$HOME/.config/starship.toml" "$HOME/.config/sheldon/plugins.toml")
-
-  for destino in "${destinos[@]}"; do
-    if [[ -e $destino || -L $destino ]]; then
-      if destino_zsh_gestionado "$raiz" "$destino"; then
-        continue
-      fi
-      if [[ -d $destino ]]; then
-        printf 'Conflicto de Zsh: %s es un directorio y no se puede migrar.\n' "$destino" >&2
-        return 1
-      fi
-    fi
+  [[ ${#conflictos[@]} -gt 0 ]] || return 0
+  respaldo="$HOME/.dotfiles-backups/dotbot-$(date +%Y%m%d-%H%M%S)"
+  for destino in "${conflictos[@]}"; do
+    relativo=${destino#"$HOME"/}
+    mkdir -p "$respaldo/$(dirname "$relativo")"
+    mv "$destino" "$respaldo/$relativo"
+    printf 'Respaldo de Dotbot creado: %s\n' "$respaldo/$relativo"
   done
-
-  local respaldo="$HOME/.dotfiles-backups/zsh-$(date +%Y%m%d-%H%M%S)"
-  local creo_respaldo=false
-  for destino in "${destinos[@]}"; do
-    if [[ -e $destino || -L $destino ]] && ! destino_zsh_gestionado "$raiz" "$destino"; then
-      relativo=${destino#"$HOME"/}
-      mkdir -p "$respaldo/$(dirname "$relativo")"
-      mv "$destino" "$respaldo/$relativo"
-      printf 'Respaldo de Zsh creado: %s\n' "$respaldo/$relativo"
-      creo_respaldo=true
-    fi
-  done
-  if [[ $creo_respaldo == true ]] && declare -F registrar_resultado >/dev/null; then
-    registrar_resultado instalados "Zsh: respaldo recuperable creado en $respaldo"
+  if declare -F registrar_resultado >/dev/null; then
+    registrar_resultado instalados "Dotbot: respaldo recuperable creado en $respaldo"
   fi
 }
 
@@ -90,7 +120,7 @@ configurar_plugins_sheldon() {
     return 1
   fi
   if [[ ! -f $directorio_configuracion/plugins.toml ]]; then
-    registrar_resultado fallidos 'Sheldon: no se encontró la configuración versionada de plugins'
+    registrar_resultado fallidos 'Sheldon: falta ~/.config/sheldon/plugins.toml; resuelve el conflicto de Dotbot y vuelve a ejecutar ./bootstrap'
     return 1
   fi
   if [[ $(grep -Ec '^rev = "[[:xdigit:]]{40}"$' "$directorio_configuracion/plugins.toml") -ne 6 ]]; then
@@ -126,8 +156,7 @@ preparar_dotbot_zsh() {
 configurar_archivos_zsh() {
   local raiz=$1
   preparar_dotbot_zsh "$raiz" || return 1
-  preparar_migracion_zsh "$raiz" || return 1
-  verificar_conflictos_configuraciones_aplicacion "$raiz" || return 1
+  resolver_conflictos_dotbot "$raiz" || return 1
   if ejecutar_dotbot_zsh "$raiz"; then
     configurar_plugins_sheldon || return 1
     if declare -F registrar_resultado >/dev/null; then

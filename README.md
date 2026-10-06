@@ -25,7 +25,7 @@ reiniciar manualmente y volver a ejecutar manualmente `./bootstrap` desde
 `~/.dotfiles`; el bootstrap no reinicia ni se reejecuta por su cuenta. Con
 Secure Boot, completa primero el enrolamiento MOK durante el reinicio.
 
-Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bootstrap activa Homebrew en la shell actual y añade un bloque delimitado, idempotente y no destructivo a `~/.bashrc`. Zsh carga Homebrew desde los archivos versionados, que se enlazan mediante Dotbot con respaldo fechado de cualquier destino no gestionado. El cambio de shell predeterminada con `chsh` se ofrece después mediante una confirmación independiente.
+Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bootstrap activa Homebrew en la shell actual y añade un bloque delimitado, idempotente y no destructivo a `~/.bashrc`. Antes de que Dotbot enlace un destino local no gestionado, muestra el destino que se sobrescribirá y su dotfile versionado, y solicita confirmación explícita. Si se aceptan todos los conflictos, guarda copias fechadas en `~/.dotfiles-backups/dotbot-*`; rechazar uno cancela esa fase sin modificar archivos. El cambio de shell predeterminada con `chsh` se ofrece después mediante una confirmación independiente.
 
 ## Guías
 
