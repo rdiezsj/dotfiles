@@ -1,8 +1,44 @@
 [global_config]
+  handle_size = 8
+  scroll_tabbar = True
+  inactive_color_offset = 0.6052631578947368
+  inactive_bg_color_offset = 0.5
+  always_split_with_profile = True
+  clear_select_on_copy = True
 [keybindings]
+  split_horiz = <Primary><Shift>d
+  split_vert = <Primary><Shift>r
+  resize_left = <Primary><Shift>Left
+  resize_right = <Primary><Shift>Right
+  next_tab = <Alt>Page_Down
+  prev_tab = <Alt>Page_Up
+  reset = <Primary><Shift><Alt>r
+  group_win = <Super>w
 [profiles]
   [[default]]
     copy_on_selection = True
+  [[nord]]
+    visible_bell = True
+    urgent_bell = True
+    background_darkness = 0.78
+    cursor_fg_color = "#f5c211"
+    cursor_bg_color = "#2ec27e"
+    cursor_color_default = False
+    foreground_color = "#D8DEE9"
+    show_titlebar = False
+    scrollback_infinite = True
+    palette = "#3B4252:#BF616A:#A3BE8C:#EBCB8B:#81A1C1:#B48EAD:#88C0D0:#E5E9F0:#4C566A:#BF616A:#A3BE8C:#EBCB8B:#81A1C1:#B48EAD:#8FBCBB:#ECEFF4"
+    bold_is_bright = True
+    copy_on_selection = True
+    title_hide_sizetext = True
+    title_transmit_fg_color = "#2E3440"
+    title_transmit_bg_color = "#ba5757"
+    title_receive_fg_color = "#2E3440"
+    title_receive_bg_color = "#8FBCBB"
+    title_inactive_fg_color = "#D8DEE9"
+    title_inactive_bg_color = "#4C566A"
+    title_use_system_font = False
+    title_font = Adwaita Sans Bold 9
 [layouts]
   [[default]]
     [[[window0]]]
@@ -11,4 +47,5 @@
     [[[child1]]]
       type = Terminal
       parent = window0
+      profile = nord
 [plugins]
