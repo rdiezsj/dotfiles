@@ -22,7 +22,7 @@ done
 
 git config --file "$RAIZ/home/.gitconfig" --get core.excludesfile | grep -Fqx '~/.gitignore'
 jq -e . "$RAIZ/home/config/Heynote/config.json" "$RAIZ/home/config/Heynote/Preferences" "$RAIZ/home/config/input-remapper-2/config.json" >/dev/null
-jq -e '.autoload == {}' "$RAIZ/home/config/input-remapper-2/config.json" >/dev/null
+jq -e '.autoload == {"Logitech MX Master 3":"cambio de escritorio"}' "$RAIZ/home/config/input-remapper-2/config.json" >/dev/null
 
 [[ $(find "$RAIZ/home/config/Heynote" -maxdepth 1 -type f | wc -l) -eq 2 ]]
 grep -Fqx 'host smtp.ionos.es' "$RAIZ/home/config/msmtp/config"

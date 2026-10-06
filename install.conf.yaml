@@ -14,6 +14,8 @@
     ~/.zsh_functions: home/.zsh_functions
     ~/.profile: home/.profile
     ~/.zprofile: home/.zprofile
+    ~/.codex/AGENTS.md: home/.codex/AGENTS.md
+    ~/.codex/skills: home/.codex/skills
     ~/.config/starship.toml: home/config/starship.toml
     ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
     ~/.config/terminator: home/config/terminator

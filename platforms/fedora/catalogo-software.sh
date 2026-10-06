@@ -12,6 +12,10 @@ registrar_catalogo() {
   fi
 }
 
+URL_CHATGPT_X86_64='https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.x86_64.rpm'
+URL_CHATGPT_AARCH64='https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.aarch64.rpm'
+VERSIONES_FEDORA_CHATGPT=(43 44)
+
 mostrar_bloque_catalogo() {
   local gestor=$1
   if declare -F mostrar_fase >/dev/null; then
@@ -47,6 +51,34 @@ instalar_paquete_dnf() {
   fi
 }
 
+instalar_chatgpt() {
+  local version_fedora arquitectura url
+  if rpm -q chatgpt >/dev/null 2>&1; then
+    registrar_catalogo presentes 'ChatGPT: ya estaba instalado'
+    return 0
+  fi
+  version_fedora=$(rpm -E %fedora 2>/dev/null) || version_fedora=
+  arquitectura=$(uname -m 2>/dev/null) || arquitectura=
+  if [[ ! " ${VERSIONES_FEDORA_CHATGPT[*]} " == *" $version_fedora "* ]]; then
+    registrar_catalogo omitidos "ChatGPT: Fedora ${version_fedora:-desconocida} no está admitida por OpenAI"
+    return 0
+  fi
+  case $arquitectura in
+    x86_64) url=$URL_CHATGPT_X86_64 ;;
+    aarch64) url=$URL_CHATGPT_AARCH64 ;;
+    *) registrar_catalogo omitidos "ChatGPT: arquitectura ${arquitectura:-desconocida} no admitida por OpenAI"; return 0 ;;
+  esac
+  if ! sudo dnf install -y "$url"; then
+    registrar_catalogo fallidos 'ChatGPT: no se pudo instalar el RPM oficial'
+    return 1
+  fi
+  if ! rpm -q chatgpt >/dev/null 2>&1; then
+    registrar_catalogo fallidos 'ChatGPT: DNF terminó sin confirmar el paquete instalado'
+    return 1
+  fi
+  registrar_catalogo instalados 'ChatGPT: RPM oficial instalado'
+}
+
 obtener_brew_catalogo() {
   if declare -F ruta_brew >/dev/null; then
     ruta_brew
@@ -72,6 +104,15 @@ instalar_paquete_homebrew() {
     registrar_catalogo fallidos "Homebrew: no se pudo instalar $paquete"
     return 1
   fi
+}
+
+instalar_openspec_global() {
+  local version
+  if command -v openspec >/dev/null 2>&1 && version=$(openspec --version 2>/dev/null) && [[ -n $version ]]; then
+    registrar_catalogo presentes "OpenSpec: CLI global funcional ($version)"
+    return 0
+  fi
+  instalar_paquete_homebrew openspec
 }
 
 configurar_flathub() {
@@ -213,11 +254,16 @@ ejecutar_catalogo_software() {
   for paquete in "${PAQUETES_DNF[@]}"; do
     instalar_paquete_dnf "$paquete" || true
   done
+  instalar_chatgpt || true
   habilitar_syncthing_usuario
 
   mostrar_bloque_catalogo 'HOMEBREW'
   for paquete in "${PAQUETES_HOMEBREW[@]}"; do
-    instalar_paquete_homebrew "$paquete" || true
+    if [[ $paquete == openspec ]]; then
+      instalar_openspec_global || true
+    else
+      instalar_paquete_homebrew "$paquete" || true
+    fi
   done
 
   mostrar_bloque_catalogo 'FLATPAK'

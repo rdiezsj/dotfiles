@@ -28,6 +28,7 @@ repositorio oficial de Microsoft. Firefox se gestiona desde DNF.
 | Flameshot | Capturas de pantalla. | Versionada: `~/.config/flameshot/flameshot.ini`. |
 | Visual Studio Code | Editor y entorno de desarrollo. | Local. |
 | Firefox | Navegador web. | Perfil y datos, locales. |
+| ChatGPT | Aplicación de escritorio con Codex; RPM oficial de OpenAI. | Cuenta, conversaciones y estado de la aplicación, locales. |
 
 RPM Fusion añade el soporte multimedia `ffmpeg`, `libavcodec-freeworld` y,
 cuando está disponible el repositorio tainted, `libdvdcss`. Si el inventario
@@ -57,6 +58,7 @@ Vaultwarden.
 | Helm | Gestor de paquetes Kubernetes. | Repositorios y estado, locales. |
 | kubernetes-cli | Cliente `kubectl`. | Configuración de clúster, local; solo su completado se carga desde Zsh. |
 | kubectx | Cambio rápido de contexto Kubernetes. | Contextos, locales. |
+| OpenSpec | CLI global para desarrollo guiado por especificaciones. | Instalación global Homebrew; no se declara como dependencia de cada proyecto. Verificar con `openspec --version`. |
 | Bitwarden CLI | Acceso a Vaultwarden desde terminal. | Sesión revocable en GNOME Keyring, nunca en el repositorio. |
 
 ## Flatpak (Flathub por usuario)
@@ -90,8 +92,10 @@ conflicto. Tras verificarlos, Gear Lever debe importarlos manualmente.
 ## Orígenes validados
 
 - [VS Code para Linux](https://code.visualstudio.com/docs/setup/linux): repositorio RPM oficial de Microsoft.
+- [ChatGPT para Linux](https://learn.chatgpt.com/docs/linux/linux-app): Fedora 43/44 con RPM x86_64 o aarch64; DNF configura el repositorio firmado oficial para actualizaciones. Abrir con `chatgpt` o desde el menú de aplicaciones.
 - [Firefox PWA en Homebrew](https://formulae.brew.sh/formula/firefoxpwa): fórmula instalada por Homebrew y actualizada con sus mecanismos habituales.
-- Herramientas de terminal: Starship, Sheldon, fzf, Helm, `kubernetes-cli` y kubectx se instalan como fórmulas Homebrew. Sheldon gestiona los plugins Zsh desde `~/.config/sheldon/plugins.toml`, con SHA fijados en el repositorio.
+- [OpenSpec en Homebrew](https://formulae.brew.sh/formula/openspec): CLI global instalada como fórmula solo cuando no existe ya un comando global funcional; comprobar con `openspec --version`.
+- Herramientas de terminal: Starship, Sheldon, fzf, Helm, `kubernetes-cli`, kubectx y OpenSpec se instalan como fórmulas Homebrew. Sheldon gestiona los plugins Zsh desde `~/.config/sheldon/plugins.toml`, con SHA fijados en el repositorio.
 - [RPM Fusion](https://rpmfusion.org/): Free, Nonfree y Free tainted para multimedia y DVD.
 - [Flathub](https://flathub.org/): remoto Flatpak por usuario.
 - [Heynote 2.9.1](https://github.com/heyman/heynote/releases/tag/v2.9.1) y [descargas de Nextcloud Desktop](https://download.nextcloud.com/desktop/releases/Linux/): binarios AppImage fijados en el catálogo.

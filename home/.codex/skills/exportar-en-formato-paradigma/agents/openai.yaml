@@ -1,0 +1,4 @@
+interface:
+  display_name: "Exportar en formato Paradigma"
+  short_description: "Genera PDF con la marca Paradigma"
+  default_prompt: "Usa $exportar-en-formato-paradigma para preparar este documento en PDF con la identidad visual de Paradigma."

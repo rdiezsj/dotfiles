@@ -59,15 +59,35 @@ ejecutar_dotbot_zsh() {
 confirmar_aplicacion_dotfile() { return 0; }
 
 configurar_archivos_zsh "$RAIZ"
-for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .config/starship.toml .config/sheldon/plugins.toml .config/terminator .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
+for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills .config/starship.toml .config/sheldon/plugins.toml .config/terminator .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
   [[ -L $HOME/$relativo ]]
   if [[ $relativo == .config/* ]]; then
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/config/${relativo#.config/}" ]]
+  elif [[ $relativo == .codex/* ]]; then
+    [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/.codex/${relativo#.codex/}" ]]
   else
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/$relativo" ]]
   fi
 done
 [[ -f $HOME/.config/terminator/plugins/.gitkeep ]]
+[[ -f $HOME/.codex/skills/.system/skill-creator/SKILL.md ]]
+
+rm "$HOME/.codex/skills"
+mkdir -p "$HOME/.codex/skills/local"
+printf '%s\n' 'contenido local' >"$HOME/.codex/skills/local/propio.md"
+confirmar_aplicacion_dotfile() { return 1; }
+if configurar_archivos_zsh "$RAIZ"; then
+  printf '%s\n' 'El directorio Codex no confirmado no detuvo Dotbot.' >&2
+  exit 1
+fi
+grep -Fqx 'contenido local' "$HOME/.codex/skills/local/propio.md"
+[[ ! -L $HOME/.codex/skills ]]
+confirmar_aplicacion_dotfile() { return 0; }
+configurar_archivos_zsh "$RAIZ"
+[[ -L $HOME/.codex/skills ]]
+respaldo_skills=$(find "$HOME/.dotfiles-backups" -type f -path '*/dotbot-*/*' -name propio.md -print -quit)
+[[ -n $respaldo_skills ]]
+grep -Fqx 'contenido local' "$respaldo_skills"
 
 rm "$HOME/.config/terminator"
 mkdir -p "$TEMPORAL/terminator-anterior"
@@ -98,7 +118,7 @@ grep -Fqx 'fallidos:Sheldon: no se pudo materializar el perfil base' "$registro"
 unset -f sheldon
 
 configurar_archivos_zsh "$RAIZ"
-[[ $(grep -Fc 'Configuración: archivos versionados enlazados mediante Dotbot' "$registro") == 3 ]]
+[[ $(grep -Fc 'Configuración: archivos versionados enlazados mediante Dotbot' "$registro") == 4 ]]
 grep -Fqx 'instalados:Sheldon: plugins Zsh materializados en el estado local' "$registro"
 grep -Fqx 'presentes:Sheldon: estado local de plugins ya materializado' "$registro"
 zsh -dfic '
@@ -143,8 +163,7 @@ if salida_conflicto=$(configurar_archivos_zsh "$RAIZ" 2>&1); then
   printf '%s\n' 'El conflicto no confirmado no detuvo Dotbot.' >&2
   exit 1
 fi
-[[ $salida_conflicto == *"Destino que se va a sobrescribir: $HOME/.gitconfig"* ]]
-[[ $salida_conflicto == *"Dotfile versionado: $RAIZ/home/.gitconfig"* ]]
+[[ $salida_conflicto == *"se rechazó el conflicto en $HOME/.gitconfig"* ]]
 grep -Fqx '[user]' "$HOME/.gitconfig"
 [[ ! -L $HOME/.gitconfig ]]
 
@@ -171,36 +190,31 @@ grep -Fqx 'zsh local' "$HOME/.zshrc"
 grep -Fqx '  name = Git local' "$HOME/.gitconfig"
 [[ ! -L $HOME/.zshrc && ! -L $HOME/.gitconfig ]]
 
-mkdir -p "$TEMPORAL/sheldon-config"
-salida_sheldon=$(zsh -dfic '
+mkdir -p "$TEMPORAL/sheldon-config/sheldon"
+salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL" XDG_DATA_HOME="$TEMPORAL" zsh -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
-  SHELDON_CONFIG_DIR="$2"
-  SHELDON_DATA_DIR="$3"
   source "$1"
-' zsh "$RAIZ/home/.zshrc" "$TEMPORAL/sheldon-config" "$TEMPORAL/sheldon-data" 2>&1)
+' zsh "$RAIZ/home/.zshrc" 2>&1)
 [[ $salida_sheldon == *'Aviso Sheldon: falta ~/.config/sheldon/plugins.toml; resuelve el conflicto de Dotbot y ejecuta ./bootstrap.'* ]]
 
-cp "$RAIZ/home/config/sheldon/plugins.toml" "$TEMPORAL/sheldon-config/plugins.toml"
-salida_sheldon=$(zsh -dfic '
+cp "$RAIZ/home/config/sheldon/plugins.toml" "$TEMPORAL/sheldon-config/sheldon/plugins.toml"
+salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMPORAL" zsh -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
-  SHELDON_CONFIG_DIR="$2"
-  SHELDON_DATA_DIR="$3"
   source "$1"
-' zsh "$RAIZ/home/.zshrc" "$TEMPORAL/sheldon-config" "$TEMPORAL/sheldon-data" 2>&1)
+' zsh "$RAIZ/home/.zshrc" 2>&1)
 [[ $salida_sheldon == *'Aviso Sheldon: falta materializar el perfil base; ejecuta ./bootstrap.'* ]]
 
-mkdir -p "$TEMPORAL/sheldon-data"
-touch "$TEMPORAL/sheldon-data/plugins.base.lock"
-salida_sheldon=$(zsh -dfic '
+mkdir -p "$TEMPORAL/sheldon-data/sheldon"
+touch "$TEMPORAL/sheldon-data/sheldon/plugins.base.lock"
+salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMPORAL/sheldon-data" zsh -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
-  SHELDON_CONFIG_DIR="$2"
-  SHELDON_DATA_DIR="$3"
   source "$1"
-' zsh "$RAIZ/home/.zshrc" "$TEMPORAL/sheldon-config" "$TEMPORAL/sheldon-data" 2>&1)
+' zsh "$RAIZ/home/.zshrc" 2>&1)
 [[ $salida_sheldon == *'Aviso Sheldon: falta materializar el perfil resaltado; ejecuta ./bootstrap.'* ]]
 
 printf '%s\n' '#!/usr/bin/env bash' 'exit 0' >"$TEMPORAL/bin/zsh"
 chmod +x "$TEMPORAL/bin/zsh"
+hash -r
 id() { printf '%s\n' prueba; }
 getent() { printf 'prueba:x:1000:1000::/home/prueba:/bin/bash\n'; }
 chsh() { printf '%s\n' "$*" >>"$TEMPORAL/chsh"; }

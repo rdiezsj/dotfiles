@@ -17,8 +17,9 @@ enlaces; rechazar uno conserva todos los originales y cancela esta fase.
 | Terminator | `~/.config/terminator/config` | Solo preferencias de terminal. |
 | Flameshot | `~/.config/flameshot/flameshot.ini` | No fija directorio de capturas. |
 | Heynote | `~/.config/Heynote/config.json`, `~/.config/Heynote/Preferences` | Las notas, buffers, sesiones y cachés siguen locales. |
-| Input Remapper | `~/.config/input-remapper-2/config.json` | Parte con `autoload` vacío; el preset se crea y asocia manualmente al dispositivo real. |
+| Input Remapper | `~/.config/input-remapper-2/config.json` | Asocia Logitech MX Master 3 al preset `cambio de escritorio`; configuración versionada. |
 | msmtp | `~/.config/msmtp/config` | La cuenta no contiene usuario, contraseña ni sesión; los consulta bajo demanda en Vaultwarden. |
+| Codex | `~/.codex/AGENTS.md`, `~/.codex/skills/` | Se versiona el árbol completo de instrucciones y skills, incluidos archivos ocultos y `.system/`. |
 
 ## Datos locales deliberadamente excluidos
 
@@ -30,6 +31,10 @@ Lever. Son datos del usuario o estado propio de cada equipo.
 Los clones y lockfiles de Sheldon permanecen en `~/.local/share/sheldon/`.
 El registro de msmtp se crea bajo `~/.local/state/msmtp/msmtp.log`; no se debe
 editar el enlace de msmtp para guardar secretos.
+
+La autenticación, `~/.codex/config.toml`, conversaciones, cachés, plugins y
+otros datos locales de Codex no se versionan ni se enlazan. ChatGPT Desktop
+proporciona Codex en Fedora compatible; inicia sesión en la propia aplicación.
 
 ## Correo con msmtp
 

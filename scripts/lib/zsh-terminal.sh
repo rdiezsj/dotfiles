@@ -10,6 +10,8 @@ destino_zsh_gestionado() {
 
   if [[ $relativo == .config/* ]]; then
     origen="$raiz/home/config/${relativo#.config/}"
+  elif [[ $relativo == .codex/* ]]; then
+    origen="$raiz/home/.codex/${relativo#.codex/}"
   else
     origen="$raiz/home/$relativo"
   fi
@@ -28,6 +30,8 @@ ${HOME}/.zsh_aliases
 ${HOME}/.zsh_functions
 ${HOME}/.profile
 ${HOME}/.zprofile
+${HOME}/.codex/AGENTS.md
+${HOME}/.codex/skills
 ${HOME}/.config/starship.toml
 ${HOME}/.config/sheldon/plugins.toml
 ${HOME}/.config/terminator
@@ -46,6 +50,8 @@ origen_dotfile() {
 
   if [[ $relativo == .config/* ]]; then
     printf '%s\n' "$raiz/home/config/${relativo#.config/}"
+  elif [[ $relativo == .codex/* ]]; then
+    printf '%s\n' "$raiz/home/.codex/${relativo#.codex/}"
   else
     printf '%s\n' "$raiz/home/$relativo"
   fi
@@ -75,10 +81,6 @@ resolver_conflictos_dotbot() {
     origen=$(origen_dotfile "$raiz" "$destino")
     if [[ ! -e $destino && ! -L $destino ]] || destino_zsh_gestionado "$raiz" "$destino"; then
       continue
-    fi
-    if [[ -d $destino && ! -L $destino ]]; then
-      printf 'Conflicto de Dotbot: %s es un directorio y no se puede sobrescribir con %s.\n' "$destino" "$origen" >&2
-      return 1
     fi
     conflictos+=("$destino")
     origenes+=("$origen")

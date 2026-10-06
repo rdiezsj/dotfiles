@@ -48,6 +48,45 @@ grep -Fqx 'instalados:DNF: nano instalado' "$registro"
 grep -Fqx 'instalados:DNF: msmtp instalado' "$registro"
 grep -Fqx 'instalados:DNF: flameshot instalado' "$registro"
 
+fedora_release=44
+arquitectura_prueba=x86_64
+chatgpt_instalado=false
+rpm() {
+  if [[ $1 == -E && $2 == %fedora ]]; then printf '%s\n' "$fedora_release"; return 0; fi
+  [[ $1 == -q && $2 == chatgpt && $chatgpt_instalado == true ]]
+}
+uname() { printf '%s\n' "$arquitectura_prueba"; }
+sudo() {
+  [[ $1 == dnf && $2 == install && $3 == -y ]] || return 1
+  [[ $4 == "$URL_CHATGPT_X86_64" || $4 == "$URL_CHATGPT_AARCH64" ]] || return 1
+  chatgpt_instalado=true
+}
+instalar_chatgpt
+grep -Fqx 'instalados:ChatGPT: RPM oficial instalado' "$registro"
+chatgpt_instalado=false
+arquitectura_prueba=aarch64
+sudo() {
+  [[ $1 == dnf && $2 == install && $3 == -y && $4 == "$URL_CHATGPT_AARCH64" ]] || return 1
+  chatgpt_instalado=true
+}
+instalar_chatgpt
+grep -Fqx 'instalados:ChatGPT: RPM oficial instalado' "$registro"
+chatgpt_instalado=false
+fedora_release=42
+instalar_chatgpt
+grep -Fqx 'omitidos:ChatGPT: Fedora 42 no está admitida por OpenAI' "$registro"
+fedora_release=44
+arquitectura_prueba=ppc64le
+instalar_chatgpt
+grep -Fqx 'omitidos:ChatGPT: arquitectura ppc64le no admitida por OpenAI' "$registro"
+arquitectura_prueba=aarch64
+sudo() { return 1; }
+if instalar_chatgpt; then exit 1; fi
+grep -Fqx 'fallidos:ChatGPT: no se pudo instalar el RPM oficial' "$registro"
+chatgpt_instalado=true
+instalar_chatgpt
+grep -Fqx 'presentes:ChatGPT: ya estaba instalado' "$registro"
+
 flatpak() {
   case $1 in
     info) return 1 ;;
@@ -121,6 +160,25 @@ instalar_paquete_homebrew firefoxpwa
 grep -Fqx 'instalados:Homebrew: firefoxpwa instalado' "$registro"
 instalar_paquete_homebrew starship
 grep -Fqx 'instalados:Homebrew: starship instalado' "$registro"
+
+openspec() { printf 'OpenSpec 1.14.0\n'; }
+brew() { printf 'brew no debe instalar OpenSpec si ya hay CLI funcional\n' >&2; return 1; }
+instalar_openspec_global
+grep -Fqx 'presentes:OpenSpec: CLI global funcional (OpenSpec 1.14.0)' "$registro"
+unset -f openspec
+path_previo=$PATH
+PATH=$TEMPORAL/bin
+brew() { [[ $1 == install && $2 == openspec ]]; }
+instalar_openspec_global
+PATH=$path_previo
+grep -Fqx 'instalados:Homebrew: openspec instalado' "$registro"
+PATH=$TEMPORAL/bin
+openspec() { return 1; }
+brew() { [[ $1 == install && $2 == openspec ]]; }
+instalar_openspec_global
+PATH=$path_previo
+grep -Fqx 'instalados:Homebrew: openspec instalado' "$registro"
+unset -f openspec
 
 brew() {
   [[ $1 == list && $2 == --versions && $3 == firefoxpwa ]]
