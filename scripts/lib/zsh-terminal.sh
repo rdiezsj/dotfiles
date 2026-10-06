@@ -9,7 +9,7 @@ destino_zsh_gestionado() {
   local origen
 
   if [[ $relativo == .config/* ]]; then
-    origen="$raiz/home/config/${relativo#.config/}"
+    origen="$raiz/home/.config/${relativo#.config/}"
   elif [[ $relativo == .codex/* ]]; then
     origen="$raiz/home/.codex/${relativo#.codex/}"
   else
@@ -31,7 +31,12 @@ ${HOME}/.zsh_functions
 ${HOME}/.profile
 ${HOME}/.zprofile
 ${HOME}/.codex/AGENTS.md
-${HOME}/.codex/skills
+${HOME}/.codex/skills/alojamientos-viajes-familiares
+${HOME}/.codex/skills/exportar-en-formato-paradigma
+${HOME}/.codex/skills/humanizador
+${HOME}/.codex/skills/librarium-terra-notes
+${HOME}/.codex/skills/planificador-viajes-familiares
+${HOME}/.codex/skills/restaurantes-celiacos-seguros
 ${HOME}/.config/starship.toml
 ${HOME}/.config/sheldon/plugins.toml
 ${HOME}/.config/terminator
@@ -49,7 +54,7 @@ origen_dotfile() {
   local relativo=${destino#"$HOME"/}
 
   if [[ $relativo == .config/* ]]; then
-    printf '%s\n' "$raiz/home/config/${relativo#.config/}"
+    printf '%s\n' "$raiz/home/.config/${relativo#.config/}"
   elif [[ $relativo == .codex/* ]]; then
     printf '%s\n' "$raiz/home/.codex/${relativo#.codex/}"
   else

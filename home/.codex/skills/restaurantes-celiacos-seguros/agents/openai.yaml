@@ -1,0 +1,18 @@
+interface:
+  display_name: restaurantes celiacos seguros
+  short_description: Activa esta Skill automáticamente siempre que el usuario pregunte
+    dónde comer o beber siendo celíaco, pida restaurantes, bares, cafeterías, tapas,
+    pintxos, desayunos, comidas o cenas sin gluten, solicite valorar la seguridad
+    de un establecimiento para celiaquía, busque alternativas seguras cerca de una
+    ruta o alojamiento, o cualquier planificación de viaje necesite elegir sitios
+    fiables para una persona celíaca. Debe distinguir siempre entre tener opciones
+    sin gluten y ser realmente seguro frente a contaminación cruzada.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

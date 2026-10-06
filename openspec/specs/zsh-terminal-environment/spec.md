@@ -10,7 +10,7 @@ configuración no gestionada.
 
 ### Requirement: Entorno Zsh versionado
 El sistema SHALL enlazar `.zshrc`, `.zsh_aliases`, `.profile`, `.zprofile` y
-`home/config/starship.toml` versionados mediante Dotbot, dejando este último en
+`home/.config/starship.toml` versionados mediante Dotbot, dejando este último en
 `~/.config/starship.toml`. SHALL crear un respaldo fechado y recuperable antes
 de sustituir un destino existente no gestionado durante la migración confirmada.
 

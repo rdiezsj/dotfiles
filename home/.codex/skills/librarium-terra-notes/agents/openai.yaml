@@ -1,0 +1,17 @@
+interface:
+  display_name: librarium terra notes
+  short_description: Crea, investiga, reescribe, clasifica y mantiene notas Markdown
+    para la bóveda Obsidian Librarium_Terra. Úsala cuando el usuario pida crear una
+    nota de Obsidian, convertir una conversación, texto o documento en una nota reutilizable,
+    documentar un procedimiento, generar una checklist, referencia, decisión, proyecto,
+    reunión, receta, viaje o investigación, clasificar una nota en Librarium_Terra
+    o actualizar una nota existente de la bóveda.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

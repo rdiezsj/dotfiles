@@ -1,0 +1,19 @@
+interface:
+  display_name: planificador viajes familiares
+  short_description: Activa esta Skill automáticamente siempre que el usuario pida
+    organizar, planificar, optimizar o modificar un viaje, escapada, vacaciones, día
+    turístico, ruta, itinerario, visitas o jornada en un destino. También debe activarse
+    cuando el usuario pregunte qué hacer en un lugar durante unas horas o días, cómo
+    encajar reservas, restaurantes, clima, coche, parking, ZBE, transporte o actividades
+    familiares dentro de un recorrido. Está especialmente adaptada a viajes en familia
+    y debe coordinarse con la Skill restaurantes-celiacos-seguros siempre que haya
+    que elegir dónde comer para una persona celíaca.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

@@ -1,0 +1,24 @@
+interface:
+  display_name: humanizador
+  short_description: "Reescribe textos generados por IA para que suenen más naturales,\
+    \ humanos, directos y creíbles, \neliminando frases genéricas, tono inflado, lenguaje\
+    \ corporativo vacío y patrones artificiales. \nÚsala siempre que el usuario quiera\
+    \ humanizar, naturalizar, limpiar o mejorar un texto para que \nno suene a IA.\
+    \ Activa esta skill cuando el usuario diga cosas como \"humaniza este texto\"\
+    , \n\"haz que no suene a IA\", \"hazlo más natural\", \"hazlo más humano\", \"\
+    quita el tono artificial\", \n\"reescríbelo como lo diría una persona\", \"hazlo\
+    \ menos corporativo\", \"hazlo más directo\", \n\"pásalo por el humanizador\"\
+    , \"haz que parezca escrito por una persona\" o cualquier variante. \nTambién\
+    \ debe activarse cuando el usuario pega un texto y pide que suene mejor, más real\
+    \ o menos \nrobótico. Funciona con emails, posts de LinkedIn, guiones, mensajes\
+    \ comerciales, webs, propuestas, \natención al cliente y cualquier texto destinado\
+    \ a ser leído por personas."
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

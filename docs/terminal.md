@@ -16,7 +16,7 @@ lockfiles son estado local en `~/.local/share/sheldon/`. Zsh activa completado
 de kubectl, modo Emacs y fzf con interfaz compacta.
 
 Si `~/.config/sheldon/plugins.toml` ya existe durante el bootstrap, el aviso de
-Dotbot muestra ese destino y `home/config/sheldon/plugins.toml` como origen, y
+Dotbot muestra ese destino y `home/.config/sheldon/plugins.toml` como origen, y
 pide confirmación antes de reemplazarlo con el enlace. Al aceptar, la copia
 anterior queda en `~/.dotfiles-backups/dotbot-<fecha>/`; al rechazar, no se
 modifica ningún destino de Dotbot. Si Zsh informa de que falta la configuración

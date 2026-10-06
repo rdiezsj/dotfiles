@@ -6,7 +6,8 @@ RAIZ=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 TEMPORAL=$(mktemp -d)
 trap 'rm -rf "$TEMPORAL"' EXIT
 export HOME="$TEMPORAL/home"
-mkdir -p "$HOME/.config" "$TEMPORAL/bin"
+mkdir -p "$HOME/.config" "$HOME/.codex/skills/.system/runtime-skill" "$TEMPORAL/bin"
+printf '%s\n' 'skill gestionada por Codex' >"$HOME/.codex/skills/.system/runtime-skill/SKILL.md"
 
 cat >"$TEMPORAL/bin/sheldon" <<'EOF'
 #!/usr/bin/env bash
@@ -38,11 +39,11 @@ export PATH="$TEMPORAL/bin:$PATH"
 source "$RAIZ/scripts/lib/zsh-terminal.sh"
 
 zsh -n "$RAIZ/home/.zshrc" "$RAIZ/home/.zsh_aliases" "$RAIZ/home/.zsh_functions" "$RAIZ/home/.zprofile"
-! rg -n -i 'token|secret|password|bw_session' "$RAIZ/home/.zshrc" "$RAIZ/home/.zsh_aliases" "$RAIZ/home/.zsh_functions" "$RAIZ/home/.profile" "$RAIZ/home/.zprofile" "$RAIZ/home/config/starship.toml"
-[[ $(grep -Ec '^rev = "[[:xdigit:]]{40}"$' "$RAIZ/home/config/sheldon/plugins.toml") -eq 6 ]]
-grep -Fqx 'profiles = ["base"]' "$RAIZ/home/config/sheldon/plugins.toml"
-grep -Fqx 'profiles = ["resaltado"]' "$RAIZ/home/config/sheldon/plugins.toml"
-! rg -n -i 'token|secret|password|bw_session' "$RAIZ/home/config/sheldon/plugins.toml"
+! rg -n -i 'token|secret|password|bw_session' "$RAIZ/home/.zshrc" "$RAIZ/home/.zsh_aliases" "$RAIZ/home/.zsh_functions" "$RAIZ/home/.profile" "$RAIZ/home/.zprofile" "$RAIZ/home/.config/starship.toml"
+[[ $(grep -Ec '^rev = "[[:xdigit:]]{40}"$' "$RAIZ/home/.config/sheldon/plugins.toml") -eq 6 ]]
+grep -Fqx 'profiles = ["base"]' "$RAIZ/home/.config/sheldon/plugins.toml"
+grep -Fqx 'profiles = ["resaltado"]' "$RAIZ/home/.config/sheldon/plugins.toml"
+! rg -n -i 'token|secret|password|bw_session' "$RAIZ/home/.config/sheldon/plugins.toml"
 ! rg -F 'sheldon lock --update' "$RAIZ/home/.zshrc"
 salida_no_interactiva=$(zsh -fc 'source "$1"' zsh "$RAIZ/home/.zshrc")
 [[ -z $salida_no_interactiva ]]
@@ -59,10 +60,10 @@ ejecutar_dotbot_zsh() {
 confirmar_aplicacion_dotfile() { return 0; }
 
 configurar_archivos_zsh "$RAIZ"
-for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills .config/starship.toml .config/sheldon/plugins.toml .config/terminator .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
+for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills/alojamientos-viajes-familiares .codex/skills/exportar-en-formato-paradigma .codex/skills/humanizador .codex/skills/librarium-terra-notes .codex/skills/planificador-viajes-familiares .codex/skills/restaurantes-celiacos-seguros .config/starship.toml .config/sheldon/plugins.toml .config/terminator .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
   [[ -L $HOME/$relativo ]]
   if [[ $relativo == .config/* ]]; then
-    [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/config/${relativo#.config/}" ]]
+    [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/.config/${relativo#.config/}" ]]
   elif [[ $relativo == .codex/* ]]; then
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/.codex/${relativo#.codex/}" ]]
   else
@@ -70,21 +71,26 @@ for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_fu
   fi
 done
 [[ -f $HOME/.config/terminator/plugins/.gitkeep ]]
-[[ -f $HOME/.codex/skills/.system/skill-creator/SKILL.md ]]
+[[ -d $HOME/.codex/skills && ! -L $HOME/.codex/skills ]]
+[[ -f $HOME/.codex/skills/.system/runtime-skill/SKILL.md ]]
+[[ $(readlink -f "$HOME/.codex/skills/exportar-en-formato-paradigma") == "$RAIZ/home/.codex/skills/exportar-en-formato-paradigma" ]]
 
-rm "$HOME/.codex/skills"
-mkdir -p "$HOME/.codex/skills/local"
-printf '%s\n' 'contenido local' >"$HOME/.codex/skills/local/propio.md"
+rm "$HOME/.codex/skills/exportar-en-formato-paradigma"
+mkdir -p "$HOME/.codex/skills/exportar-en-formato-paradigma"
+printf '%s\n' 'contenido local' >"$HOME/.codex/skills/exportar-en-formato-paradigma/propio.md"
 confirmar_aplicacion_dotfile() { return 1; }
 if configurar_archivos_zsh "$RAIZ"; then
   printf '%s\n' 'El directorio Codex no confirmado no detuvo Dotbot.' >&2
   exit 1
 fi
-grep -Fqx 'contenido local' "$HOME/.codex/skills/local/propio.md"
-[[ ! -L $HOME/.codex/skills ]]
+grep -Fqx 'contenido local' "$HOME/.codex/skills/exportar-en-formato-paradigma/propio.md"
+[[ ! -L $HOME/.codex/skills/exportar-en-formato-paradigma ]]
+[[ -f $HOME/.codex/skills/.system/runtime-skill/SKILL.md ]]
 confirmar_aplicacion_dotfile() { return 0; }
 configurar_archivos_zsh "$RAIZ"
-[[ -L $HOME/.codex/skills ]]
+[[ -L $HOME/.codex/skills/exportar-en-formato-paradigma ]]
+[[ -d $HOME/.codex/skills && ! -L $HOME/.codex/skills ]]
+[[ -f $HOME/.codex/skills/.system/runtime-skill/SKILL.md ]]
 respaldo_skills=$(find "$HOME/.dotfiles-backups" -type f -path '*/dotbot-*/*' -name propio.md -print -quit)
 [[ -n $respaldo_skills ]]
 grep -Fqx 'contenido local' "$respaldo_skills"
@@ -94,7 +100,7 @@ mkdir -p "$TEMPORAL/terminator-anterior"
 ln -s "$TEMPORAL/terminator-anterior" "$HOME/.config/terminator"
 configurar_archivos_zsh "$RAIZ"
 [[ -L $HOME/.config/terminator ]]
-[[ $(readlink -f "$HOME/.config/terminator") == "$RAIZ/home/config/terminator" ]]
+[[ $(readlink -f "$HOME/.config/terminator") == "$RAIZ/home/.config/terminator" ]]
 respaldo_terminator=$(find "$HOME/.dotfiles-backups" -type l -path '*/dotbot-*/*' -name terminator -print -quit)
 [[ -n $respaldo_terminator ]]
 [[ -f $HOME/.local/share/sheldon/plugins.base.lock ]]
@@ -197,7 +203,7 @@ salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL" XDG_DATA_HOME="$TEMPORAL" zsh -dfic
 ' zsh "$RAIZ/home/.zshrc" 2>&1)
 [[ $salida_sheldon == *'Aviso Sheldon: falta ~/.config/sheldon/plugins.toml; resuelve el conflicto de Dotbot y ejecuta ./bootstrap.'* ]]
 
-cp "$RAIZ/home/config/sheldon/plugins.toml" "$TEMPORAL/sheldon-config/sheldon/plugins.toml"
+cp "$RAIZ/home/.config/sheldon/plugins.toml" "$TEMPORAL/sheldon-config/sheldon/plugins.toml"
 salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMPORAL" zsh -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
   source "$1"

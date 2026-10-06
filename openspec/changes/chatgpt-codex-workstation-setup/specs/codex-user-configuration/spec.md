@@ -14,21 +14,25 @@ El sistema SHALL conservar `~/.codex/AGENTS.md` en el repositorio y SHALL enlaza
 - **THEN** `~/.codex/AGENTS.md` resuelve al fichero versionado `home/.codex/AGENTS.md`
 
 ### Requirement: Skills globales de Codex versionadas
-El sistema SHALL conservar y enlazar íntegramente el árbol `~/.codex/skills/`, incluidos archivos ocultos, subdirectorios, recursos y `.system/`.
+El sistema SHALL conservar y enlazar individualmente solo las skills creadas por la persona usuaria, incluidos sus recursos y archivos ocultos, y SHALL dejar las skills predeterminadas bajo gestión de Codex.
 
 #### Scenario: Skills desplegadas
 - **WHEN** Dotbot aplica la configuración de Codex
-- **THEN** `~/.codex/skills` resuelve al árbol versionado `home/.codex/skills` y mantiene la misma estructura y contenido
+- **THEN** el directorio de cada skill propia resuelve a su copia versionada bajo `home/.codex/skills/` y mantiene sus recursos y estructura
 
 #### Scenario: Recursos anidados u ocultos
-- **WHEN** una skill contiene referencias, scripts, assets, subdirectorios o archivos ocultos
+- **WHEN** una skill propia contiene referencias, scripts, assets, subdirectorios o archivos ocultos
 - **THEN** esos elementos permanecen en su ruta relativa original y son accesibles a través del enlace global
+
+#### Scenario: Skills predeterminadas preservadas
+- **WHEN** Dotbot aplica la configuración mientras Codex tiene skills predeterminadas en `~/.codex/skills/.system/`
+- **THEN** esas skills permanecen locales y no se versionan ni sustituyen
 
 ### Requirement: Conflictos en destinos globales Codex
 El sistema SHALL pedir confirmación antes de mover destinos Codex existentes que no estén gestionados, SHALL conservarlos en un respaldo recuperable y SHALL cancelar sin cambios si se rechaza la confirmación.
 
 #### Scenario: Sustitución confirmada
-- **WHEN** `~/.codex/AGENTS.md` o `~/.codex/skills` existe y no apunta al contenido versionado, y la persona confirma la migración
+- **WHEN** `~/.codex/AGENTS.md` o el destino de una skill propia existe y no apunta al contenido versionado, y la persona confirma la migración
 - **THEN** el sistema respalda el destino existente y aplica el enlace versionado
 
 #### Scenario: Sustitución rechazada

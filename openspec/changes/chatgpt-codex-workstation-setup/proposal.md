@@ -8,7 +8,7 @@ La estación Fedora no instala la aplicación de escritorio de ChatGPT, que ahor
 
 - Instalar ChatGPT desde el RPM oficial de OpenAI en las versiones Fedora y arquitecturas que OpenAI admita.
 - Añadir OpenSpec al catálogo de herramientas globales Homebrew, sin instalarlo como dependencia de un proyecto.
-- Versionar `~/.codex/AGENTS.md` y el contenido completo de `~/.codex/skills/`, incluidos archivos ocultos y `.system/`, y enlazarlos desde Dotbot.
+- Versionar `~/.codex/AGENTS.md` y las skills propias de `~/.codex/skills/`; dejar `.system/` y otras skills predeterminadas bajo gestión de Codex y enlazar individualmente las skills propias desde Dotbot.
 - Gestionar con confirmación y copia de respaldo los destinos Codex locales que ya existan y no estén enlazados a estos dotfiles.
 
 ## Capabilities

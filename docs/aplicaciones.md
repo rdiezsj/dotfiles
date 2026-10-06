@@ -19,7 +19,7 @@ enlaces; rechazar uno conserva todos los originales y cancela esta fase.
 | Heynote | `~/.config/Heynote/config.json`, `~/.config/Heynote/Preferences` | Las notas, buffers, sesiones y cachés siguen locales. |
 | Input Remapper | `~/.config/input-remapper-2/config.json` | Asocia Logitech MX Master 3 al preset `cambio de escritorio`; configuración versionada. |
 | msmtp | `~/.config/msmtp/config` | La cuenta no contiene usuario, contraseña ni sesión; los consulta bajo demanda en Vaultwarden. |
-| Codex | `~/.codex/AGENTS.md`, `~/.codex/skills/` | Se versiona el árbol completo de instrucciones y skills, incluidos archivos ocultos y `.system/`. |
+| Codex | `~/.codex/AGENTS.md`, `~/.codex/skills/<skill-propia>/` | Se versionan y enlazan las instrucciones y cada skill propia. Las skills predeterminadas de Codex (`.system/`) permanecen gestionadas por la aplicación y no se enlazan desde el repositorio. |
 
 ## Datos locales deliberadamente excluidos
 

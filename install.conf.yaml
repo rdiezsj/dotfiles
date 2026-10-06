@@ -15,14 +15,19 @@
     ~/.profile: home/.profile
     ~/.zprofile: home/.zprofile
     ~/.codex/AGENTS.md: home/.codex/AGENTS.md
-    ~/.codex/skills: home/.codex/skills
-    ~/.config/starship.toml: home/config/starship.toml
-    ~/.config/sheldon/plugins.toml: home/config/sheldon/plugins.toml
-    ~/.config/terminator: home/config/terminator
-    ~/.config/flameshot/flameshot.ini: home/config/flameshot/flameshot.ini
-    ~/.config/Heynote/config.json: home/config/Heynote/config.json
-    ~/.config/Heynote/Preferences: home/config/Heynote/Preferences
-    ~/.config/input-remapper-2/config.json: home/config/input-remapper-2/config.json
-    ~/.config/msmtp/config: home/config/msmtp/config
+    ~/.codex/skills/alojamientos-viajes-familiares: home/.codex/skills/alojamientos-viajes-familiares
+    ~/.codex/skills/exportar-en-formato-paradigma: home/.codex/skills/exportar-en-formato-paradigma
+    ~/.codex/skills/humanizador: home/.codex/skills/humanizador
+    ~/.codex/skills/librarium-terra-notes: home/.codex/skills/librarium-terra-notes
+    ~/.codex/skills/planificador-viajes-familiares: home/.codex/skills/planificador-viajes-familiares
+    ~/.codex/skills/restaurantes-celiacos-seguros: home/.codex/skills/restaurantes-celiacos-seguros
+    ~/.config/starship.toml: home/.config/starship.toml
+    ~/.config/sheldon/plugins.toml: home/.config/sheldon/plugins.toml
+    ~/.config/terminator: home/.config/terminator
+    ~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini
+    ~/.config/Heynote/config.json: home/.config/Heynote/config.json
+    ~/.config/Heynote/Preferences: home/.config/Heynote/Preferences
+    ~/.config/input-remapper-2/config.json: home/.config/input-remapper-2/config.json
+    ~/.config/msmtp/config: home/.config/msmtp/config
 
 - clean: []

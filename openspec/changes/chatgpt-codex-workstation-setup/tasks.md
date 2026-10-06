@@ -2,8 +2,8 @@
 
 ## 1. Configuración global de Codex
 
-- [x] 1.1 Copiar `~/.codex/AGENTS.md` y todo `~/.codex/skills/` a `home/.codex/`, incluidos `.system/` y recursos ocultos; verificar rutas, contenido y ausencia de secretos.
-- [x] 1.2 Añadir enlaces Dotbot para `~/.codex/AGENTS.md` y `~/.codex/skills`; extender la gestión de conflictos para respaldar directorios solo tras confirmación y verificar casos de aceptación, rechazo y enlaces conformes con pruebas unitarias.
+- [x] 1.1 Versionar `~/.codex/AGENTS.md` y solo las skills propias de `~/.codex/skills/`, con sus recursos; excluir `.system/` y otras skills predeterminadas.
+- [x] 1.2 Añadir enlaces Dotbot para `~/.codex/AGENTS.md` y cada skill propia; preservar el directorio de skills de Codex y verificar conflictos, aceptación, rechazo y conservación de `.system/` mediante pruebas unitarias.
 - [x] 1.3 Documentar qué configuración Codex se versiona y qué estado queda fuera; verificar que la guía coincide con los destinos de Dotbot.
 
 ## 2. ChatGPT de escritorio en Fedora

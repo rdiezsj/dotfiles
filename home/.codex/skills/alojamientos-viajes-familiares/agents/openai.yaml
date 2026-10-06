@@ -1,0 +1,19 @@
+interface:
+  display_name: alojamientos viajes familiares
+  short_description: 'Activa esta Skill automáticamente siempre que el usuario pida
+    buscar, comparar, elegir o recomendar alojamiento para un viaje, escapada o vacaciones:
+    apartamentos, hoteles, aparthoteles, casas, resorts u otros alojamientos. Debe
+    valorar simultáneamente ubicación respecto a puntos de interés, restaurantes adecuados
+    para celíacos, playa cuando sea relevante, capacidad real para toda la familia,
+    piscina en meses cálidos, calidad estética, disponibilidad y precio total para
+    las fechas y número de huéspedes indicados. No debe asumir destino, fechas, personas
+    ni preferencias materiales si faltan.'
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
