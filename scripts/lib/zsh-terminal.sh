@@ -30,7 +30,7 @@ ${HOME}/.profile
 ${HOME}/.zprofile
 ${HOME}/.config/starship.toml
 ${HOME}/.config/sheldon/plugins.toml
-${HOME}/.config/terminator/config
+${HOME}/.config/terminator
 ${HOME}/.config/flameshot/flameshot.ini
 ${HOME}/.config/Heynote/config.json
 ${HOME}/.config/Heynote/Preferences
@@ -76,7 +76,7 @@ resolver_conflictos_dotbot() {
     if [[ ! -e $destino && ! -L $destino ]] || destino_zsh_gestionado "$raiz" "$destino"; then
       continue
     fi
-    if [[ -d $destino ]]; then
+    if [[ -d $destino && ! -L $destino ]]; then
       printf 'Conflicto de Dotbot: %s es un directorio y no se puede sobrescribir con %s.\n' "$destino" "$origen" >&2
       return 1
     fi

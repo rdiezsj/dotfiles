@@ -17,6 +17,8 @@ for archivo in \
   home/config/msmtp/config; do
   [[ -f $RAIZ/$archivo ]]
 done
+[[ -d $RAIZ/home/config/terminator/plugins ]]
+[[ -f $RAIZ/home/config/terminator/plugins/.gitkeep ]]
 
 git config --file "$RAIZ/home/.gitconfig" --get core.excludesfile | grep -Fqx '~/.gitignore'
 jq -e . "$RAIZ/home/config/Heynote/config.json" "$RAIZ/home/config/Heynote/Preferences" "$RAIZ/home/config/input-remapper-2/config.json" >/dev/null
@@ -38,7 +40,7 @@ for destino in \
   '~/.vimrc: home/.vimrc' \
   '~/.gitconfig: home/.gitconfig' \
   '~/.gitignore: home/.gitignore' \
-  '~/.config/terminator/config: home/config/terminator/config' \
+  '~/.config/terminator: home/config/terminator' \
   '~/.config/flameshot/flameshot.ini: home/config/flameshot/flameshot.ini' \
   '~/.config/Heynote/config.json: home/config/Heynote/config.json' \
   '~/.config/Heynote/Preferences: home/config/Heynote/Preferences' \

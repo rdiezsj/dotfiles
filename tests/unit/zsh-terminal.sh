@@ -59,7 +59,7 @@ ejecutar_dotbot_zsh() {
 confirmar_aplicacion_dotfile() { return 0; }
 
 configurar_archivos_zsh "$RAIZ"
-for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .config/starship.toml .config/sheldon/plugins.toml .config/terminator/config .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
+for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .config/starship.toml .config/sheldon/plugins.toml .config/terminator .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
   [[ -L $HOME/$relativo ]]
   if [[ $relativo == .config/* ]]; then
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/config/${relativo#.config/}" ]]
@@ -67,6 +67,16 @@ for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_fu
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/$relativo" ]]
   fi
 done
+[[ -f $HOME/.config/terminator/plugins/.gitkeep ]]
+
+rm "$HOME/.config/terminator"
+mkdir -p "$TEMPORAL/terminator-anterior"
+ln -s "$TEMPORAL/terminator-anterior" "$HOME/.config/terminator"
+configurar_archivos_zsh "$RAIZ"
+[[ -L $HOME/.config/terminator ]]
+[[ $(readlink -f "$HOME/.config/terminator") == "$RAIZ/home/config/terminator" ]]
+respaldo_terminator=$(find "$HOME/.dotfiles-backups" -type l -path '*/dotbot-*/*' -name terminator -print -quit)
+[[ -n $respaldo_terminator ]]
 [[ -f $HOME/.local/share/sheldon/plugins.base.lock ]]
 [[ -f $HOME/.local/share/sheldon/plugins.resaltado.lock ]]
 [[ ! -L $HOME/.local/share/sheldon/plugins.base.lock ]]
@@ -88,7 +98,7 @@ grep -Fqx 'fallidos:Sheldon: no se pudo materializar el perfil base' "$registro"
 unset -f sheldon
 
 configurar_archivos_zsh "$RAIZ"
-[[ $(grep -Fc 'Configuración: archivos versionados enlazados mediante Dotbot' "$registro") == 2 ]]
+[[ $(grep -Fc 'Configuración: archivos versionados enlazados mediante Dotbot' "$registro") == 3 ]]
 grep -Fqx 'instalados:Sheldon: plugins Zsh materializados en el estado local' "$registro"
 grep -Fqx 'presentes:Sheldon: estado local de plugins ya materializado' "$registro"
 zsh -dfic '
