@@ -7,15 +7,32 @@ Instala y reconcilia de forma declarativa el software base de una estación Fedo
 ## Requirements
 
 ### Requirement: Catálogos ejecutables por gestor
-El sistema SHALL instalar de forma idempotente los paquetes DNF y Flatpak declarados para la estación Fedora, incluidos GNOME Tweaks, Sushi, compresión, VLC, Syncthing, Terminator, Vim, wl-clipboard, pipx, input-remapper, VS Code, Firefox y Firefox PWA; y las aplicaciones Flatpak acordadas.
+El sistema SHALL instalar de forma idempotente los paquetes DNF y Flatpak declarados para la estación Fedora, incluidos GNOME Tweaks, Sushi, compresión, VLC, Syncthing, Terminator, Nano, Vim, wl-clipboard, pipx, input-remapper, msmtp, Flameshot, VS Code y Firefox; y las aplicaciones Flatpak acordadas. Firefox PWA SHALL instalarse mediante su fórmula Homebrew declarada.
 
 #### Scenario: Equipo sin el software base
-- **WHEN** se confirma el catálogo en una Fedora compatible sin esos paquetes
+- **WHEN** se confirma el catálogo en una Fedora compatible sin el software declarado
 - **THEN** el sistema instala cada elemento desde el gestor y origen declarados
 
 #### Scenario: Segunda ejecución
-- **WHEN** todos los elementos declarados ya están instalados
+- **WHEN** todos los elementos declarados, incluida la fórmula Firefox PWA, ya están instalados
 - **THEN** el sistema los comunica como presentes sin reinstalarlos
+
+#### Scenario: Cliente SMTP disponible
+- **WHEN** finaliza correctamente el catálogo DNF en una estación nueva
+- **THEN** `msmtp` queda instalado sin requerir fuentes externas adicionales
+
+### Requirement: Firefox PWA desde Homebrew
+El sistema SHALL instalar Firefox PWA exclusivamente mediante la fórmula
+`firefoxpwa` de Homebrew y no SHALL configurar Packagecloud ni descargar RPMs
+directamente para este componente.
+
+#### Scenario: Fórmula Firefox PWA ausente
+- **WHEN** la fórmula `firefoxpwa` no está instalada tras preparar Homebrew
+- **THEN** el sistema la instala y registra Firefox PWA como instalado
+
+#### Scenario: Fórmula Firefox PWA ya presente
+- **WHEN** la fórmula `firefoxpwa` ya está instalada
+- **THEN** el sistema la comunica como presente sin reinstalarla
 
 ### Requirement: Origen único de aplicaciones excluyentes
 El sistema SHALL conservar Firefox instalado desde DNF y ONLYOFFICE desde Flathub, y SHALL retirar las variantes Firefox Snap o Flatpak, LibreOffice y FreeOffice detectadas antes de declarar conforme el catálogo.
