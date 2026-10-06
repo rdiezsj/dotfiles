@@ -16,70 +16,29 @@ Tras instalar las dependencias mínimas, el bootstrap emplea Gum para distinguir
 
 Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bootstrap activa Homebrew en la shell actual y añade un bloque delimitado, idempotente y no destructivo a `~/.bashrc`. Zsh carga Homebrew desde los archivos versionados, que se enlazan mediante Dotbot con respaldo fechado de cualquier destino no gestionado. El cambio de shell predeterminada con `chsh` se ofrece después mediante una confirmación independiente.
 
-## Catálogo base de software
+## Guías
 
-Tras validar fuentes, el bootstrap instala el catálogo Fedora desde DNF, Homebrew, Flathub y AppImage. Incluye VS Code desde el repositorio oficial de Microsoft, Firefox desde DNF, Firefox PWA, Starship, Sheldon, fzf, Helm, `kubernetes-cli` y kubectx desde Homebrew, ONLYOFFICE desde Flathub, multimedia RPM Fusion y soporte DVD. Elimina únicamente las variantes declaradas que entran en conflicto: Firefox Snap/Flatpak, LibreOffice y FreeOffice.
+- [Instalación y verificación](docs/instalacion.md)
+- [Catálogo de software](docs/catalogo-fedora.md)
+- [Configuración de aplicaciones](docs/aplicaciones.md)
+- [Terminal y Zsh](docs/terminal.md)
+- [Vaultwarden y GNOME Keyring](docs/vaultwarden.md)
 
-Heynote y Nextcloud Desktop se descargan en `~/Apps` con versión y SHA-256 fijados. Si ya hay un archivo distinto en una de esas rutas, se conserva y el resumen informa del conflicto. Cuando un AppImage queda verificado, el resumen indica su ruta para importarlo manualmente en Gear Lever.
+## Construir el sitio de documentación
 
-Si el inventario PCI detecta NVIDIA, se instalan los controladores RPM Fusion y bibliotecas VA-API de 64 y 32 bits. Con Secure Boot activo, el bootstrap no desactiva ninguna protección: deja pendiente el enrolamiento MOK y el reinicio. Ver [verificación posterior](docs/catalogo-fedora.md).
-
-La configuración Zsh versionada carga Starship, fzf y los plugins declarados por Sheldon: completions, autosuggestions, autopair, resaltado de sintaxis, `sudo` y `extract`. Declara `DOTFILES=~/.dotfiles`, añade sin duplicados los directorios existentes `~/.local/bin`, `~/.dotfiles/bin` y `~/.krew/bin`, y deja las rutas de Homebrew a `brew shellenv`. Activa el modo Emacs, una interfaz compacta para el historial con fzf y el completado explícito de kubectl. `plugins.toml` contiene SHA fijados; los clones, lockfiles y demás caché de Sheldon se mantienen exclusivamente en `~/.local/share/sheldon/` y no se versionan. Tras el bootstrap, abre una sesión Zsh nueva y verifica `starship --version`, `sheldon --version`, `fzf --version`, `helm version --short` y `kubectl version --client`.
-
-## Configuración de aplicaciones
-
-Dotbot enlaza Nano, Vim, Git, Terminator, Flameshot, Heynote e Input Remapper
-2. Si uno de sus destinos ya existe y no es un enlace gestionado, el bootstrap
-detiene esa fase y conserva el archivo local. La configuración activa no incluye
-credenciales, cachés, buffers ni sesiones.
-
-Las preferencias pendientes se mantienen como comentarios o plantillas para no
-pedir datos durante el bootstrap: el tamaño de tabulación de Nano y Vim y la
-ruta de capturas de Flameshot. `msmtp` se instala desde DNF y queda enlazado
-con la cuenta IONOS en `~/.config/msmtp/config`, sin usuario, contraseña ni
-sesión. Al enviar correo, consulta bajo demanda el ítem `Mail.ionos.es` de
-Vaultwarden mediante la sesión de GNOME Keyring; si la bóveda está bloqueada,
-el envío falla sin afectar al bootstrap. Gear Lever gestiona de forma local su
-sandbox Flatpak, los AppImages importados y el estado de actualizaciones; esos
-datos no se versionan ni se enlazan.
-
-Heynote enlaza únicamente `~/.config/Heynote/config.json` y
-`~/.config/Heynote/Preferences`; sus notas y buffers permanecen locales. Input
-Remapper 2 deja el autoload vacío y habilita su servicio de sistema, por lo que
-un preset solo debe asociarse manualmente después de identificar el dispositivo
-en el equipo destino.
-
-Para actualizar un plugin, revisa primero la nueva revisión Git, reemplaza exclusivamente su SHA en `~/.config/sheldon/plugins.toml` desde el repositorio y revisa el diff. Después materializa de forma explícita el estado local y reinicia Zsh:
+Instala las dependencias en un entorno aislado y construye el sitio con enlaces
+estrictos:
 
 ```bash
-sheldon --non-interactive --profile base lock
-sheldon --non-interactive --profile resaltado lock
-exec zsh
+python3 -m venv /tmp/dotfiles-docs
+/tmp/dotfiles-docs/bin/pip install -r requirements-docs.txt
+/tmp/dotfiles-docs/bin/mkdocs build --strict
 ```
 
-No ejecutes `sheldon lock --update` desde el arranque de Zsh ni como parte de una actualización rutinaria del bootstrap.
-
-Cuando el bootstrap finaliza sin incidencias y ya ha mostrado el resumen, ofrece abrir una nueva sesión con `exec zsh -l`. Aceptar reemplaza únicamente la Bash desde la que se lanzó el bootstrap; rechazarla conserva la sesión actual.
-
-Zsh incluye también dos utilidades de archivos. `extract archivo.tar.gz` extrae tar, ZIP o 7z en un directorio homónimo sin borrar el original. `compress carpeta` abre un asistente Gum para elegir formato (`tar.gz`, `tar.xz`, ZIP o 7z), nivel, destino y división opcional en bloques. Si se generan partes, recompón el archivo antes de extraerlo:
-
-```bash
-cat archivo.tar.xz.part-* > archivo.tar.xz
-extract archivo.tar.xz
-```
-
-Para revisar el plan sin cambiar nada desde el checkout:
-
-```bash
-cd ~/.dotfiles
-./bootstrap --dry-run
-```
-
-Bitwarden CLI se instala mediante Homebrew. Para configurar Vaultwarden:
-
-```bash
-./bootstrap --vault-server https://tu-servidor
-```
+El flujo de GitHub Actions repite esa construcción al cambiar documentación en
+`main` o cuando se ejecuta manualmente. Tras integrarlo, una persona debe abrir
+la configuración de Pages del repositorio y seleccionar **GitHub Actions** como
+origen; la primera publicación se confirma desde la ejecución del flujo.
 
 ## Compatibilidad
 

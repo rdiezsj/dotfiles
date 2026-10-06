@@ -1,6 +1,15 @@
 site_name: Dotfiles Fedora
+site_description: Bootstrap reproducible y conservador para Fedora Workstation con GNOME
 theme:
   name: material
 nav:
   - Inicio: index.md
-  - Vaultwarden: vaultwarden.md
+  - Empezar:
+      - Instalación y verificación: instalacion.md
+  - Software:
+      - Catálogo por gestor: catalogo-fedora.md
+  - Configuración:
+      - Aplicaciones: aplicaciones.md
+      - Terminal y Zsh: terminal.md
+  - Seguridad:
+      - Vaultwarden y GNOME Keyring: vaultwarden.md

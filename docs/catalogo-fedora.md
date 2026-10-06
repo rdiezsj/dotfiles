@@ -1,13 +1,90 @@
-# Catálogo base de Fedora
+# Catálogo de software
 
-El bootstrap declara los paquetes por su gestor para que el origen y la actualización sean trazables:
+El bootstrap declara el software por gestor en `catalogs/`. Esta guía es la
+referencia operativa: indica finalidad y, cuando existe, la configuración
+versionada. «Local» significa que no se enlaza ni se versiona.
 
-- DNF/RPM: paquetes de Fedora y VS Code desde Microsoft.
-- Homebrew: Firefox PWA, Starship, Sheldon, fzf, Helm, `kubernetes-cli` y kubectx.
-- Flatpak: aplicaciones de escritorio por usuario desde Flathub.
-- AppImage: Heynote 2.9.1 y Nextcloud Desktop 34.0.4 en `~/Apps`, con SHA-256 fijado.
+## DNF/RPM
 
-Los catálogos están en `catalogs/dnf-rpm.sh`, `catalogs/homebrew.sh`, `catalogs/flatpak.sh` y `catalogs/appimage.sh`. No contienen datos personales ni secretos.
+Además de los paquetes de Fedora, este grupo instala VS Code desde el
+repositorio oficial de Microsoft. Firefox se gestiona desde DNF.
+
+| Aplicación | Finalidad | Configuración |
+| --- | --- | --- |
+| GNOME Tweaks | Ajustes adicionales de GNOME. | Local. |
+| Sushi | Vista previa rápida en Nautilus. | Local. |
+| p7zip y complementos | Crear y extraer archivos 7z. | Local. |
+| zip y unzip | Crear y extraer ZIP. | Local. |
+| File Roller | Interfaz gráfica de archivos comprimidos. | Local. |
+| VLC | Reproducción multimedia. | Local. |
+| Syncthing | Sincronización entre dispositivos; habilita su servicio de usuario. | Local. |
+| Terminator | Terminal gráfica. | Versionada: `~/.config/terminator/config`. |
+| Nano | Editor de texto. | Versionada: `~/.nanorc`. |
+| Vim | Editor de texto. | Versionada: `~/.vimrc`. |
+| wl-clipboard | Portapapeles para Wayland. | Local. |
+| pipx | Instalación aislada de aplicaciones Python. | Local. |
+| Input Remapper | Remapeo de dispositivos; habilita su servicio de sistema. | Versionada: `~/.config/input-remapper-2/config.json`; presets y asociación de dispositivo, locales. |
+| msmtp | Cliente SMTP compatible con sendmail. | Versionada sin secretos: `~/.config/msmtp/config`. |
+| Flameshot | Capturas de pantalla. | Versionada: `~/.config/flameshot/flameshot.ini`. |
+| Visual Studio Code | Editor y entorno de desarrollo. | Local. |
+| Firefox | Navegador web. | Perfil y datos, locales. |
+
+RPM Fusion añade el soporte multimedia `ffmpeg`, `libavcodec-freeworld` y,
+cuando está disponible el repositorio tainted, `libdvdcss`. Si el inventario
+PCI detecta NVIDIA, instala además `akmod-nvidia`, CUDA, VA-API y bibliotecas
+de 32 bits; son componentes condicionales, no aplicaciones configuradas por
+Dotbot. Requieren reinicio y, con Secure Boot, enrolamiento MOK.
+
+El bootstrap también instala las dependencias técnicas `git`, `curl`, `zsh`,
+`flatpak`, `gum`, `python3`, `libsecret`, `pciutils` y `mokutil`, junto al grupo
+DNF `development-tools`. Son soporte del proceso; sus datos específicos de
+usuario no se versionan, salvo las configuraciones de Git y Zsh documentadas
+en [Aplicaciones](aplicaciones.md) y [Terminal](terminal.md).
+
+## Homebrew
+
+Homebrew se instala antes de este catálogo. Bitwarden CLI se instala al final
+del bootstrap si aún no está disponible, para la configuración opcional de
+Vaultwarden.
+
+| Aplicación | Finalidad | Configuración |
+| --- | --- | --- |
+| Firefox PWA | Crear y ejecutar aplicaciones web de Firefox. | Local. |
+| Starship | Prompt de shell. | Versionada: `~/.config/starship.toml`. |
+| Sheldon | Gestor de plugins Zsh. | Versionada: `~/.config/sheldon/plugins.toml`; clones y lockfiles, locales. |
+| fzf | Búsqueda interactiva en terminal. | Ajustes en Zsh versionada; caché local. |
+| Helm | Gestor de paquetes Kubernetes. | Repositorios y estado, locales. |
+| kubernetes-cli | Cliente `kubectl`. | Configuración de clúster, local; solo su completado se carga desde Zsh. |
+| kubectx | Cambio rápido de contexto Kubernetes. | Contextos, locales. |
+| Bitwarden CLI | Acceso a Vaultwarden desde terminal. | Sesión revocable en GNOME Keyring, nunca en el repositorio. |
+
+## Flatpak (Flathub por usuario)
+
+| Aplicación | Finalidad | Configuración |
+| --- | --- | --- |
+| ONLYOFFICE | Suite ofimática. | Documentos, preferencias y sandbox, locales. |
+| Bitwarden | Aplicación de escritorio de Bitwarden. | Bóveda y sesión, locales. |
+| Obsidian | Gestión de conocimiento. | Bóvedas, plugins y preferencias, locales. |
+| NotepadNext | Editor de texto. | Local. |
+| Telegram | Mensajería. | Sesión y datos, locales. |
+| Spotify | Música. | Sesión y caché, locales. |
+| Ark | Gestor de archivos comprimidos. | Local. |
+| Meld | Comparación de archivos. | Local. |
+| Steam | Juegos. | Biblioteca, sesión y datos, locales. |
+| Emote | Selector de emoji. | Local. |
+| Gear Lever | Gestión de AppImages. | Sandbox, inventario, rutas y actualizaciones, locales. |
+| LocalSend | Transferencia local de archivos. | Dispositivos y preferencias, locales. |
+
+## AppImage verificados
+
+Los binarios se descargan en `~/Apps` con versión y SHA-256 fijados. Si ya hay
+un archivo distinto en la misma ruta, se conserva y el resumen informa del
+conflicto. Tras verificarlos, Gear Lever debe importarlos manualmente.
+
+| Aplicación | Versión | Finalidad | Configuración |
+| --- | --- | --- | --- |
+| Heynote | 2.9.1 | Bloc de notas temporal para desarrollo. | Versionada: `~/.config/Heynote/config.json` y `Preferences`; notas, buffers y cachés, locales. |
+| Nextcloud Desktop | 34.0.4 | Sincronización con Nextcloud. | Cuenta, carpetas y estado, locales. |
 
 ## Orígenes validados
 
@@ -56,76 +133,9 @@ brew list --versions starship sheldon fzf helm kubernetes-cli kubectx
 
 En una segunda ejecución del bootstrap, la fórmula debe informarse como ya presente.
 
-## Plugins Zsh y utilidades de archivos
-
-El bootstrap enlaza `~/.config/sheldon/plugins.toml` mediante Dotbot y materializa las revisiones SHA declaradas. No enlaza ni versiona `~/.local/share/sheldon/`: contiene clones y lockfiles con rutas del equipo. Para volver a materializar los perfiles tras modificar una SHA revisada:
-
-```bash
-sheldon --non-interactive --profile base lock
-sheldon --non-interactive --profile resaltado lock
-```
-
-Los plugins incluyen autosuggestions, autopair, resaltado de sintaxis, completions, `sudo` con doble Escape y `extract`. Usa `compress <archivo-o-carpeta>` para crear `tar.gz`, `tar.xz`, ZIP o 7z mediante un asistente Gum. La división por bloques conserva los originales y muestra el comando de recomposición. Por ejemplo:
-
-```bash
-cat respaldo.tar.xz.part-* > respaldo.tar.xz
-extract respaldo.tar.xz
-```
-
-Zsh define `DOTFILES=~/.dotfiles` y añade solo si existen `~/.local/bin`, `~/.dotfiles/bin` y `~/.krew/bin`, eliminando duplicados mediante `typeset -U`. Las rutas de Homebrew las configura `brew shellenv`; no se añaden rutas de macOS ni rutas adicionales de fzf. El historial de fzf usa modo Emacs con `--height 40% --layout=reverse --border`, y `kubectl completion zsh` se carga después de `compinit`.
-
-Comprueba la variante completa de FFmpeg y los codecs:
-
-```bash
-ffmpeg -version
-rpm -q ffmpeg libavcodec-freeworld libdvdcss
-```
-
-## Configuración versionada de aplicaciones
-
-El bootstrap enlaza los siguientes archivos cuando no existe una configuración
-local no gestionada:
-
-- `~/.nanorc`, `~/.vimrc`, `~/.gitconfig` y `~/.gitignore`.
-- `~/.config/terminator/config` y `~/.config/flameshot/flameshot.ini`.
-- `~/.config/Heynote/config.json` y `~/.config/Heynote/Preferences`.
-- `~/.config/input-remapper-2/config.json`.
-- `~/.config/msmtp/config`.
-
-Nano y Vim muestran números de línea, sangrado y tabulaciones como espacios,
-pero dejan el tamaño de tabulación comentado hasta decidir si será de 2 o 4.
-Flameshot no fija un directorio de guardado. Edita los comentarios de sus
-ficheros versionados y vuelve a ejecutar el bootstrap para aplicar esos valores
-en otro equipo.
-
-Input Remapper 2 parte de un `autoload` vacío. Tras crear un preset para el
-dispositivo real, asígnalo explícitamente desde la interfaz de la aplicación.
-El bootstrap habilita `input-remapper.service`, pero no activa ningún remapeo
-por sí mismo.
-
-`msmtp` se instala por DNF y recibe la cuenta IONOS versionada en
-`~/.config/msmtp/config`, sin usuario, contraseña ni sesión. Al enviar, los
-helpers `~/.dotfiles/bin/msmtp-obtener-usuario` y
-`~/.dotfiles/bin/msmtp-obtener-contrasena` consultan bajo demanda el ítem
-`Mail.ionos.es` mediante la sesión almacenada en GNOME Keyring. El registro se
-guarda en `~/.local/state/msmtp/msmtp.log` y se crea al primer envío.
-
-Para habilitar el envío, configura y desbloquea Vaultwarden desde el bootstrap:
-
-```bash
-cd ~/.dotfiles
-./bootstrap --vault-server https://tu-servidor
-```
-
-Si no hay sesión válida, el envío falla sin exponer valores y el bootstrap
-sigue siendo correcto. No edites el enlace `~/.config/msmtp/config` para
-guardar secretos.
-
-Gear Lever no tiene configuración ni plantilla versionada. Su sandbox Flatpak,
-los AppImages importados, las rutas, el inventario y el estado de
-actualizaciones permanecen locales. Heynote también excluye notas, buffers,
-sesiones y cachés: solo se versionan los dos ficheros indicados arriba.
-
 ## Validación dependiente de Fedora real
 
-La suite automatizada usa dobles y no modifica el equipo de desarrollo. Antes de usar este catálogo en un equipo personal, ejecútalo en una VM Fedora 44 sin NVIDIA y, si hay hardware NVIDIA disponible, completa también la validación posterior al reinicio descrita arriba.
+La suite automatizada usa dobles y no modifica el equipo de desarrollo. Antes
+de usar este catálogo en un equipo personal, ejecútalo en una VM Fedora 44 sin
+NVIDIA y, si hay hardware NVIDIA disponible, completa también la validación
+posterior al reinicio descrita arriba.
