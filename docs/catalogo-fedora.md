@@ -33,7 +33,8 @@ RPM Fusion añade el soporte multimedia `ffmpeg`, `libavcodec-freeworld` y,
 cuando está disponible el repositorio tainted, `libdvdcss`. Si el inventario
 PCI detecta NVIDIA, instala además `akmod-nvidia`, CUDA, VA-API y bibliotecas
 de 32 bits; son componentes condicionales, no aplicaciones configuradas por
-Dotbot. Requieren reinicio y, con Secure Boot, enrolamiento MOK.
+Dotbot. El bootstrap comprueba paquetes, akmods, el módulo del kernel activo y
+el controlador; con Secure Boot puede requerir el enrolamiento MOK.
 
 El bootstrap también instala las dependencias técnicas `git`, `curl`, `zsh`,
 `flatpak`, `gum`, `python3`, `libsecret`, `pciutils` y `mokutil`, junto al grupo
@@ -101,15 +102,22 @@ El bootstrap importa la clave oficial de Microsoft y declara el repositorio YUM 
 
 Para evitar duplicidades, se retiran exclusivamente Firefox de Snap o Flatpak y las variantes LibreOffice/FreeOffice de DNF o Flatpak. No se borran perfiles, documentos ni directorios de datos de usuario.
 
-## Verificación tras reiniciar
+## Reinicio y validación NVIDIA
 
-Cuando se instala NVIDIA, reinicia antes de validar el controlador:
+El bootstrap valida automáticamente el controlador NVIDIA mientras se ejecuta.
+Si el resumen final indica que falta reiniciar, reinicia manualmente y vuelve a
+ejecutar manualmente el bootstrap desde el checkout:
 
 ```bash
-nvidia-smi
+cd ~/.dotfiles
+./bootstrap
 ```
 
-Si Secure Boot estaba activo, completa el enrolamiento MOK que solicita el sistema durante el reinicio y vuelve a ejecutar el comando anterior. El bootstrap no desactiva Secure Boot ni automatiza firmware.
+No es necesario ejecutar `nvidia-smi` manualmente: la segunda ejecución lo
+comprueba junto con los paquetes, akmods y el módulo del kernel activo. Si
+Secure Boot estaba activo, completa primero el enrolamiento MOK solicitado
+durante el reinicio. El bootstrap no desactiva Secure Boot, no automatiza
+firmware ni reinicia el equipo por su cuenta.
 
 Comprueba el servicio de Syncthing para el usuario actual:
 
@@ -138,4 +146,5 @@ En una segunda ejecución del bootstrap, la fórmula debe informarse como ya pre
 La suite automatizada usa dobles y no modifica el equipo de desarrollo. Antes
 de usar este catálogo en un equipo personal, ejecútalo en una VM Fedora 44 sin
 NVIDIA y, si hay hardware NVIDIA disponible, completa también la validación
-posterior al reinicio descrita arriba.
+posterior al reinicio reejecutando manualmente el bootstrap como se describe
+arriba.

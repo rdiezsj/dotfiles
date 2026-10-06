@@ -57,6 +57,14 @@ configurar_multimedia() {
   fi
 }
 
+PAQUETES_NVIDIA=(
+  akmod-nvidia
+  xorg-x11-drv-nvidia-cuda
+  libva-nvidia-driver
+  libva-nvidia-driver.i686
+  xorg-x11-drv-nvidia-libs.i686
+)
+
 equipo_tiene_nvidia() {
   lspci -nn 2>/dev/null | grep -qi '\[10de:'
 }
@@ -65,16 +73,82 @@ secure_boot_activo() {
   mokutil --sb-state 2>/dev/null | grep -qi 'enabled'
 }
 
+kernel_activo() {
+  uname -r
+}
+
+paquetes_nvidia_faltantes() {
+  local paquete
+  for paquete in "${PAQUETES_NVIDIA[@]}"; do
+    if ! rpm -q "$paquete" >/dev/null 2>&1; then
+      printf '%s\n' "$paquete"
+    fi
+  done
+}
+
+modulo_nvidia_disponible() {
+  modinfo -k "$(kernel_activo)" nvidia >/dev/null 2>&1
+}
+
+nvidia_smi_operativo() {
+  command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi >/dev/null 2>&1
+}
+
+compilar_modulo_nvidia() {
+  if ! command -v akmods >/dev/null 2>&1; then
+    printf '%s\n' 'No se encontró akmods tras instalar el controlador NVIDIA.' >&2
+    return 1
+  fi
+  sudo timeout 300 akmods --force --kernels "$(kernel_activo)"
+}
+
 instalar_nvidia() {
+  local -a paquetes_faltantes=()
+  local cambio_realizado=false
+
   if ! equipo_tiene_nvidia; then
     registrar_multimedia omitidos 'NVIDIA: no se detectó una GPU NVIDIA; no se modificó el controlador gráfico'
     return 0
   fi
-  sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver libva-nvidia-driver.i686 xorg-x11-drv-nvidia-libs.i686
+
+  mapfile -t paquetes_faltantes < <(paquetes_nvidia_faltantes)
+  if (( ${#paquetes_faltantes[@]} > 0 )); then
+    sudo dnf install -y "${paquetes_faltantes[@]}"
+    cambio_realizado=true
+  fi
+
+  if ! modulo_nvidia_disponible; then
+    if compilar_modulo_nvidia; then
+      :
+    else
+      local codigo_akmods=$?
+      if (( codigo_akmods == 124 )); then
+        registrar_multimedia fallidos 'NVIDIA: akmods agotó el tiempo de compilación para el kernel activo'
+      else
+        registrar_multimedia fallidos 'NVIDIA: akmods no pudo preparar el módulo para el kernel activo'
+      fi
+      return 1
+    fi
+    if ! modulo_nvidia_disponible; then
+      registrar_multimedia fallidos 'NVIDIA: akmods no pudo preparar el módulo para el kernel activo'
+      return 1
+    fi
+    cambio_realizado=true
+  fi
+
+  if nvidia_smi_operativo; then
+    if [[ $cambio_realizado == true ]]; then
+      registrar_multimedia instalados 'NVIDIA: controlador propietario RPM Fusion instalado y verificado'
+    else
+      registrar_multimedia presentes 'NVIDIA: controlador propietario RPM Fusion ya estaba verificado'
+    fi
+    return 0
+  fi
+
   if secure_boot_activo; then
-    registrar_multimedia pendientes 'NVIDIA: Secure Boot activo; enrola la clave MOK y reinicia antes de validar el controlador'
+    registrar_multimedia pendientes 'NVIDIA: Secure Boot activo; enrola la clave MOK, reinicia manualmente y ejecuta manualmente ./bootstrap para validar el controlador'
   else
-    registrar_multimedia pendientes 'NVIDIA: akmods puede seguir compilando; reinicia y valida nvidia-smi antes de considerar operativo el controlador'
+    registrar_multimedia pendientes 'NVIDIA: reinicia manualmente y ejecuta manualmente ./bootstrap para validar el controlador'
   fi
 }
 

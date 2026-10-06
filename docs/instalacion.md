@@ -40,15 +40,18 @@ paquete y [Configuración de aplicaciones](aplicaciones.md) para los enlaces.
 ## Verificación posterior
 
 Abre una sesión Zsh nueva tras finalizar y comprueba las herramientas de
-terminal descritas en [Terminal y Zsh](terminal.md). Si se detectó NVIDIA,
-reinicia antes de ejecutar:
+terminal descritas en [Terminal y Zsh](terminal.md). El bootstrap valida
+automáticamente NVIDIA durante cada ejecución. Si el resumen final indica que
+falta reiniciar, hazlo manualmente y vuelve a ejecutar manualmente:
 
 ```bash
-nvidia-smi
+cd ~/.dotfiles
+./bootstrap
 ```
 
 Con Secure Boot activo, completa antes el enrolamiento MOK solicitado por el
-sistema. El bootstrap no desactiva Secure Boot ni automatiza firmware.
+sistema. El bootstrap no desactiva Secure Boot, no automatiza firmware ni
+reinicia el equipo por su cuenta.
 
 Comprueba también el servicio de Syncthing para el usuario actual:
 

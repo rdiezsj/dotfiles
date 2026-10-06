@@ -2,6 +2,10 @@
 
 Bootstrap personal reproducible para Fedora Workstation con GNOME.
 
+## Documentación en línea
+
+Consulta la documentación publicada en [rdiezsj.github.io/dotfiles](https://rdiezsj.github.io/dotfiles/).
+
 ## Instalación
 
 En una instalación nueva, ejecuta:
@@ -13,6 +17,13 @@ En una instalación nueva, ejecuta:
 El instalador muestra un plan, solicita confirmación antes de cambiar el equipo y clona el repositorio en `~/.dotfiles` solo después de validar Fedora Workstation con GNOME. La validación se muestra una vez, al arrancar desde el clon compatible.
 
 Tras instalar las dependencias mínimas, el bootstrap emplea Gum para distinguir las fases y el resumen final. Si Gum no está disponible todavía o se ejecuta con `DOTFILES_DISABLE_GUM=true`, conserva una salida ASCII legible. Un fallo de un elemento del catálogo no impide procesar los restantes; queda reflejado en el resumen y el comando termina con error.
+
+Cuando detecta una GPU NVIDIA compatible, el bootstrap verifica automáticamente
+la pila propietaria de RPM Fusion, akmods, el módulo del kernel activo y
+`nvidia-smi`. Si el resumen final indica que necesita reiniciar, la persona debe
+reiniciar manualmente y volver a ejecutar manualmente `./bootstrap` desde
+`~/.dotfiles`; el bootstrap no reinicia ni se reejecuta por su cuenta. Con
+Secure Boot, completa primero el enrolamiento MOK durante el reinicio.
 
 Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bootstrap activa Homebrew en la shell actual y añade un bloque delimitado, idempotente y no destructivo a `~/.bashrc`. Zsh carga Homebrew desde los archivos versionados, que se enlazan mediante Dotbot con respaldo fechado de cualquier destino no gestionado. El cambio de shell predeterminada con `chsh` se ofrece después mediante una confirmación independiente.
 

@@ -19,3 +19,7 @@ mostrar_resumen_final
 
 grep -Fqx 'style --border double --padding 0 1 --foreground 212 DOTFILES FEDORA -- RESUMEN FINAL' "$registro"
 grep -Fqx 'style --foreground 212 --bold Instalados:' "$registro"
+
+registrar_resultado pendientes 'NVIDIA: reinicia manualmente y ejecuta manualmente ./bootstrap para validar el controlador'
+salida=$(mostrar_resumen_final)
+[[ $salida == *'NVIDIA: reinicia manualmente y ejecuta manualmente ./bootstrap para validar el controlador'* ]]
