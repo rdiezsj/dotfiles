@@ -40,6 +40,8 @@ ${HOME}/.codex/skills/restaurantes-celiacos-seguros
 ${HOME}/.config/starship.toml
 ${HOME}/.config/sheldon/plugins.toml
 ${HOME}/.config/terminator
+${HOME}/.local/bin/terminator
+${HOME}/.local/share/applications/terminator.desktop
 ${HOME}/.config/flameshot/flameshot.ini
 ${HOME}/.config/Heynote/config.json
 ${HOME}/.config/Heynote/Preferences

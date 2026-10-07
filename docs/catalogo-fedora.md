@@ -18,7 +18,7 @@ repositorio oficial de Microsoft. Firefox se gestiona desde DNF.
 | File Roller | Interfaz gráfica de archivos comprimidos. | Local. |
 | VLC | Reproducción multimedia. | Local. |
 | Syncthing | Sincronización entre dispositivos; habilita su servicio de usuario. | Local. |
-| Terminator | Terminal gráfica. | Versionada: `~/.config/terminator/config`. |
+| Terminator | Terminal gráfica. | Versionada: configuración, lanzador `~/.local/bin/terminator` y entrada de GNOME; usa `Adwaita:dark` solo para Terminator. |
 | Nano | Editor de texto. | Versionada: `~/.nanorc`. |
 | Vim | Editor de texto. | Versionada: `~/.vimrc`. |
 | wl-clipboard | Portapapeles para Wayland. | Local. |

@@ -14,7 +14,7 @@ enlaces; rechazar uno conserva todos los originales y cancela esta fase.
 | Nano | `~/.nanorc` | Números de línea y sangrado; el ancho de tabulación queda comentado. |
 | Vim | `~/.vimrc` | Números de línea y sangrado; el ancho de tabulación queda comentado. |
 | Git | `~/.gitconfig`, `~/.gitignore` | No contiene credenciales. |
-| Terminator | `~/.config/terminator/config` | Solo preferencias de terminal. |
+| Terminator | `~/.config/terminator/config`, `~/.local/bin/terminator`, `~/.local/share/applications/terminator.desktop` | Preferencias de terminal y lanzadores que fuerzan `Adwaita:dark` solo para Terminator; cierra todas sus ventanas antes de abrirlo para aplicar el cambio. |
 | Flameshot | `~/.config/flameshot/flameshot.ini` | Preferencias manuales versionadas, incluida la ruta de capturas y el arranque automático. |
 | Heynote | `~/.config/Heynote/config.json`, `~/.config/Heynote/Preferences` | Se versionan exactamente esos ficheros manuales; los demás datos siguen locales. |
 | Input Remapper | `~/.config/input-remapper-2/` | Configuración y presets completos, incluido Logitech MX Master 3. |

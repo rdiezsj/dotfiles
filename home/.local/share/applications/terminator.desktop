@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Terminator
+Comment=Multiple terminals in one window
+TryExec=/usr/bin/terminator
+Exec=/usr/bin/env GTK_THEME=Adwaita:dark /usr/bin/terminator
+Icon=terminator
+Type=Application
+Categories=GNOME;GTK;Utility;TerminalEmulator;System;
+StartupNotify=true
+Actions=NewWindow;
+X-Ubuntu-Gettext-Domain=terminator
+Keywords=terminal;shell;prompt;command;commandline;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Exec=/usr/bin/env GTK_THEME=Adwaita:dark /usr/bin/terminator --new-tab

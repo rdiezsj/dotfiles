@@ -10,6 +10,8 @@ for archivo in \
   home/.gitconfig \
   home/.gitignore \
   home/.config/terminator/config \
+  home/.local/bin/terminator \
+  home/.local/share/applications/terminator.desktop \
   home/.config/flameshot/flameshot.ini \
   home/.config/Heynote/config.json \
   home/.config/Heynote/Preferences \
@@ -20,6 +22,13 @@ for archivo in \
 done
 [[ -d $RAIZ/home/.config/terminator/plugins ]]
 [[ -f $RAIZ/home/.config/terminator/plugins/.gitkeep ]]
+[[ -x $RAIZ/home/.local/bin/terminator ]]
+grep -Fqx 'export GTK_THEME=Adwaita:dark' "$RAIZ/home/.local/bin/terminator"
+grep -Fqx 'exec /usr/bin/terminator "$@"' "$RAIZ/home/.local/bin/terminator"
+grep -Fqx 'Exec=/usr/bin/env GTK_THEME=Adwaita:dark /usr/bin/terminator' "$RAIZ/home/.local/share/applications/terminator.desktop"
+grep -Fqx 'Actions=NewWindow;' "$RAIZ/home/.local/share/applications/terminator.desktop"
+grep -Fqx '[Desktop Action NewWindow]' "$RAIZ/home/.local/share/applications/terminator.desktop"
+grep -Fqx 'Exec=/usr/bin/env GTK_THEME=Adwaita:dark /usr/bin/terminator --new-tab' "$RAIZ/home/.local/share/applications/terminator.desktop"
 
 git config --file "$RAIZ/home/.gitconfig" --get core.excludesfile | grep -Fqx '~/.gitignore'
 jq -e . "$RAIZ/home/.config/Heynote/config.json" "$RAIZ/home/.config/Heynote/Preferences" "$RAIZ/home/.config/input-remapper-2/config.json" >/dev/null
@@ -43,6 +52,8 @@ for destino in \
   '~/.gitconfig: home/.gitconfig' \
   '~/.gitignore: home/.gitignore' \
   '~/.config/terminator: home/.config/terminator' \
+  '~/.local/bin/terminator: home/.local/bin/terminator' \
+  '~/.local/share/applications/terminator.desktop: home/.local/share/applications/terminator.desktop' \
   '~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini' \
   '~/.config/Heynote/config.json: home/.config/Heynote/config.json' \
   '~/.config/Heynote/Preferences: home/.config/Heynote/Preferences' \

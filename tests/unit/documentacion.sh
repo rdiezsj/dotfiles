@@ -42,6 +42,9 @@ for extension in \
 done
 
 grep -Fq 'Si ya se ejecuta desde Zsh, conserva esa sesión y no solicita' "$RAIZ/docs/terminal.md"
+grep -Fq 'usa `Adwaita:dark` solo para Terminator' "$RAIZ/docs/catalogo-fedora.md"
+grep -Fq '~/.local/share/applications/terminator.desktop' "$RAIZ/docs/aplicaciones.md"
+grep -Fq 'cierra todas sus ventanas antes de abrirlo' "$RAIZ/docs/aplicaciones.md"
 
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then
   printf '%s\n' 'Documentación: instala pip install -r requirements-docs.txt para ejecutar mkdocs build --strict.'

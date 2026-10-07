@@ -24,6 +24,8 @@
     ~/.config/starship.toml: home/.config/starship.toml
     ~/.config/sheldon/plugins.toml: home/.config/sheldon/plugins.toml
     ~/.config/terminator: home/.config/terminator
+    ~/.local/bin/terminator: home/.local/bin/terminator
+    ~/.local/share/applications/terminator.desktop: home/.local/share/applications/terminator.desktop
     ~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini
     ~/.config/Heynote/config.json: home/.config/Heynote/config.json
     ~/.config/Heynote/Preferences: home/.config/Heynote/Preferences
