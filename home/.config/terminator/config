@@ -16,10 +16,13 @@
   group_win = <Super>w
 [profiles]
   [[default]]
+    background_color = "#1E1E1E"
+    palette = "#6a787a:#e9653b:#39e9a8:#e5b684:#44aae6:#e17599:#3dd5e7:#c3dde1:#598489:#e65029:#00ff9a:#e89440:#009afb:#ff578f:#5fffff:#d9fbff"
     copy_on_selection = True
   [[nord]]
     visible_bell = True
     urgent_bell = True
+    background_color = "#2E3440"
     background_darkness = 0.78
     cursor_fg_color = "#f5c211"
     cursor_bg_color = "#2ec27e"
