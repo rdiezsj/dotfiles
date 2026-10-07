@@ -19,6 +19,10 @@ PAQUETES_DNF=(
   pipx
   input-remapper
   fuse-libs
+  gnome-shell-extension-appindicator
+  gnome-shell-extension-dash-to-dock
+  libgtop2-devel
+  lm_sensors
   msmtp
   flameshot
   code
@@ -42,6 +46,10 @@ declare -gA DESCRIPCIONES_DNF=(
   [pipx]='Instalación aislada de aplicaciones Python'
   [input-remapper]='Remapeo de dispositivos de entrada'
   [fuse-libs]='Biblioteca FUSE v2 para AppImage'
+  [gnome-shell-extension-appindicator]='Indicadores de aplicaciones para GNOME Shell'
+  [gnome-shell-extension-dash-to-dock]='Dock configurable para GNOME Shell'
+  [libgtop2-devel]='Biblioteca de métricas del sistema para Vitals'
+  [lm_sensors]='Lectura de sensores de hardware para Vitals'
   [msmtp]='Cliente SMTP compatible con sendmail'
   [flameshot]='Capturas de pantalla Flameshot'
   [code]='Visual Studio Code desde Microsoft'

@@ -31,6 +31,14 @@ done
 ! printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq firefoxpwa
 printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq zip
 printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq unzip
+printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq gnome-shell-extension-appindicator
+printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq gnome-shell-extension-dash-to-dock
+printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq libgtop2-devel
+printf '%s\n' "${PAQUETES_DNF[@]}" | grep -Fxq lm_sensors
+[[ ${DESCRIPCIONES_DNF[gnome-shell-extension-appindicator]} == 'Indicadores de aplicaciones para GNOME Shell' ]]
+[[ ${DESCRIPCIONES_DNF[gnome-shell-extension-dash-to-dock]} == 'Dock configurable para GNOME Shell' ]]
+[[ ${DESCRIPCIONES_DNF[libgtop2-devel]} == 'Biblioteca de métricas del sistema para Vitals' ]]
+[[ ${DESCRIPCIONES_DNF[lm_sensors]} == 'Lectura de sensores de hardware para Vitals' ]]
 [[ ${PAQUETES_HOMEBREW[*]} == 'firefoxpwa starship sheldon fzf helm kubernetes-cli kubectx openspec' ]]
 [[ $(printf '%s\n' "${PAQUETES_HOMEBREW[@]}" | sort -u | wc -l) -eq ${#PAQUETES_HOMEBREW[@]} ]]
 ! printf '%s\n' "${PAQUETES_HOMEBREW[@]}" | grep -Fxq zsh-completions

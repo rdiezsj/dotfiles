@@ -35,7 +35,7 @@ mostrar_bloque_catalogo 'APPIMAGE'
 rpm() { return 1; }
 sudo() {
   case $1:$2:$3:$4 in
-    dnf:install:-y:gnome-tweaks|dnf:install:-y:nano|dnf:install:-y:fuse-libs|dnf:install:-y:msmtp|dnf:install:-y:flameshot) return 0 ;;
+    dnf:install:-y:gnome-tweaks|dnf:install:-y:nano|dnf:install:-y:fuse-libs|dnf:install:-y:gnome-shell-extension-appindicator|dnf:install:-y:gnome-shell-extension-dash-to-dock|dnf:install:-y:libgtop2-devel|dnf:install:-y:lm_sensors|dnf:install:-y:msmtp|dnf:install:-y:flameshot) return 0 ;;
   esac
   return 1
 }
@@ -45,10 +45,22 @@ instalar_paquete_dnf nano
 instalar_paquete_dnf msmtp
 instalar_paquete_dnf flameshot
 instalar_paquete_dnf fuse-libs
+instalar_paquete_dnf gnome-shell-extension-appindicator
+instalar_paquete_dnf gnome-shell-extension-dash-to-dock
+instalar_paquete_dnf libgtop2-devel
+instalar_paquete_dnf lm_sensors
 grep -Fqx 'instalados:DNF: nano instalado' "$registro"
 grep -Fqx 'instalados:DNF: msmtp instalado' "$registro"
 grep -Fqx 'instalados:DNF: flameshot instalado' "$registro"
 grep -Fqx 'instalados:DNF: fuse-libs instalado' "$registro"
+grep -Fqx 'instalados:DNF: gnome-shell-extension-appindicator instalado' "$registro"
+grep -Fqx 'instalados:DNF: gnome-shell-extension-dash-to-dock instalado' "$registro"
+grep -Fqx 'instalados:DNF: libgtop2-devel instalado' "$registro"
+grep -Fqx 'instalados:DNF: lm_sensors instalado' "$registro"
+
+rpm() { [[ $1 == -q && $2 == gnome-shell-extension-appindicator ]]; }
+instalar_paquete_dnf gnome-shell-extension-appindicator
+grep -Fqx 'presentes:DNF: gnome-shell-extension-appindicator ya estaba instalado' "$registro"
 
 flatpak() {
   case $1:$2:$3:$4:$5 in

@@ -24,8 +24,21 @@ for entrada in \
   grep -Fqx "      - $entrada" "$RAIZ/mkdocs.yml"
 done
 
-for grupo in '## DNF/RPM' '## Homebrew' '## Flatpak (Flathub por usuario)' '## AppImage verificados'; do
+for grupo in '## DNF/RPM' '## Homebrew' '## Flatpak (Flathub por usuario)' '## Extensiones GNOME' '## AppImage verificados'; do
   grep -Fqx "$grupo" "$RAIZ/docs/catalogo-fedora.md"
+done
+
+for extension in \
+  'appindicatorsupport@rgcjonas.gmail.com' \
+  'custom-hot-corners-extended@G-dH.github.com' \
+  'clipboard-indicator@tudmotu.com' \
+  'Vitals@CoreCoding.com' \
+  'dash-to-dock@micxgx.gmail.com' \
+  'gnome-shell-extension-appindicator' \
+  'gnome-shell-extension-dash-to-dock' \
+  'libgtop2-devel' \
+  'lm_sensors'; do
+  grep -Fq "$extension" "$RAIZ/docs/catalogo-fedora.md"
 done
 
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then

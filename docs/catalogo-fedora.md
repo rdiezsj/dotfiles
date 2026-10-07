@@ -25,6 +25,10 @@ repositorio oficial de Microsoft. Firefox se gestiona desde DNF.
 | pipx | Instalación aislada de aplicaciones Python. | Local. |
 | Input Remapper | Remapeo de dispositivos; habilita su servicio de sistema. | Versionado: directorio completo `~/.config/input-remapper-2/`, incluido el perfil asociado a Logitech MX Master 3. |
 | fuse-libs | Biblioteca FUSE v2 para ejecutar AppImage v2. | Local. |
+| AppIndicator | Indicadores de aplicaciones para GNOME Shell. | Activación local de la extensión; preferencias, locales. |
+| Dash to Dock | Dock configurable para GNOME Shell. | Activación y preferencias, locales. |
+| libgtop2-devel | Biblioteca de métricas del sistema requerida por Vitals. | Local. |
+| lm_sensors | Lectura de sensores de hardware requerida por Vitals. | Local. |
 | msmtp | Cliente SMTP compatible con sendmail. | Versionada sin secretos: `~/.config/msmtp/config`. |
 | Flameshot | Capturas de pantalla. | Versionada: `~/.config/flameshot/flameshot.ini`. |
 | Visual Studio Code | Editor y entorno de desarrollo. | Local. |
@@ -80,6 +84,26 @@ Vaultwarden.
 | LocalSend | Transferencia local de archivos. | Dispositivos y preferencias, locales. |
 | GNOME Extensions | Gestión de extensiones de GNOME Shell. | Extensiones instaladas y preferencias, locales. |
 
+## Extensiones GNOME
+
+Después del catálogo de software, el bootstrap instala y activa el conjunto
+siguiente para la persona que lo ejecuta. AppIndicator y Dash to Dock usan los
+paquetes oficiales de Fedora; las demás se descargan exclusivamente de
+extensions.gnome.org tras comprobar una publicación compatible con la versión
+de GNOME Shell. No se usan clones Git, COPR ni compilación local.
+
+| Extensión | UUID | Origen | Dependencias y configuración |
+| --- | --- | --- | --- |
+| AppIndicator | `appindicatorsupport@rgcjonas.gmail.com` | DNF: `gnome-shell-extension-appindicator`. | Activación y preferencias, locales. |
+| Custom Hot Corners Extended | `custom-hot-corners-extended@G-dH.github.com` | extensions.gnome.org. | Activación y preferencias, locales. |
+| Clipboard Indicator | `clipboard-indicator@tudmotu.com` | extensions.gnome.org. | Activación y preferencias, locales. |
+| Vitals | `Vitals@CoreCoding.com` | extensions.gnome.org. | Requiere `libgtop2-devel` y `lm_sensors`; activación y preferencias, locales. |
+| Dash to Dock | `dash-to-dock@micxgx.gmail.com` | DNF: `gnome-shell-extension-dash-to-dock`. | Activación y preferencias, locales. |
+
+El bloque no modifica extensiones ajenas ni preferencias. Si GNOME Shell no
+aplica una activación de inmediato, cierra e inicia sesión manualmente; el
+bootstrap no reinicia la sesión ni el equipo.
+
 ## AppImage verificados
 
 Los binarios se descargan en `~/Apps` con versión y SHA-256 fijados. Si ya hay
@@ -102,6 +126,7 @@ esa misma carpeta como ubicación predeterminada. `fuse-libs` aporta
 - Herramientas de terminal: Starship, Sheldon, fzf, Helm, `kubernetes-cli`, kubectx y OpenSpec se instalan como fórmulas Homebrew. Sheldon gestiona los plugins Zsh desde `~/.config/sheldon/plugins.toml`, con SHA fijados en el repositorio.
 - [RPM Fusion](https://rpmfusion.org/): Free, Nonfree y Free tainted para multimedia y DVD.
 - [Flathub](https://flathub.org/): remoto Flatpak por usuario.
+- [Extensiones GNOME](https://extensions.gnome.org/): origen de las publicaciones compatibles de Custom Hot Corners Extended, Clipboard Indicator y Vitals.
 - [Heynote 2.9.1](https://github.com/heyman/heynote/releases/tag/v2.9.1) y [descargas de Nextcloud Desktop](https://download.nextcloud.com/desktop/releases/Linux/): binarios AppImage fijados en el catálogo.
 
 El bootstrap importa la clave oficial de Microsoft y declara el repositorio YUM específico de VS Code con `gpgcheck=1`. También comprueba que las URLs críticas coinciden con las declaradas. No acepta claves, repositorios ni sumas desde entradas proporcionadas en tiempo de ejecución.

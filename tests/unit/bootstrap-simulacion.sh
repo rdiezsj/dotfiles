@@ -20,7 +20,12 @@ salida=$(DOTFILES_DISABLE_GUM=true DOTFILES_OS_RELEASE="$TEMPORAL/os-release" DO
 [[ $salida != *'Abrir ahora una nueva sesión Zsh'* ]]
 [[ $salida == *'Aplicar configuraciones versionadas'* ]]
 [[ $salida == *'Configurar la cuenta SMTP IONOS bajo demanda.'* ]]
+[[ $salida == *'Instalar y activar las extensiones GNOME declaradas.'* ]]
 [[ $salida != *'plantilla de Gear Lever'* ]]
+
+linea_catalogo=$(grep -nF "ejecutar_fase 'Catálogo DNF, Homebrew, Flatpak y AppImage'" "$RAIZ/bootstrap" | cut -d: -f1)
+linea_extensiones=$(grep -nF "ejecutar_fase 'Extensiones GNOME'" "$RAIZ/bootstrap" | cut -d: -f1)
+[[ $linea_catalogo -lt $linea_extensiones ]]
 
 salida_remota=$(printf 'n\n' | bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
 [[ $salida_remota == *'DOTFILES FEDORA -- PLAN INICIAL'* ]]
@@ -29,9 +34,10 @@ salida_remota=$(printf 'n\n' | bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
 git clone --quiet "$RAIZ" "$TEMPORAL/remoto"
 cp "$RAIZ/bootstrap" "$TEMPORAL/remoto/bootstrap"
 cp "$RAIZ/platforms/fedora/catalogo-software.sh" "$TEMPORAL/remoto/platforms/fedora/catalogo-software.sh"
+cp "$RAIZ/platforms/fedora/extensiones-gnome.sh" "$TEMPORAL/remoto/platforms/fedora/extensiones-gnome.sh"
 cp "$RAIZ/platforms/fedora/multimedia-nvidia.sh" "$TEMPORAL/remoto/platforms/fedora/multimedia-nvidia.sh"
 cp "$RAIZ/scripts/lib/zsh-terminal.sh" "$TEMPORAL/remoto/scripts/lib/zsh-terminal.sh"
-git -C "$TEMPORAL/remoto" add bootstrap platforms/fedora/catalogo-software.sh platforms/fedora/multimedia-nvidia.sh scripts/lib/zsh-terminal.sh
+git -C "$TEMPORAL/remoto" add bootstrap platforms/fedora/catalogo-software.sh platforms/fedora/extensiones-gnome.sh platforms/fedora/multimedia-nvidia.sh scripts/lib/zsh-terminal.sh
 if ! git -C "$TEMPORAL/remoto" diff --cached --quiet; then
   git -C "$TEMPORAL/remoto" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
     commit --quiet -m 'Actualiza bootstrap para la prueba remota'

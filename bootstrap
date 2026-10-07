@@ -133,6 +133,8 @@ ejecutar_checkout_local() {
   # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/catalogo-software.sh"
   # shellcheck source=/dev/null
+  source "$DIRECTORIO_SCRIPT/platforms/fedora/extensiones-gnome.sh"
+  # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/multimedia-nvidia.sh"
   # shellcheck source=/dev/null
   source "$DIRECTORIO_SCRIPT/platforms/fedora/scaffold.sh"
@@ -143,6 +145,7 @@ ejecutar_checkout_local() {
   mostrar_encabezado 'DOTFILES FEDORA -- PLAN COMPLETO'
   mostrar_mensaje '[>] Comprobar dependencias mínimas y catálogos esenciales.'
   mostrar_mensaje '[>] Configurar Microsoft, RPM Fusion, software DNF/Flatpak y AppImage verificados.'
+  mostrar_mensaje '[>] Instalar y activar las extensiones GNOME declaradas.'
   mostrar_mensaje '[>] Sustituir Firefox y ONLYOFFICE por las variantes declaradas.'
   mostrar_mensaje '[>] Detectar NVIDIA, codecs multimedia y requisitos de reinicio de forma condicionada.'
   mostrar_mensaje '[>] Crear scaffold, plantillas Nautilus y configuración mínima de Dotbot.'
@@ -168,6 +171,7 @@ ejecutar_checkout_local() {
   ejecutar_fase 'Carpetas personales' crear_scaffold_personal "$DIRECTORIO_SCRIPT/config/scaffold/carpetas.sh" || hubo_fallos=true
   ejecutar_fase 'Plantillas de Nautilus' instalar_plantillas_nautilus "$DIRECTORIO_SCRIPT/config/nautilus-templates" || hubo_fallos=true
   ejecutar_fase 'Catálogo DNF, Homebrew, Flatpak y AppImage' ejecutar_catalogo_software "$DIRECTORIO_SCRIPT/catalogs" || hubo_fallos=true
+  ejecutar_fase 'Extensiones GNOME' ejecutar_extensiones_gnome || hubo_fallos=true
   if ejecutar_fase 'Configuración versionada' configurar_archivos_zsh "$DIRECTORIO_SCRIPT"; then
     ejecutar_fase 'Servicio de Input Remapper' habilitar_input_remapper_sistema || hubo_fallos=true
     registrar_resultado presentes 'SMTP IONOS: credenciales obtenidas bajo demanda desde Vaultwarden'
