@@ -36,6 +36,11 @@ declare -gA EXTENSION_GNOME_ORIGEN=(
   [dash-to-dock]='dnf'
 )
 
+declare -gA EXTENSION_GNOME_PAQUETE_DNF=(
+  [appindicator]='gnome-shell-extension-appindicator'
+  [dash-to-dock]='gnome-shell-extension-dash-to-dock'
+)
+
 registrar_extension_gnome() {
   local categoria=$1
   local mensaje=$2
@@ -74,8 +79,20 @@ print(ruta)
   printf '%s%s\n' "$URL_EXTENSIONS_GNOME" "$ruta"
 }
 
-extension_gnome_instalada() {
-  gnome-extensions info "$1" >/dev/null 2>&1
+directorio_extensiones_gnome_usuario() {
+  printf '%s/gnome-shell/extensions\n' "${XDG_DATA_HOME:-$HOME/.local/share}"
+}
+
+extension_gnome_instalada_usuario() {
+  local uuid=$1
+  [[ -f "$(directorio_extensiones_gnome_usuario)/$uuid/metadata.json" ]]
+}
+
+extension_gnome_instalada_dnf() {
+  local paquete=$1
+  local uuid=$2
+  rpm -q "$paquete" >/dev/null 2>&1 && \
+    rpm -ql "$paquete" 2>/dev/null | grep -Fxq "/usr/share/gnome-shell/extensions/$uuid/metadata.json"
 }
 
 extension_gnome_activa() {
@@ -107,8 +124,8 @@ instalar_extension_desde_ego() {
     return 1
   fi
   rm -f "$temporal"
-  if ! extension_gnome_instalada "$uuid"; then
-    registrar_extension_gnome fallidos "$nombre ($uuid): GNOME Shell no reconoce la extensión instalada"
+  if ! extension_gnome_instalada_usuario "$uuid"; then
+    registrar_extension_gnome fallidos "$nombre ($uuid): no se encontró metadata.json tras la instalación"
     return 1
   fi
   registrar_extension_gnome instalados "$nombre ($uuid): instalada desde extensions.gnome.org"
@@ -126,10 +143,6 @@ activar_extension_gnome() {
     registrar_extension_gnome fallidos "$nombre ($uuid): no se pudo activar"
     return 1
   fi
-  if ! extension_gnome_instalada "$uuid"; then
-    registrar_extension_gnome fallidos "$nombre ($uuid): GNOME Shell no reconoce la extensión activada"
-    return 1
-  fi
   if extension_gnome_activa "$uuid"; then
     registrar_extension_gnome instalados "$nombre ($uuid): activada"
   else
@@ -142,13 +155,15 @@ procesar_extension_gnome() {
   local nombre=${EXTENSION_GNOME_NOMBRE[$id]}
   local uuid=${EXTENSION_GNOME_UUID[$id]}
   local origen=${EXTENSION_GNOME_ORIGEN[$id]}
+  local paquete_dnf=${EXTENSION_GNOME_PAQUETE_DNF[$id]:-}
   local version_shell=$2
 
-  if ! extension_gnome_instalada "$uuid"; then
-    if [[ $origen != extensions.gnome.org ]]; then
-      registrar_extension_gnome fallidos "$nombre ($uuid): no está disponible tras instalar su paquete DNF"
+  if [[ $origen == dnf ]]; then
+    if ! extension_gnome_instalada_dnf "$paquete_dnf" "$uuid"; then
+      registrar_extension_gnome fallidos "$nombre ($uuid): no se encontró metadata.json en el paquete DNF $paquete_dnf"
       return 1
     fi
+  elif ! extension_gnome_instalada_usuario "$uuid"; then
     instalar_extension_desde_ego "$nombre" "$uuid" "$version_shell" || return 1
   fi
   activar_extension_gnome "$nombre" "$uuid"
