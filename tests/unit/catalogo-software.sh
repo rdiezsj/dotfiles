@@ -35,7 +35,7 @@ mostrar_bloque_catalogo 'APPIMAGE'
 rpm() { return 1; }
 sudo() {
   case $1:$2:$3:$4 in
-    dnf:install:-y:gnome-tweaks|dnf:install:-y:nano|dnf:install:-y:msmtp|dnf:install:-y:flameshot) return 0 ;;
+    dnf:install:-y:gnome-tweaks|dnf:install:-y:nano|dnf:install:-y:fuse-libs|dnf:install:-y:msmtp|dnf:install:-y:flameshot) return 0 ;;
   esac
   return 1
 }
@@ -44,9 +44,47 @@ grep -Fqx 'instalados:DNF: gnome-tweaks instalado' "$registro"
 instalar_paquete_dnf nano
 instalar_paquete_dnf msmtp
 instalar_paquete_dnf flameshot
+instalar_paquete_dnf fuse-libs
 grep -Fqx 'instalados:DNF: nano instalado' "$registro"
 grep -Fqx 'instalados:DNF: msmtp instalado' "$registro"
 grep -Fqx 'instalados:DNF: flameshot instalado' "$registro"
+grep -Fqx 'instalados:DNF: fuse-libs instalado' "$registro"
+
+flatpak() {
+  case $1:$2:$3:$4:$5 in
+    info:--user:it.mijorus.gearlever::) return 0 ;;
+    run:--command=gsettings:it.mijorus.gearlever:get:it.mijorus.gearlever)
+      printf "'%s'\n" "$HOME/AppImages"
+      ;;
+    run:--command=gsettings:it.mijorus.gearlever:set:it.mijorus.gearlever)
+      [[ $6 == appimages-default-folder && $7 == "$HOME/Apps" ]]
+      ;;
+    *) return 1 ;;
+  esac
+}
+configurar_carpeta_gear_lever
+grep -Fqx "instalados:Gear Lever: carpeta predeterminada configurada en $HOME/Apps" "$registro"
+flatpak() {
+  case $1:$2:$3:$4:$5 in
+    info:--user:it.mijorus.gearlever::) return 0 ;;
+    run:--command=gsettings:it.mijorus.gearlever:get:it.mijorus.gearlever)
+      printf "'%s'\n" "$HOME/Apps"
+      ;;
+    *) return 1 ;;
+  esac
+}
+configurar_carpeta_gear_lever
+grep -Fqx "presentes:Gear Lever: carpeta predeterminada ya configurada en $HOME/Apps" "$registro"
+flatpak() { return 1; }
+if configurar_carpeta_gear_lever; then exit 1; fi
+grep -Fqx 'fallidos:Gear Lever: no está disponible para configurar la carpeta predeterminada' "$registro"
+
+ldconfig() { printf '\tlibfuse.so.2 (libc6) => /usr/lib64/libfuse.so.2\n'; }
+verificar_fuse_appimage
+grep -Fqx 'presentes:FUSE: biblioteca libfuse.so.2 disponible para AppImage v2' "$registro"
+ldconfig() { return 0; }
+if verificar_fuse_appimage; then exit 1; fi
+grep -Fqx 'fallidos:FUSE: falta libfuse.so.2 para ejecutar AppImage v2; revisa la instalación de fuse-libs' "$registro"
 
 fedora_release=44
 arquitectura_prueba=x86_64

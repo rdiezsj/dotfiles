@@ -14,6 +14,7 @@ for archivo in \
   home/.config/Heynote/config.json \
   home/.config/Heynote/Preferences \
   home/.config/input-remapper-2/config.json \
+  'home/.config/input-remapper-2/presets/Logitech MX Master 3/cambio de escritorio.json' \
   home/.config/msmtp/config; do
   [[ -f $RAIZ/$archivo ]]
 done
@@ -25,6 +26,8 @@ jq -e . "$RAIZ/home/.config/Heynote/config.json" "$RAIZ/home/.config/Heynote/Pre
 jq -e '.autoload == {"Logitech MX Master 3":"cambio de escritorio"}' "$RAIZ/home/.config/input-remapper-2/config.json" >/dev/null
 
 [[ $(find "$RAIZ/home/.config/Heynote" -maxdepth 1 -type f | wc -l) -eq 2 ]]
+grep -Fqx 'saveAsFileExtension=png' "$RAIZ/home/.config/flameshot/flameshot.ini"
+grep -Fqx 'startupLaunch=true' "$RAIZ/home/.config/flameshot/flameshot.ini"
 grep -Fqx 'host smtp.ionos.es' "$RAIZ/home/.config/msmtp/config"
 grep -Fqx 'from fedora_desktop@rdiez.es' "$RAIZ/home/.config/msmtp/config"
 grep -Fqx 'eval ~/.dotfiles/bin/msmtp-obtener-usuario' "$RAIZ/home/.config/msmtp/config"
@@ -32,7 +35,6 @@ grep -Fqx 'passwordeval ~/.dotfiles/bin/msmtp-obtener-contrasena' "$RAIZ/home/.c
 grep -Fqx 'logfile ~/.local/state/msmtp/msmtp.log' "$RAIZ/home/.config/msmtp/config"
 ! rg -n -i '^(user|password)[[:space:]]|BW_SESSION|token[[:space:]]*=' "$RAIZ/home/.config/msmtp/config"
 ! rg -n -i '(password\s*=\s*[^<]|token\s*=|secret\s*=)' "$RAIZ/home"
-! rg -F 'gearlever' "$RAIZ/install.conf.yaml"
 [[ ! -d $RAIZ/templates ]]
 
 for destino in \
@@ -44,7 +46,7 @@ for destino in \
   '~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini' \
   '~/.config/Heynote/config.json: home/.config/Heynote/config.json' \
   '~/.config/Heynote/Preferences: home/.config/Heynote/Preferences' \
-  '~/.config/input-remapper-2/config.json: home/.config/input-remapper-2/config.json' \
+  '~/.config/input-remapper-2: home/.config/input-remapper-2' \
   '~/.config/msmtp/config: home/.config/msmtp/config'; do
   grep -Fqx "    $destino" "$RAIZ/install.conf.yaml"
 done

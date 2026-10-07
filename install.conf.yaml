@@ -27,7 +27,7 @@
     ~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini
     ~/.config/Heynote/config.json: home/.config/Heynote/config.json
     ~/.config/Heynote/Preferences: home/.config/Heynote/Preferences
-    ~/.config/input-remapper-2/config.json: home/.config/input-remapper-2/config.json
+    ~/.config/input-remapper-2: home/.config/input-remapper-2
     ~/.config/msmtp/config: home/.config/msmtp/config
 
 - clean: []

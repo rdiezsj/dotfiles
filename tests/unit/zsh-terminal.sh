@@ -60,7 +60,7 @@ ejecutar_dotbot_zsh() {
 confirmar_aplicacion_dotfile() { return 0; }
 
 configurar_archivos_zsh "$RAIZ"
-for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills/alojamientos-viajes-familiares .codex/skills/exportar-en-formato-paradigma .codex/skills/humanizador .codex/skills/librarium-terra-notes .codex/skills/planificador-viajes-familiares .codex/skills/restaurantes-celiacos-seguros .config/starship.toml .config/sheldon/plugins.toml .config/terminator .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2/config.json .config/msmtp/config; do
+for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills/alojamientos-viajes-familiares .codex/skills/exportar-en-formato-paradigma .codex/skills/humanizador .codex/skills/librarium-terra-notes .codex/skills/planificador-viajes-familiares .codex/skills/restaurantes-celiacos-seguros .config/starship.toml .config/sheldon/plugins.toml .config/terminator .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2 .config/msmtp/config; do
   [[ -L $HOME/$relativo ]]
   if [[ $relativo == .config/* ]]; then
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/.config/${relativo#.config/}" ]]
@@ -71,6 +71,7 @@ for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_fu
   fi
 done
 [[ -f $HOME/.config/terminator/plugins/.gitkeep ]]
+[[ -f "$HOME/.config/input-remapper-2/presets/Logitech MX Master 3/cambio de escritorio.json" ]]
 [[ -d $HOME/.codex/skills && ! -L $HOME/.codex/skills ]]
 [[ -f $HOME/.codex/skills/.system/runtime-skill/SKILL.md ]]
 [[ $(readlink -f "$HOME/.codex/skills/exportar-en-formato-paradigma") == "$RAIZ/home/.codex/skills/exportar-en-formato-paradigma" ]]

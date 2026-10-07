@@ -43,7 +43,7 @@ ${HOME}/.config/terminator
 ${HOME}/.config/flameshot/flameshot.ini
 ${HOME}/.config/Heynote/config.json
 ${HOME}/.config/Heynote/Preferences
-${HOME}/.config/input-remapper-2/config.json
+${HOME}/.config/input-remapper-2
 ${HOME}/.config/msmtp/config
 EOF
 }

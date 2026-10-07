@@ -18,6 +18,7 @@ PAQUETES_DNF=(
   wl-clipboard
   pipx
   input-remapper
+  fuse-libs
   msmtp
   flameshot
   code
@@ -40,6 +41,7 @@ declare -gA DESCRIPCIONES_DNF=(
   [wl-clipboard]='Portapapeles para Wayland'
   [pipx]='Instalación aislada de aplicaciones Python'
   [input-remapper]='Remapeo de dispositivos de entrada'
+  [fuse-libs]='Biblioteca FUSE v2 para AppImage'
   [msmtp]='Cliente SMTP compatible con sendmail'
   [flameshot]='Capturas de pantalla Flameshot'
   [code]='Visual Studio Code desde Microsoft'

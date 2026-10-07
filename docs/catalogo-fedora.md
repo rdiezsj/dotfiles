@@ -23,7 +23,8 @@ repositorio oficial de Microsoft. Firefox se gestiona desde DNF.
 | Vim | Editor de texto. | Versionada: `~/.vimrc`. |
 | wl-clipboard | Portapapeles para Wayland. | Local. |
 | pipx | Instalación aislada de aplicaciones Python. | Local. |
-| Input Remapper | Remapeo de dispositivos; habilita su servicio de sistema. | Versionada: `~/.config/input-remapper-2/config.json`, incluido el perfil asociado a Logitech MX Master 3. |
+| Input Remapper | Remapeo de dispositivos; habilita su servicio de sistema. | Versionado: directorio completo `~/.config/input-remapper-2/`, incluido el perfil asociado a Logitech MX Master 3. |
+| fuse-libs | Biblioteca FUSE v2 para ejecutar AppImage v2. | Local. |
 | msmtp | Cliente SMTP compatible con sendmail. | Versionada sin secretos: `~/.config/msmtp/config`. |
 | Flameshot | Capturas de pantalla. | Versionada: `~/.config/flameshot/flameshot.ini`. |
 | Visual Studio Code | Editor y entorno de desarrollo. | Local. |
@@ -75,7 +76,7 @@ Vaultwarden.
 | Meld | Comparación de archivos. | Local. |
 | Steam | Juegos. | Biblioteca, sesión y datos, locales. |
 | Emote | Selector de emoji. | Local. |
-| Gear Lever | Gestión de AppImages. | Sandbox, inventario, rutas y actualizaciones, locales. |
+| Gear Lever | Gestión de AppImages. | Versionada: carpeta predeterminada `~/Apps`; sandbox, inventario, rutas por aplicación y actualizaciones, locales. |
 | LocalSend | Transferencia local de archivos. | Dispositivos y preferencias, locales. |
 | GNOME Extensions | Gestión de extensiones de GNOME Shell. | Extensiones instaladas y preferencias, locales. |
 
@@ -83,7 +84,9 @@ Vaultwarden.
 
 Los binarios se descargan en `~/Apps` con versión y SHA-256 fijados. Si ya hay
 un archivo distinto en la misma ruta, se conserva y el resumen informa del
-conflicto. Tras verificarlos, Gear Lever debe importarlos manualmente.
+conflicto. Tras verificarlos, Gear Lever debe importarlos manualmente y usa
+esa misma carpeta como ubicación predeterminada. `fuse-libs` aporta
+`libfuse.so.2`, necesaria para ejecutar AppImage v2.
 
 | Aplicación | Versión | Finalidad | Configuración |
 | --- | --- | --- | --- |

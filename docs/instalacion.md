@@ -60,5 +60,8 @@ systemctl --user status syncthing.service
 ```
 
 Los AppImages descargados en `~/Apps` requieren importación manual en Gear
-Lever. Los presets reales de Input Remapper se asocian manualmente al
-dispositivo después de identificarlo.
+Lever, que queda configurado para usar esa carpeta como predeterminada. El
+catálogo instala `fuse-libs` para que los AppImage v2 puedan cargar
+`libfuse.so.2`; si falla, el resumen indica revisar esa dependencia. Los
+presets reales de Input Remapper se asocian manualmente al dispositivo después
+de identificarlo.

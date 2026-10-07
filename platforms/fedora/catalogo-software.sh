@@ -16,6 +16,9 @@ URL_CHATGPT_X86_64='https://persistent.oaistatic.com/codex-app-prod/linux/rpm/la
 URL_CHATGPT_AARCH64='https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.aarch64.rpm'
 URL_FLATHUB='https://flathub.org/repo/flathub.flatpakrepo'
 VERSIONES_FEDORA_CHATGPT=(43 44)
+APP_ID_GEAR_LEVER='it.mijorus.gearlever'
+ESQUEMA_GEAR_LEVER='it.mijorus.gearlever'
+CLAVE_CARPETA_GEAR_LEVER='appimages-default-folder'
 
 mostrar_bloque_catalogo() {
   local gestor=$1
@@ -140,6 +143,39 @@ instalar_paquete_flatpak() {
   fi
 }
 
+configurar_carpeta_gear_lever() {
+  local carpeta="$HOME/Apps"
+  local valor_actual
+
+  if ! flatpak info --user "$APP_ID_GEAR_LEVER" >/dev/null 2>&1; then
+    registrar_catalogo fallidos 'Gear Lever: no está disponible para configurar la carpeta predeterminada'
+    return 1
+  fi
+  mkdir -p "$carpeta"
+  if ! valor_actual=$(flatpak run --command=gsettings "$APP_ID_GEAR_LEVER" get "$ESQUEMA_GEAR_LEVER" "$CLAVE_CARPETA_GEAR_LEVER"); then
+    registrar_catalogo fallidos 'Gear Lever: no se pudo leer la carpeta predeterminada'
+    return 1
+  fi
+  if [[ $valor_actual == "'$carpeta'" ]]; then
+    registrar_catalogo presentes "Gear Lever: carpeta predeterminada ya configurada en $carpeta"
+    return 0
+  fi
+  if ! flatpak run --command=gsettings "$APP_ID_GEAR_LEVER" set "$ESQUEMA_GEAR_LEVER" "$CLAVE_CARPETA_GEAR_LEVER" "$carpeta"; then
+    registrar_catalogo fallidos 'Gear Lever: no se pudo configurar la carpeta predeterminada'
+    return 1
+  fi
+  registrar_catalogo instalados "Gear Lever: carpeta predeterminada configurada en $carpeta"
+}
+
+verificar_fuse_appimage() {
+  if ldconfig -p 2>/dev/null | grep -Fq 'libfuse.so.2'; then
+    registrar_catalogo presentes 'FUSE: biblioteca libfuse.so.2 disponible para AppImage v2'
+    return 0
+  fi
+  registrar_catalogo fallidos 'FUSE: falta libfuse.so.2 para ejecutar AppImage v2; revisa la instalación de fuse-libs'
+  return 1
+}
+
 retirar_flatpak_si_existe() {
   local paquete=$1
   if flatpak info --user "$paquete" >/dev/null 2>&1; then
@@ -258,6 +294,7 @@ ejecutar_catalogo_software() {
   for paquete in "${PAQUETES_DNF[@]}"; do
     instalar_paquete_dnf "$paquete" || true
   done
+  verificar_fuse_appimage || true
   instalar_chatgpt || true
   habilitar_syncthing_usuario
 
@@ -276,6 +313,7 @@ ejecutar_catalogo_software() {
   for paquete in "${PAQUETES_FLATPAK[@]}"; do
     instalar_paquete_flatpak "$paquete" || true
   done
+  configurar_carpeta_gear_lever || true
 
   mostrar_bloque_catalogo 'APPIMAGE'
   for paquete in "${PAQUETES_APPIMAGE[@]}"; do

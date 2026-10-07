@@ -15,9 +15,9 @@ enlaces; rechazar uno conserva todos los originales y cancela esta fase.
 | Vim | `~/.vimrc` | Números de línea y sangrado; el ancho de tabulación queda comentado. |
 | Git | `~/.gitconfig`, `~/.gitignore` | No contiene credenciales. |
 | Terminator | `~/.config/terminator/config` | Solo preferencias de terminal. |
-| Flameshot | `~/.config/flameshot/flameshot.ini` | No fija directorio de capturas. |
-| Heynote | `~/.config/Heynote/config.json`, `~/.config/Heynote/Preferences` | Las notas, buffers, sesiones y cachés siguen locales. |
-| Input Remapper | `~/.config/input-remapper-2/config.json` | Asocia Logitech MX Master 3 al preset `cambio de escritorio`; configuración versionada. |
+| Flameshot | `~/.config/flameshot/flameshot.ini` | Preferencias manuales versionadas, incluida la ruta de capturas y el arranque automático. |
+| Heynote | `~/.config/Heynote/config.json`, `~/.config/Heynote/Preferences` | Se versionan exactamente esos ficheros manuales; los demás datos siguen locales. |
+| Input Remapper | `~/.config/input-remapper-2/` | Configuración y presets completos, incluido Logitech MX Master 3. |
 | msmtp | `~/.config/msmtp/config` | La cuenta no contiene usuario, contraseña ni sesión; los consulta bajo demanda en Vaultwarden. |
 | Codex | `~/.codex/AGENTS.md`, `~/.codex/skills/<skill-propia>/` | Se versionan y enlazan las instrucciones y cada skill propia. Las skills predeterminadas de Codex (`.system/`) permanecen gestionadas por la aplicación y no se enlazan desde el repositorio. |
 
@@ -25,8 +25,9 @@ enlaces; rechazar uno conserva todos los originales y cancela esta fase.
 
 No se enlazan ni versionan perfiles de navegador, bibliotecas y documentos de
 ONLYOFFICE, bóvedas de Bitwarden, notas de Obsidian, sesiones de Telegram,
-Spotify o Steam, ni el sandbox, inventario, rutas o actualizaciones de Gear
-Lever. Son datos del usuario o estado propio de cada equipo.
+Spotify o Steam, ni el sandbox, inventario, rutas por aplicación o
+actualizaciones de Gear Lever. Son datos del usuario o estado propio de cada
+equipo.
 
 Los clones y lockfiles de Sheldon permanecen en `~/.local/share/sheldon/`.
 El registro de msmtp se crea bajo `~/.local/state/msmtp/msmtp.log`; no se debe
