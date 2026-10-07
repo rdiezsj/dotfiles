@@ -13,10 +13,12 @@ PAQUETES_DNF=(
   vlc
   syncthing
   terminator
+  ptyxis
   nano
   vim-enhanced
   wl-clipboard
   pipx
+  dconf
   input-remapper
   fuse-libs
   gnome-shell-extension-appindicator
@@ -40,10 +42,12 @@ declare -gA DESCRIPCIONES_DNF=(
   [vlc]='Reproductor multimedia VLC'
   [syncthing]='Sincronización de archivos entre dispositivos'
   [terminator]='Terminal Terminator'
+  [ptyxis]='Terminal principal de GNOME'
   [nano]='Editor de texto Nano'
   [vim-enhanced]='Editor Vim'
   [wl-clipboard]='Portapapeles para Wayland'
   [pipx]='Instalación aislada de aplicaciones Python'
+  [dconf]='Herramienta de configuración para aplicaciones GNOME'
   [input-remapper]='Remapeo de dispositivos de entrada'
   [fuse-libs]='Biblioteca FUSE v2 para AppImage'
   [gnome-shell-extension-appindicator]='Indicadores de aplicaciones para GNOME Shell'

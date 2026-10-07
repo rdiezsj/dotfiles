@@ -62,6 +62,18 @@ rpm() { [[ $1 == -q && $2 == gnome-shell-extension-appindicator ]]; }
 instalar_paquete_dnf gnome-shell-extension-appindicator
 grep -Fqx 'presentes:DNF: gnome-shell-extension-appindicator ya estaba instalado' "$registro"
 
+ptyxis() { [[ $1 == --version ]]; }
+verificar_terminal ptyxis DNF
+grep -Fqx 'presentes:Terminal: ptyxis disponible' "$registro"
+
+zellij() { [[ $1 == --version ]]; }
+verificar_terminal zellij Homebrew
+grep -Fqx 'presentes:Terminal: zellij disponible' "$registro"
+
+zellij() { return 1; }
+if verificar_terminal zellij Homebrew; then exit 1; fi
+grep -Fqx 'fallidos:Terminal: zellij no está disponible tras el catálogo Homebrew' "$registro"
+
 flatpak() {
   case $1:$2:$3:$4:$5 in
     info:--user:it.mijorus.gearlever::) return 0 ;;
@@ -232,7 +244,7 @@ ruta_brew() { printf '%s\n' brew; }
 brew() {
   case $1 in
     list) return 1 ;;
-    install) [[ $2 == firefoxpwa || $2 == starship ]] ;;
+    install) [[ $2 == firefoxpwa || $2 == starship || $2 == zellij ]] ;;
     *) return 1 ;;
   esac
 }
@@ -240,6 +252,8 @@ instalar_paquete_homebrew firefoxpwa
 grep -Fqx 'instalados:Homebrew: firefoxpwa instalado' "$registro"
 instalar_paquete_homebrew starship
 grep -Fqx 'instalados:Homebrew: starship instalado' "$registro"
+instalar_paquete_homebrew zellij
+grep -Fqx 'instalados:Homebrew: zellij instalado' "$registro"
 
 openspec() { printf 'OpenSpec 1.14.0\n'; }
 brew() { printf 'brew no debe instalar OpenSpec si ya hay CLI funcional\n' >&2; return 1; }
@@ -265,6 +279,12 @@ brew() {
 }
 instalar_paquete_homebrew firefoxpwa
 grep -Fqx 'presentes:Homebrew: firefoxpwa ya estaba instalado' "$registro"
+
+brew() {
+  [[ $1 == list && $2 == --versions && $3 == zellij ]]
+}
+instalar_paquete_homebrew zellij
+grep -Fqx 'presentes:Homebrew: zellij ya estaba instalado' "$registro"
 
 brew() { return 1; }
 if instalar_paquete_homebrew firefoxpwa; then

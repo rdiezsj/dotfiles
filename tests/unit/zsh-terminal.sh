@@ -35,6 +35,31 @@ EOF
 chmod +x "$TEMPORAL/bin/sheldon"
 export PATH="$TEMPORAL/bin:$PATH"
 
+dconf_cargado=false
+zellij_validado=false
+dconf() {
+  [[ $1 == load && $2 == /org/gnome/Ptyxis/ ]] || return 1
+  cat >/dev/null
+  dconf_cargado=true
+}
+gsettings() {
+  [[ $1 == get ]] || return 1
+  if [[ $2 == org.gnome.Ptyxis && $3 == default-profile-uuid ]]; then
+    printf "'%s'\n" b3a9ca574b7b4bbd9c73a56c3e254ef4
+  elif [[ $2 == org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/b3a9ca574b7b4bbd9c73a56c3e254ef4/ && $3 == palette ]]; then
+    printf "'nord'\n"
+  elif [[ $2 == org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/b3a9ca574b7b4bbd9c73a56c3e254ef4/ && $3 == limit-scrollback ]]; then
+    printf '%s\n' false
+  else
+    return 1
+  fi
+}
+zellij() {
+  [[ $1 == setup && $2 == --check ]] || return 1
+  [[ -n ${ZELLIJ_CONFIG_DIR:-} && -n ${ZELLIJ_SOCKET_DIR:-} ]]
+  zellij_validado=true
+}
+
 # shellcheck source=/dev/null
 source "$RAIZ/scripts/lib/zsh-terminal.sh"
 
@@ -60,7 +85,7 @@ ejecutar_dotbot_zsh() {
 confirmar_aplicacion_dotfile() { return 0; }
 
 configurar_archivos_zsh "$RAIZ"
-for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills/alojamientos-viajes-familiares .codex/skills/exportar-en-formato-paradigma .codex/skills/humanizador .codex/skills/librarium-terra-notes .codex/skills/planificador-viajes-familiares .codex/skills/restaurantes-celiacos-seguros .config/starship.toml .config/sheldon/plugins.toml .config/terminator .local/bin/terminator .local/share/applications/terminator.desktop .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2 .config/msmtp/config; do
+for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills/alojamientos-viajes-familiares .codex/skills/exportar-en-formato-paradigma .codex/skills/humanizador .codex/skills/librarium-terra-notes .codex/skills/planificador-viajes-familiares .codex/skills/restaurantes-celiacos-seguros .config/starship.toml .config/sheldon/plugins.toml .config/terminator .local/bin/terminator .local/share/applications/terminator.desktop .config/ptyxis/config.dconf .config/zellij/config.kdl .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2 .config/msmtp/config; do
   [[ -L $HOME/$relativo ]]
   if [[ $relativo == .config/* ]]; then
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/.config/${relativo#.config/}" ]]
@@ -70,6 +95,8 @@ for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_fu
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/$relativo" ]]
   fi
 done
+[[ $dconf_cargado == true ]]
+[[ $zellij_validado == true ]]
 [[ -f $HOME/.config/terminator/plugins/.gitkeep ]]
 [[ -f "$HOME/.config/input-remapper-2/presets/Logitech MX Master 3/cambio de escritorio.json" ]]
 [[ -d $HOME/.codex/skills && ! -L $HOME/.codex/skills ]]

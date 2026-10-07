@@ -12,6 +12,8 @@ for archivo in \
   home/.config/terminator/config \
   home/.local/bin/terminator \
   home/.local/share/applications/terminator.desktop \
+  home/.config/ptyxis/config.dconf \
+  home/.config/zellij/config.kdl \
   home/.config/flameshot/flameshot.ini \
   home/.config/Heynote/config.json \
   home/.config/Heynote/Preferences \
@@ -29,6 +31,11 @@ grep -Fqx 'Exec=/usr/bin/env GTK_THEME=Adwaita:dark /usr/bin/terminator' "$RAIZ/
 grep -Fqx 'Actions=NewWindow;' "$RAIZ/home/.local/share/applications/terminator.desktop"
 grep -Fqx '[Desktop Action NewWindow]' "$RAIZ/home/.local/share/applications/terminator.desktop"
 grep -Fqx 'Exec=/usr/bin/env GTK_THEME=Adwaita:dark /usr/bin/terminator --new-tab' "$RAIZ/home/.local/share/applications/terminator.desktop"
+grep -Fqx "default-profile-uuid='b3a9ca574b7b4bbd9c73a56c3e254ef4'" "$RAIZ/home/.config/ptyxis/config.dconf"
+grep -Fqx "palette='nord'" "$RAIZ/home/.config/ptyxis/config.dconf"
+grep -Fqx 'limit-scrollback=false' "$RAIZ/home/.config/ptyxis/config.dconf"
+! rg -n '^\[.*\]$' "$RAIZ/home/.config/ptyxis/config.dconf" | grep -Fv -e '[/]' -e '[Profiles/b3a9ca574b7b4bbd9c73a56c3e254ef4]'
+! rg -n -i '^(keybinds|plugins|layout|default_layout|default_mode)' "$RAIZ/home/.config/zellij/config.kdl"
 
 git config --file "$RAIZ/home/.gitconfig" --get core.excludesfile | grep -Fqx '~/.gitignore'
 jq -e . "$RAIZ/home/.config/Heynote/config.json" "$RAIZ/home/.config/Heynote/Preferences" "$RAIZ/home/.config/input-remapper-2/config.json" >/dev/null
@@ -54,6 +61,8 @@ for destino in \
   '~/.config/terminator: home/.config/terminator' \
   '~/.local/bin/terminator: home/.local/bin/terminator' \
   '~/.local/share/applications/terminator.desktop: home/.local/share/applications/terminator.desktop' \
+  '~/.config/ptyxis/config.dconf: home/.config/ptyxis/config.dconf' \
+  '~/.config/zellij/config.kdl: home/.config/zellij/config.kdl' \
   '~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini' \
   '~/.config/Heynote/config.json: home/.config/Heynote/config.json' \
   '~/.config/Heynote/Preferences: home/.config/Heynote/Preferences' \

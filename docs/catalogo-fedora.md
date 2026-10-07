@@ -18,11 +18,13 @@ repositorio oficial de Microsoft. Firefox se gestiona desde DNF.
 | File Roller | Interfaz gráfica de archivos comprimidos. | Local. |
 | VLC | Reproducción multimedia. | Local. |
 | Syncthing | Sincronización entre dispositivos; habilita su servicio de usuario. | Local. |
-| Terminator | Terminal gráfica. | Versionada: configuración, lanzador `~/.local/bin/terminator` y entrada de GNOME; usa `Adwaita:dark` solo para Terminator. |
+| Terminator | Terminal gráfica alternativa. | Versionada: configuración, lanzador `~/.local/bin/terminator` y entrada de GNOME; usa `Adwaita:dark` solo para Terminator. |
+| Ptyxis | Terminal principal de GNOME. | Versionada: perfil Nord mediante exportación Dconf limitada a Ptyxis. |
 | Nano | Editor de texto. | Versionada: `~/.nanorc`. |
 | Vim | Editor de texto. | Versionada: `~/.vimrc`. |
 | wl-clipboard | Portapapeles para Wayland. | Local. |
 | pipx | Instalación aislada de aplicaciones Python. | Local. |
+| dconf | Herramienta de configuración para aplicaciones GNOME. | Local; aplica el perfil versionado de Ptyxis. |
 | Input Remapper | Remapeo de dispositivos; habilita su servicio de sistema. | Versionado: directorio completo `~/.config/input-remapper-2/`, incluido el perfil asociado a Logitech MX Master 3. |
 | fuse-libs | Biblioteca FUSE v2 para ejecutar AppImage v2. | Local. |
 | AppIndicator | Indicadores de aplicaciones para GNOME Shell. | Activación local de la extensión; preferencias, locales. |
@@ -63,6 +65,7 @@ Vaultwarden.
 | Helm | Gestor de paquetes Kubernetes. | Repositorios y estado, locales. |
 | kubernetes-cli | Cliente `kubectl`. | Configuración de clúster, local; solo su completado se carga desde Zsh. |
 | kubectx | Cambio rápido de contexto Kubernetes. | Contextos, locales. |
+| Zellij | Multiplexor de terminal con paneles. | Versionada: `~/.config/zellij/config.kdl`; se inicia manualmente y conserva `Ctrl+P`, `D` y `R`. |
 | OpenSpec | CLI global para desarrollo guiado por especificaciones. | Instalación global Homebrew; no se declara como dependencia de cada proyecto. Verificar con `openspec --version`. |
 | Bitwarden CLI | Acceso a Vaultwarden desde terminal. | Sesión revocable en GNOME Keyring, nunca en el repositorio. |
 
@@ -123,7 +126,8 @@ esa misma carpeta como ubicación predeterminada. `fuse-libs` aporta
 - [ChatGPT para Linux](https://learn.chatgpt.com/docs/linux/linux-app): Fedora 43/44 con RPM x86_64 o aarch64; DNF configura el repositorio firmado oficial para actualizaciones. Abrir con `chatgpt` o desde el menú de aplicaciones.
 - [Firefox PWA en Homebrew](https://formulae.brew.sh/formula/firefoxpwa): fórmula instalada por Homebrew y actualizada con sus mecanismos habituales.
 - [OpenSpec en Homebrew](https://formulae.brew.sh/formula/openspec): CLI global instalada como fórmula solo cuando no existe ya un comando global funcional; comprobar con `openspec --version`.
-- Herramientas de terminal: Starship, Sheldon, fzf, Helm, `kubernetes-cli`, kubectx y OpenSpec se instalan como fórmulas Homebrew. Sheldon gestiona los plugins Zsh desde `~/.config/sheldon/plugins.toml`, con SHA fijados en el repositorio.
+- [Zellij en Homebrew](https://formulae.brew.sh/formula/zellij): multiplexor de terminal instalado como fórmula; se conserva su configuración y sus atajos nativos.
+- Herramientas de terminal: Starship, Sheldon, fzf, Helm, `kubernetes-cli`, kubectx, Zellij y OpenSpec se instalan como fórmulas Homebrew. Sheldon gestiona los plugins Zsh desde `~/.config/sheldon/plugins.toml`, con SHA fijados en el repositorio.
 - [RPM Fusion](https://rpmfusion.org/): Free, Nonfree y Free tainted para multimedia y DVD.
 - [Flathub](https://flathub.org/): remoto Flatpak por usuario.
 - [Extensiones GNOME](https://extensions.gnome.org/): origen de las publicaciones compatibles de Custom Hot Corners Extended, Clipboard Indicator y Vitals.
@@ -169,7 +173,7 @@ brew list --versions firefoxpwa
 Comprueba las herramientas de terminal instaladas por Homebrew:
 
 ```bash
-brew list --versions starship sheldon fzf helm kubernetes-cli kubectx
+brew list --versions starship sheldon fzf helm kubernetes-cli kubectx zellij
 ```
 
 En una segunda ejecución del bootstrap, la fórmula debe informarse como ya presente.

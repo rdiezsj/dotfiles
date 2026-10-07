@@ -15,6 +15,8 @@ enlaces; rechazar uno conserva todos los originales y cancela esta fase.
 | Vim | `~/.vimrc` | Números de línea y sangrado; el ancho de tabulación queda comentado. |
 | Git | `~/.gitconfig`, `~/.gitignore` | No contiene credenciales. |
 | Terminator | `~/.config/terminator/config`, `~/.local/bin/terminator`, `~/.local/share/applications/terminator.desktop` | Preferencias de terminal y lanzadores que fuerzan `Adwaita:dark` solo para Terminator; cierra todas sus ventanas antes de abrirlo para aplicar el cambio. |
+| Ptyxis | `~/.config/ptyxis/config.dconf` | Perfil Nord oscuro y scrollback sin límite. El bootstrap carga exclusivamente `/org/gnome/Ptyxis/`; no se versionan sesiones ni otras preferencias Dconf. |
+| Zellij | `~/.config/zellij/config.kdl` | Se inicia manualmente dentro de Ptyxis. Conserva los atajos predeterminados: `Ctrl+P`, seguido de `D` o `R`, para dividir paneles. |
 | Flameshot | `~/.config/flameshot/flameshot.ini` | Preferencias manuales versionadas, incluida la ruta de capturas y el arranque automático. |
 | Heynote | `~/.config/Heynote/config.json`, `~/.config/Heynote/Preferences` | Se versionan exactamente esos ficheros manuales; los demás datos siguen locales. |
 | Input Remapper | `~/.config/input-remapper-2/` | Configuración y presets completos, incluido Logitech MX Master 3. |

@@ -1,0 +1,10 @@
+[/]
+default-profile-uuid='b3a9ca574b7b4bbd9c73a56c3e254ef4'
+profile-uuids=['b3a9ca574b7b4bbd9c73a56c3e254ef4']
+interface-style='dark'
+
+[Profiles/b3a9ca574b7b4bbd9c73a56c3e254ef4]
+label='Nord'
+palette='nord'
+limit-scrollback=false
+bold-is-bright=true

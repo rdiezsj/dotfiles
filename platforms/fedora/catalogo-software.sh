@@ -176,6 +176,18 @@ verificar_fuse_appimage() {
   return 1
 }
 
+verificar_terminal() {
+  local herramienta=$1
+  local gestor=$2
+
+  if command -v "$herramienta" >/dev/null 2>&1 && "$herramienta" --version >/dev/null 2>&1; then
+    registrar_catalogo presentes "Terminal: $herramienta disponible"
+    return 0
+  fi
+  registrar_catalogo fallidos "Terminal: $herramienta no está disponible tras el catálogo $gestor"
+  return 1
+}
+
 retirar_flatpak_si_existe() {
   local paquete=$1
   if flatpak info --user "$paquete" >/dev/null 2>&1; then
@@ -295,6 +307,7 @@ ejecutar_catalogo_software() {
     instalar_paquete_dnf "$paquete" || true
   done
   verificar_fuse_appimage || true
+  verificar_terminal ptyxis DNF || true
   instalar_chatgpt || true
   habilitar_syncthing_usuario
 
@@ -306,6 +319,7 @@ ejecutar_catalogo_software() {
       instalar_paquete_homebrew "$paquete" || true
     fi
   done
+  verificar_terminal zellij Homebrew || true
 
   mostrar_bloque_catalogo 'FLATPAK'
   reconciliar_aplicaciones_exclusivas_flatpak

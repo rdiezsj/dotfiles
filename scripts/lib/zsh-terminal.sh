@@ -42,6 +42,8 @@ ${HOME}/.config/sheldon/plugins.toml
 ${HOME}/.config/terminator
 ${HOME}/.local/bin/terminator
 ${HOME}/.local/share/applications/terminator.desktop
+${HOME}/.config/ptyxis/config.dconf
+${HOME}/.config/zellij/config.kdl
 ${HOME}/.config/flameshot/flameshot.ini
 ${HOME}/.config/Heynote/config.json
 ${HOME}/.config/Heynote/Preferences
@@ -118,6 +120,58 @@ ejecutar_dotbot_zsh() {
   "$raiz/dotbot/bin/dotbot" -d "$raiz" -c "$raiz/install.conf.yaml"
 }
 
+configurar_ptyxis() {
+  local configuracion="${XDG_CONFIG_HOME:-$HOME/.config}/ptyxis/config.dconf"
+  local uuid='b3a9ca574b7b4bbd9c73a56c3e254ef4'
+  local ruta_perfil="/org/gnome/Ptyxis/Profiles/$uuid/"
+
+  if [[ ! -f $configuracion ]]; then
+    registrar_resultado fallidos 'Ptyxis: falta ~/.config/ptyxis/config.dconf; resuelve el conflicto de Dotbot y vuelve a ejecutar ./bootstrap'
+    return 1
+  fi
+  if ! command -v dconf >/dev/null 2>&1 || ! command -v gsettings >/dev/null 2>&1; then
+    registrar_resultado fallidos 'Ptyxis: faltan dconf o gsettings para aplicar la configuración versionada'
+    return 1
+  fi
+  if ! dconf load /org/gnome/Ptyxis/ <"$configuracion"; then
+    registrar_resultado fallidos 'Ptyxis: no se pudo aplicar la configuración versionada'
+    return 1
+  fi
+  if [[ $(gsettings get org.gnome.Ptyxis default-profile-uuid) != "'$uuid'" ]] \
+    || [[ $(gsettings get "org.gnome.Ptyxis.Profile:$ruta_perfil" palette) != "'nord'" ]] \
+    || [[ $(gsettings get "org.gnome.Ptyxis.Profile:$ruta_perfil" limit-scrollback) != false ]]; then
+    registrar_resultado fallidos 'Ptyxis: la configuración aplicada no coincide con el perfil Nord declarado'
+    return 1
+  fi
+  registrar_resultado instalados 'Ptyxis: perfil Nord versionado aplicado y validado'
+}
+
+validar_configuracion_zellij() {
+  local directorio_configuracion="${XDG_CONFIG_HOME:-$HOME/.config}/zellij"
+  local directorio_socket
+
+  if [[ ! -f $directorio_configuracion/config.kdl ]]; then
+    registrar_resultado fallidos 'Zellij: falta ~/.config/zellij/config.kdl; resuelve el conflicto de Dotbot y vuelve a ejecutar ./bootstrap'
+    return 1
+  fi
+  if ! command -v zellij >/dev/null 2>&1; then
+    registrar_resultado fallidos 'Zellij: no está disponible para validar la configuración versionada'
+    return 1
+  fi
+  directorio_socket=$(mktemp -d) || {
+    registrar_resultado fallidos 'Zellij: no se pudo crear el directorio temporal de sockets para validar la configuración'
+    return 1
+  }
+  if ZELLIJ_CONFIG_DIR="$directorio_configuracion" ZELLIJ_SOCKET_DIR="$directorio_socket" zellij setup --check >/dev/null; then
+    rm -rf "$directorio_socket"
+    registrar_resultado instalados 'Zellij: configuración versionada validada sin autoarranque'
+    return 0
+  fi
+  rm -rf "$directorio_socket"
+  registrar_resultado fallidos 'Zellij: la configuración versionada no superó la validación'
+  return 1
+}
+
 configurar_plugins_sheldon() {
   local perfil
   local directorio_configuracion="${XDG_CONFIG_HOME:-$HOME/.config}/sheldon"
@@ -167,6 +221,8 @@ configurar_archivos_zsh() {
   preparar_dotbot_zsh "$raiz" || return 1
   resolver_conflictos_dotbot "$raiz" || return 1
   if ejecutar_dotbot_zsh "$raiz"; then
+    configurar_ptyxis || return 1
+    validar_configuracion_zellij || return 1
     configurar_plugins_sheldon || return 1
     if declare -F registrar_resultado >/dev/null; then
       registrar_resultado instalados 'Configuración: archivos versionados enlazados mediante Dotbot'

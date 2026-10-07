@@ -1,0 +1,2 @@
+// Se conservan los atajos predeterminados de Zellij, incluido Ctrl+P, D y R.
+// Zellij se inicia manualmente; este archivo no configura inicio automático ni plugins.

@@ -43,8 +43,23 @@ done
 
 grep -Fq 'Si ya se ejecuta desde Zsh, conserva esa sesión y no solicita' "$RAIZ/docs/terminal.md"
 grep -Fq 'usa `Adwaita:dark` solo para Terminator' "$RAIZ/docs/catalogo-fedora.md"
+grep -Fq '| Ptyxis | Terminal principal de GNOME.' "$RAIZ/docs/catalogo-fedora.md"
+grep -Fq '| Zellij | Multiplexor de terminal con paneles.' "$RAIZ/docs/catalogo-fedora.md"
+grep -Fq '[Zellij en Homebrew](https://formulae.brew.sh/formula/zellij)' "$RAIZ/docs/catalogo-fedora.md"
+awk '
+  /^## DNF\/RPM$/ { seccion="dnf"; next }
+  /^## Homebrew$/ { seccion="homebrew"; next }
+  /^## / { seccion="" }
+  /^\| Zellij \|/ && seccion == "homebrew" { encontrado=1 }
+  /^\| Zellij \|/ && seccion == "dnf" { exit 1 }
+  END { exit !encontrado }
+' "$RAIZ/docs/catalogo-fedora.md"
+grep -Fq 'conserva `Ctrl+P`, `D` y `R`' "$RAIZ/docs/catalogo-fedora.md"
+grep -Fq '| dconf | Herramienta de configuración para aplicaciones GNOME.' "$RAIZ/docs/catalogo-fedora.md"
 grep -Fq '~/.local/share/applications/terminator.desktop' "$RAIZ/docs/aplicaciones.md"
 grep -Fq 'cierra todas sus ventanas antes de abrirlo' "$RAIZ/docs/aplicaciones.md"
+grep -Fq '~/.config/ptyxis/config.dconf' "$RAIZ/docs/aplicaciones.md"
+grep -Fq 'Ctrl+P`, seguido de `D` o `R`' "$RAIZ/docs/aplicaciones.md"
 
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then
   printf '%s\n' 'Documentación: instala pip install -r requirements-docs.txt para ejecutar mkdocs build --strict.'
