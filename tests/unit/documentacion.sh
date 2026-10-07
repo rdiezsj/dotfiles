@@ -41,6 +41,8 @@ for extension in \
   grep -Fq "$extension" "$RAIZ/docs/catalogo-fedora.md"
 done
 
+grep -Fq 'Si ya se ejecuta desde Zsh, conserva esa sesión y no solicita' "$RAIZ/docs/terminal.md"
+
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then
   printf '%s\n' 'Documentación: instala pip install -r requirements-docs.txt para ejecutar mkdocs build --strict.'
   exit 0

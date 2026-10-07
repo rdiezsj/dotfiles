@@ -219,12 +219,23 @@ confirmar_recarga_sesion_zsh() {
   [[ ${respuesta,,} == s || ${respuesta,,} == si || ${respuesta,,} == sí ]]
 }
 
+terminal_actual_usa_zsh() {
+  local proceso_padre
+  proceso_padre=$(ps -p "$PPID" -o comm= 2>/dev/null) || return 1
+  proceso_padre=${proceso_padre//[[:space:]]/}
+  [[ ${proceso_padre##*/} == zsh ]]
+}
+
 ofrecer_recarga_sesion_zsh() {
   local zsh_actual
   zsh_actual=$(command -v zsh) || {
     printf '%s\n' 'No se encontró Zsh; se mantiene la sesión actual.' >&2
     return 0
   }
+  if terminal_actual_usa_zsh; then
+    printf '%s\n' 'La sesión actual ya usa Zsh; no se abre una sesión adicional.'
+    return 0
+  fi
   if ! confirmar_recarga_sesion_zsh; then
     printf '%s\n' 'Se mantiene la sesión actual; abre una nueva terminal para aplicar Zsh.'
     return 0

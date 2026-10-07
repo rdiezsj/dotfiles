@@ -24,7 +24,9 @@ o uno de los perfiles `base` o `resaltado`, resuelve el conflicto indicado y
 vuelve a ejecutar `./bootstrap`: Sheldon materializa ambos perfiles durante esa
 ejecución.
 
-Tras instalar, abre una sesión Zsh nueva y comprueba:
+Tras instalar desde una terminal que no sea Zsh, el bootstrap ofrece abrir una
+sesión Zsh nueva. Si ya se ejecuta desde Zsh, conserva esa sesión y no solicita
+abrir otra. Después, comprueba:
 
 ```bash
 starship --version

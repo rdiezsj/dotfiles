@@ -238,6 +238,7 @@ ofrecer_shell_zsh_predeterminada
 grep -Fqx 'presentes:Zsh ya es la shell predeterminada' "$registro"
 
 exec() { printf '%s\n' "$*" >>"$TEMPORAL/exec-zsh"; }
+ps() { return 1; }
 confirmar_recarga_sesion_zsh() { return 1; }
 ofrecer_recarga_sesion_zsh
 [[ ! -e $TEMPORAL/exec-zsh ]]
@@ -245,3 +246,23 @@ ofrecer_recarga_sesion_zsh
 confirmar_recarga_sesion_zsh() { return 0; }
 ofrecer_recarga_sesion_zsh
 grep -Fqx "$TEMPORAL/bin/zsh -l" "$TEMPORAL/exec-zsh"
+
+rm -f "$TEMPORAL/exec-zsh"
+confirmaciones_recarga=0
+confirmar_recarga_sesion_zsh() {
+  confirmaciones_recarga=$((confirmaciones_recarga + 1))
+  return 1
+}
+ps() {
+  [[ $1 == -p && $2 == "$PPID" && $3 == -o && $4 == comm= ]] || return 1
+  printf '%s\n' zsh
+}
+ofrecer_recarga_sesion_zsh >"$TEMPORAL/salida-zsh"
+[[ $confirmaciones_recarga -eq 0 ]]
+[[ ! -e $TEMPORAL/exec-zsh ]]
+grep -Fqx 'La sesión actual ya usa Zsh; no se abre una sesión adicional.' "$TEMPORAL/salida-zsh"
+
+ps() { printf '%s\n' bash; }
+ofrecer_recarga_sesion_zsh >"$TEMPORAL/salida-bash"
+[[ $confirmaciones_recarga -eq 1 ]]
+grep -Fqx 'Se mantiene la sesión actual; abre una nueva terminal para aplicar Zsh.' "$TEMPORAL/salida-bash"
