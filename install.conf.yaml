@@ -27,7 +27,7 @@
     ~/.local/bin/terminator: home/.local/bin/terminator
     ~/.local/share/applications/terminator.desktop: home/.local/share/applications/terminator.desktop
     ~/.config/ptyxis/config.dconf: home/.config/ptyxis/config.dconf
-    ~/.config/zellij/config.kdl: home/.config/zellij/config.kdl
+    ~/.config/zellij: home/.config/zellij
     ~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini
     ~/.config/Heynote/config.json: home/.config/Heynote/config.json
     ~/.config/Heynote/Preferences: home/.config/Heynote/Preferences

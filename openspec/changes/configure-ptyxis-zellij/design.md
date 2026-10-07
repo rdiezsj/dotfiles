@@ -20,8 +20,8 @@ centralizada de destinos Dotbot y pruebas unitarias que validan esos destinos.
 **Non-Goals:**
 
 - No desinstalar, alterar ni redirigir el lanzador de Terminator.
-- No iniciar Zellij automáticamente desde Zsh ni configurar plugins, layouts
-  personalizados o atajos alternativos.
+- No iniciar Zellij automáticamente desde Zsh ni preconfigurar plugins,
+  layouts personalizados o atajos alternativos.
 - No copiar todo el estado Dconf, sesiones de Ptyxis ni datos de Zellij.
 
 ## Decisions
@@ -46,11 +46,13 @@ solicitadas.
 
 ### Zellij mínimo sin remapeos
 
-Se versionará `home/.config/zellij/config.kdl` y se enlazará como directorio o
-archivo XDG gestionado por Dotbot. El archivo conservará el modo de claves
-predeterminado de Zellij y no definirá `keybinds`, por lo que `Ctrl+P`, `D` y
-`R` mantienen su significado nativo. Tampoco se añadirá la invocación de
-Zellij a `.zshrc`, `.zprofile` ni perfiles de Ptyxis.
+Se versionará el directorio `home/.config/zellij/` y Dotbot lo enlazará como
+`~/.config/zellij/`. Inicialmente contendrá solo `config.kdl`, que conservará
+el modo de claves predeterminado de Zellij y no definirá `keybinds`, por lo que
+`Ctrl+P`, `D` y `R` mantienen su significado nativo. El enlace de directorio
+permite incorporar más adelante plugins u otros recursos de Zellij de forma
+versionada. Tampoco se añadirá la invocación de Zellij a `.zshrc`, `.zprofile`
+ni perfiles de Ptyxis.
 
 Se descarta reproducir los atajos directos de Terminator porque sustituirían
 el flujo estándar que se ha elegido conservar y podrían interferir con
@@ -76,7 +78,8 @@ una sesión interactiva.
 - [Un archivo Zellij local no gestionado] → Dotbot conservará el mecanismo de
   conflicto y respaldo ya existente; no lo sustituirá sin confirmación.
 - [La validación de Zellij requiere recursos de sesión] → Se ejecutará con un
-  directorio temporal seguro para sus sockets y se limpiará al finalizar.
+  directorio temporal seguro para sus sockets y una copia de la configuración,
+  que se limpiarán al finalizar sin alterar el directorio versionado.
 
 ## Migration Plan
 

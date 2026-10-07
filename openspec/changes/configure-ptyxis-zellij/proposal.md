@@ -14,7 +14,9 @@ Terminator seguirá disponible y sin cambios como alternativa.
 - Versionar una exportación limitada de Dconf para Ptyxis y enlazarla mediante
   Dotbot; el bootstrap la aplicará bajo `/org/gnome/Ptyxis/` para crear un
   perfil Nord reproducible, oscuro y con scrollback sin límite.
-- Versionar y enlazar `~/.config/zellij/config.kdl` mediante Dotbot.
+- Versionar y enlazar el directorio `~/.config/zellij/` mediante Dotbot, con
+  `config.kdl` como configuración inicial y espacio para futuras extensiones
+  versionadas.
 - Configurar Zellij sin autoarranque y conservando sus combinaciones nativas:
   el modo de paneles sigue comenzando con `Ctrl+P`, incluido `D` y `R` para
   dividir.
@@ -29,9 +31,9 @@ Terminator seguirá disponible y sin cambios como alternativa.
 
 ### Modified Capabilities
 
-- `application-configuration`: Las configuraciones portables incluirán los
-  archivos de Ptyxis y Zellij gestionados por Dotbot, sin incluir estado local
-  ni modificar la configuración existente de Terminator.
+- `application-configuration`: Las configuraciones portables incluirán el
+  archivo de Ptyxis y el directorio de Zellij gestionados por Dotbot, sin
+  incluir estado local ni modificar la configuración existente de Terminator.
 - `fedora-software-catalog`: DNF instalará Ptyxis junto a Terminator y
   Homebrew instalará Zellij; cada gestor validará su herramienta al terminar.
 

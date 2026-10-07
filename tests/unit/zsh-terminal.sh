@@ -85,7 +85,7 @@ ejecutar_dotbot_zsh() {
 confirmar_aplicacion_dotfile() { return 0; }
 
 configurar_archivos_zsh "$RAIZ"
-for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills/alojamientos-viajes-familiares .codex/skills/exportar-en-formato-paradigma .codex/skills/humanizador .codex/skills/librarium-terra-notes .codex/skills/planificador-viajes-familiares .codex/skills/restaurantes-celiacos-seguros .config/starship.toml .config/sheldon/plugins.toml .config/terminator .local/bin/terminator .local/share/applications/terminator.desktop .config/ptyxis/config.dconf .config/zellij/config.kdl .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2 .config/msmtp/config; do
+for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_functions .profile .zprofile .codex/AGENTS.md .codex/skills/alojamientos-viajes-familiares .codex/skills/exportar-en-formato-paradigma .codex/skills/humanizador .codex/skills/librarium-terra-notes .codex/skills/planificador-viajes-familiares .codex/skills/restaurantes-celiacos-seguros .config/starship.toml .config/sheldon/plugins.toml .config/terminator .local/bin/terminator .local/share/applications/terminator.desktop .config/ptyxis/config.dconf .config/zellij .config/flameshot/flameshot.ini .config/Heynote/config.json .config/Heynote/Preferences .config/input-remapper-2 .config/msmtp/config; do
   [[ -L $HOME/$relativo ]]
   if [[ $relativo == .config/* ]]; then
     [[ $(readlink -f "$HOME/$relativo") == "$RAIZ/home/.config/${relativo#.config/}" ]]
@@ -97,6 +97,7 @@ for relativo in .nanorc .vimrc .gitconfig .gitignore .zshrc .zsh_aliases .zsh_fu
 done
 [[ $dconf_cargado == true ]]
 [[ $zellij_validado == true ]]
+[[ -f $HOME/.config/zellij/config.kdl ]]
 [[ -f $HOME/.config/terminator/plugins/.gitkeep ]]
 [[ -f "$HOME/.config/input-remapper-2/presets/Logitech MX Master 3/cambio de escritorio.json" ]]
 [[ -d $HOME/.codex/skills && ! -L $HOME/.codex/skills ]]

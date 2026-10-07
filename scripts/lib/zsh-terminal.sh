@@ -43,7 +43,7 @@ ${HOME}/.config/terminator
 ${HOME}/.local/bin/terminator
 ${HOME}/.local/share/applications/terminator.desktop
 ${HOME}/.config/ptyxis/config.dconf
-${HOME}/.config/zellij/config.kdl
+${HOME}/.config/zellij
 ${HOME}/.config/flameshot/flameshot.ini
 ${HOME}/.config/Heynote/config.json
 ${HOME}/.config/Heynote/Preferences
@@ -148,7 +148,7 @@ configurar_ptyxis() {
 
 validar_configuracion_zellij() {
   local directorio_configuracion="${XDG_CONFIG_HOME:-$HOME/.config}/zellij"
-  local directorio_socket
+  local directorio_temporal
 
   if [[ ! -f $directorio_configuracion/config.kdl ]]; then
     registrar_resultado fallidos 'Zellij: falta ~/.config/zellij/config.kdl; resuelve el conflicto de Dotbot y vuelve a ejecutar ./bootstrap'
@@ -158,16 +158,22 @@ validar_configuracion_zellij() {
     registrar_resultado fallidos 'Zellij: no está disponible para validar la configuración versionada'
     return 1
   fi
-  directorio_socket=$(mktemp -d) || {
-    registrar_resultado fallidos 'Zellij: no se pudo crear el directorio temporal de sockets para validar la configuración'
+  directorio_temporal=$(mktemp -d) || {
+    registrar_resultado fallidos 'Zellij: no se pudo crear el directorio temporal para validar la configuración'
     return 1
   }
-  if ZELLIJ_CONFIG_DIR="$directorio_configuracion" ZELLIJ_SOCKET_DIR="$directorio_socket" zellij setup --check >/dev/null; then
-    rm -rf "$directorio_socket"
+  if ! mkdir "$directorio_temporal/configuracion" "$directorio_temporal/sockets" \
+    || ! cp -a "$directorio_configuracion/." "$directorio_temporal/configuracion/"; then
+    rm -rf "$directorio_temporal"
+    registrar_resultado fallidos 'Zellij: no se pudo preparar una copia temporal de la configuración'
+    return 1
+  fi
+  if ZELLIJ_CONFIG_DIR="$directorio_temporal/configuracion" ZELLIJ_SOCKET_DIR="$directorio_temporal/sockets" zellij setup --check >/dev/null; then
+    rm -rf "$directorio_temporal"
     registrar_resultado instalados 'Zellij: configuración versionada validada sin autoarranque'
     return 0
   fi
-  rm -rf "$directorio_socket"
+  rm -rf "$directorio_temporal"
   registrar_resultado fallidos 'Zellij: la configuración versionada no superó la validación'
   return 1
 }

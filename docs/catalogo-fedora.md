@@ -65,7 +65,7 @@ Vaultwarden.
 | Helm | Gestor de paquetes Kubernetes. | Repositorios y estado, locales. |
 | kubernetes-cli | Cliente `kubectl`. | Configuración de clúster, local; solo su completado se carga desde Zsh. |
 | kubectx | Cambio rápido de contexto Kubernetes. | Contextos, locales. |
-| Zellij | Multiplexor de terminal con paneles. | Versionada: `~/.config/zellij/config.kdl`; se inicia manualmente y conserva `Ctrl+P`, `D` y `R`. |
+| Zellij | Multiplexor de terminal con paneles. | Versionado: directorio completo `~/.config/zellij/`, preparado para futuras extensiones; se inicia manualmente y conserva `Ctrl+P`, `D` y `R`. |
 | OpenSpec | CLI global para desarrollo guiado por especificaciones. | Instalación global Homebrew; no se declara como dependencia de cada proyecto. Verificar con `openspec --version`. |
 | Bitwarden CLI | Acceso a Vaultwarden desde terminal. | Sesión revocable en GNOME Keyring, nunca en el repositorio. |
 

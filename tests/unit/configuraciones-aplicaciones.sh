@@ -24,6 +24,7 @@ for archivo in \
 done
 [[ -d $RAIZ/home/.config/terminator/plugins ]]
 [[ -f $RAIZ/home/.config/terminator/plugins/.gitkeep ]]
+[[ -d $RAIZ/home/.config/zellij ]]
 [[ -x $RAIZ/home/.local/bin/terminator ]]
 grep -Fqx 'export GTK_THEME=Adwaita:dark' "$RAIZ/home/.local/bin/terminator"
 grep -Fqx 'exec /usr/bin/terminator "$@"' "$RAIZ/home/.local/bin/terminator"
@@ -62,7 +63,7 @@ for destino in \
   '~/.local/bin/terminator: home/.local/bin/terminator' \
   '~/.local/share/applications/terminator.desktop: home/.local/share/applications/terminator.desktop' \
   '~/.config/ptyxis/config.dconf: home/.config/ptyxis/config.dconf' \
-  '~/.config/zellij/config.kdl: home/.config/zellij/config.kdl' \
+  '~/.config/zellij: home/.config/zellij' \
   '~/.config/flameshot/flameshot.ini: home/.config/flameshot/flameshot.ini' \
   '~/.config/Heynote/config.json: home/.config/Heynote/config.json' \
   '~/.config/Heynote/Preferences: home/.config/Heynote/Preferences' \

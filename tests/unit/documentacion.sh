@@ -59,6 +59,7 @@ grep -Fq '| dconf | Herramienta de configuración para aplicaciones GNOME.' "$RA
 grep -Fq '~/.local/share/applications/terminator.desktop' "$RAIZ/docs/aplicaciones.md"
 grep -Fq 'cierra todas sus ventanas antes de abrirlo' "$RAIZ/docs/aplicaciones.md"
 grep -Fq '~/.config/ptyxis/config.dconf' "$RAIZ/docs/aplicaciones.md"
+grep -Fq '~/.config/zellij/' "$RAIZ/docs/aplicaciones.md"
 grep -Fq 'Ctrl+P`, seguido de `D` o `R`' "$RAIZ/docs/aplicaciones.md"
 
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then

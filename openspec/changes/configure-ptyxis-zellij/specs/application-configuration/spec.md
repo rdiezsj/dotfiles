@@ -7,7 +7,8 @@ El sistema SHALL enlazar las configuraciones versionadas de Nano, Vim, Git,
 Terminator, Ptyxis, Zellij, Flameshot, Heynote, Input Remapper 2 y msmtp solo
 cuando el destino esté ausente o ya sea el enlace gestionado. La configuración
 de Ptyxis SHALL ser una exportación limitada de Dconf aplicable sin incluir la
-base Dconf completa. La de Zellij SHALL conservar sus atajos predeterminados.
+base Dconf completa. La de Zellij SHALL enlazar su directorio XDG completo y
+conservar sus atajos predeterminados.
 Los destinos no gestionados SHALL seguir el mecanismo existente de detección de
 conflictos y no serán reemplazados.
 
@@ -26,3 +27,7 @@ conflictos y no serán reemplazados.
 #### Scenario: Atajos nativos de Zellij
 - **WHEN** se inicia Zellij con su configuración gestionada
 - **THEN** `Ctrl+P` seguido de `D` o `R` conserva las divisiones predeterminadas y Zellij no se inicia automáticamente desde la shell
+
+#### Scenario: Directorio Zellij extensible
+- **WHEN** se añade una configuración o plugin versionado bajo `home/.config/zellij/`
+- **THEN** queda disponible en `~/.config/zellij/` mediante el enlace Dotbot sin crear enlaces individuales adicionales
