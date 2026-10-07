@@ -77,6 +77,7 @@ Vaultwarden.
 | Emote | Selector de emoji. | Local. |
 | Gear Lever | Gestión de AppImages. | Sandbox, inventario, rutas y actualizaciones, locales. |
 | LocalSend | Transferencia local de archivos. | Dispositivos y preferencias, locales. |
+| GNOME Extensions | Gestión de extensiones de GNOME Shell. | Extensiones instaladas y preferencias, locales. |
 
 ## AppImage verificados
 

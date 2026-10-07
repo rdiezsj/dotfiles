@@ -87,16 +87,46 @@ chatgpt_instalado=true
 instalar_chatgpt
 grep -Fqx 'presentes:ChatGPT: ya estaba instalado' "$registro"
 
+operaciones_flatpak="$TEMPORAL/operaciones-flatpak"
+flathub_url=
 flatpak() {
   case $1 in
-    info) return 1 ;;
-    install) [[ $2 == --user && $3 == -y && $4 == flathub && $5 == md.obsidian.Obsidian ]] ;;
-    remote-get-url) return 0 ;;
+    remote-get-url)
+      [[ -n $flathub_url ]] || return 1
+      printf '%s\n' "$flathub_url"
+      ;;
+    remote-add)
+      [[ $2 == --user && $3 == --if-not-exists && $4 == flathub && $5 == "$URL_FLATHUB" ]] || return 1
+      flathub_url=$5
+      printf 'remote-add:%s\n' "$flathub_url" >>"$operaciones_flatpak"
+      ;;
+    remote-modify)
+      [[ $2 == --user && $3 == "--url=$URL_FLATHUB" && $4 == flathub ]] || return 1
+      flathub_url=$URL_FLATHUB
+      printf 'remote-modify:%s\n' "$flathub_url" >>"$operaciones_flatpak"
+      ;;
     *) return 1 ;;
   esac
 }
-instalar_paquete_flatpak md.obsidian.Obsidian
-grep -Fqx 'instalados:Flatpak: md.obsidian.Obsidian instalado' "$registro"
+configurar_flathub
+grep -Fqx "remote-add:$URL_FLATHUB" "$operaciones_flatpak"
+[[ $flathub_url == "$URL_FLATHUB" ]]
+: >"$operaciones_flatpak"
+configurar_flathub
+[[ ! -s $operaciones_flatpak ]]
+flathub_url='https://example.invalid/flathub.flatpakrepo'
+configurar_flathub
+grep -Fqx "remote-modify:$URL_FLATHUB" "$operaciones_flatpak"
+
+flatpak() {
+  case $1 in
+    info) return 1 ;;
+    install) [[ $2 == --user && $3 == -y && $4 == flathub && $5 == org.gnome.Extensions ]] ;;
+    *) return 1 ;;
+  esac
+}
+instalar_paquete_flatpak org.gnome.Extensions
+grep -Fqx 'instalados:Flatpak: org.gnome.Extensions instalado' "$registro"
 
 rpm() { [[ $1 == -q && $2 == syncthing ]]; }
 systemctl() {

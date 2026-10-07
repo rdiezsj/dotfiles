@@ -21,6 +21,8 @@ source "$RAIZ/catalogs/homebrew.sh"
 
 [[ $(printf '%s\n' "${PAQUETES_DNF[@]}" | sort -u | wc -l) -eq ${#PAQUETES_DNF[@]} ]]
 [[ $(printf '%s\n' "${PAQUETES_FLATPAK[@]}" | sort -u | wc -l) -eq ${#PAQUETES_FLATPAK[@]} ]]
+printf '%s\n' "${PAQUETES_FLATPAK[@]}" | grep -Fxq org.gnome.Extensions
+[[ ${DESCRIPCIONES_FLATPAK[org.gnome.Extensions]} == 'Gestor de extensiones de GNOME' ]]
 [[ ${#PAQUETES_APPIMAGE[@]} -eq 2 ]]
 for appimage in "${PAQUETES_APPIMAGE[@]}"; do
   [[ ${APPIMAGE_URL[$appimage]} == https://* ]]

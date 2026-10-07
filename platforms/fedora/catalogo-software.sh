@@ -14,6 +14,7 @@ registrar_catalogo() {
 
 URL_CHATGPT_X86_64='https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.x86_64.rpm'
 URL_CHATGPT_AARCH64='https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.aarch64.rpm'
+URL_FLATHUB='https://flathub.org/repo/flathub.flatpakrepo'
 VERSIONES_FEDORA_CHATGPT=(43 44)
 
 mostrar_bloque_catalogo() {
@@ -116,10 +117,13 @@ instalar_openspec_global() {
 }
 
 configurar_flathub() {
-  if flatpak remote-get-url --user flathub >/dev/null 2>&1; then
-    return 0
+  local url_actual
+  if url_actual=$(flatpak remote-get-url --user flathub 2>/dev/null); then
+    [[ $url_actual == "$URL_FLATHUB" ]] && return 0
+    flatpak remote-modify --user --url="$URL_FLATHUB" flathub
+    return
   fi
-  flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  flatpak remote-add --user --if-not-exists flathub "$URL_FLATHUB"
 }
 
 instalar_paquete_flatpak() {

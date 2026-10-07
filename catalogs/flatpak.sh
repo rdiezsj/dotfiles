@@ -15,6 +15,7 @@ PAQUETES_FLATPAK=(
   com.tomjwatson.Emote
   it.mijorus.gearlever
   org.localsend.localsend_app
+  org.gnome.Extensions
 )
 
 declare -gA DESCRIPCIONES_FLATPAK=(
@@ -30,6 +31,7 @@ declare -gA DESCRIPCIONES_FLATPAK=(
   [com.tomjwatson.Emote]='Selector de emoji Emote'
   [it.mijorus.gearlever]='Gestor de AppImage Gear Lever'
   [org.localsend.localsend_app]='Transferencia local LocalSend'
+  [org.gnome.Extensions]='Gestor de extensiones de GNOME'
 )
 
 # Variantes que se retiran exclusivamente para mantener Firefox y ONLYOFFICE.
