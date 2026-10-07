@@ -1,2 +1,11 @@
 // Se conservan los atajos predeterminados de Zellij, incluido Ctrl+P, D y R.
 // Zellij se inicia manualmente; este archivo no configura inicio automático ni plugins.
+
+
+pane_frame_style "full"
+
+ui {
+    pane_frames {
+        rounded_corners true
+    }
+}
