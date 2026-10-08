@@ -1,5 +1,8 @@
 # Dotfiles Fedora
 
+[![Publicar documentación](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml)
+[![Analizar secretos](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml)
+
 Bootstrap personal reproducible para Fedora Workstation con GNOME.
 
 ## Documentación en línea

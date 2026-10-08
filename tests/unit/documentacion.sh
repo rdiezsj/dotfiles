@@ -30,6 +30,9 @@ for pendiente in \
   grep -Fqx -- "- $pendiente" "$RAIZ/README.md"
 done
 
+grep -Fqx '[![Publicar documentación](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml)' "$RAIZ/README.md"
+grep -Fqx '[![Analizar secretos](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml)' "$RAIZ/README.md"
+
 for entrada in \
   'Instalación y verificación: instalacion.md' \
   'Catálogo por gestor: catalogo-fedora.md' \
