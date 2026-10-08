@@ -36,16 +36,34 @@ configurar COPR para estas extensiones.
 - **WHEN** no existe una publicación compatible con la versión de GNOME Shell instalada
 - **THEN** el bootstrap conserva el estado existente de esa extensión y registra el fallo con su nombre y UUID
 
-### Requirement: Activación idempotente
+### Requirement: Activación idempotente y diferida
 El sistema SHALL activar mediante el UUID declarado cada extensión instalada
 que aún no esté activa. Tras cada activación SHALL comprobar que GNOME Shell la
-reconoce; si la sesión requiere recarga, SHALL comunicar que se cierre e inicie
-sesión manualmente sin reiniciar el equipo ni GNOME Shell automáticamente.
+reconoce. Si una extensión recién instalada no está disponible todavía para
+activarse, SHALL comunicar una nueva sesión GNOME como acción pendiente, sin
+reiniciar el equipo ni GNOME Shell automáticamente ni declarar fallida la fase.
+El resumen final SHALL incluir el comando `activar-extensiones-gnome` como el
+siguiente paso y no SHALL listar esa extensión ni la fase en «Fallidos».
 
 #### Scenario: Extensión instalada pero inactiva
 - **WHEN** una extensión declarada está disponible y no figura como activa
 - **THEN** el bootstrap la activa para el usuario actual y registra el resultado
 
-#### Scenario: Recarga de sesión requerida
-- **WHEN** GNOME Shell no aplica una extensión recién activada en la sesión actual
-- **THEN** el resumen informa de que la persona debe cerrar e iniciar sesión manualmente
+#### Scenario: Activación diferida hasta una nueva sesión
+- **WHEN** una extensión recién instalada no se puede activar todavía en la sesión actual
+- **THEN** el resumen final la registra solo como acción pendiente, indica cerrar e iniciar sesión y ejecutar `activar-extensiones-gnome`, y no marca fallida la extensión ni la fase
+
+### Requirement: Comprobación posterior de activación
+El sistema SHALL ofrecer el alias `activar-extensiones-gnome` para activar y
+verificar exclusivamente las extensiones declaradas en una nueva sesión GNOME.
+SHALL informar el nombre y UUID de cada extensión que continúe sin poder
+activarse y terminar con error, sin reinstalar, actualizar ni modificar
+preferencias.
+
+#### Scenario: Nueva sesión con extensiones disponibles
+- **WHEN** la persona inicia una nueva sesión GNOME y ejecuta `activar-extensiones-gnome`
+- **THEN** el comando activa las extensiones declaradas inactivas, comunica las ya activas y termina correctamente
+
+#### Scenario: Fallo persistente tras una nueva sesión
+- **WHEN** `activar-extensiones-gnome` no puede activar una extensión declarada desde una nueva sesión GNOME
+- **THEN** el comando comunica su nombre y UUID, termina con error y conserva las restantes extensiones y preferencias

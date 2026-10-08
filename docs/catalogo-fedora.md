@@ -103,8 +103,11 @@ de GNOME Shell. No se usan clones Git, COPR ni compilación local.
 | Vitals | `Vitals@CoreCoding.com` | extensions.gnome.org. | Requiere `libgtop2-devel` y `lm_sensors`; activación y preferencias, locales. |
 | Dash to Dock | `dash-to-dock@micxgx.gmail.com` | DNF: `gnome-shell-extension-dash-to-dock`. | Activación y preferencias, locales. |
 
-El bloque no modifica extensiones ajenas ni preferencias. Si GNOME Shell no
-aplica una activación de inmediato, cierra e inicia sesión manualmente; el
+El bloque no modifica extensiones ajenas ni preferencias. Si una extensión
+queda pendiente al terminar el bootstrap, cierra e inicia sesión manualmente y
+ejecuta `activar-extensiones-gnome`. Esa situación aparece en «Acciones
+manuales pendientes», no en «Fallidos»; el comando solo activa y verifica las
+extensiones declaradas, sin actualizar software ni modificar preferencias. El
 bootstrap no reinicia la sesión ni el equipo.
 
 ## AppImage verificados

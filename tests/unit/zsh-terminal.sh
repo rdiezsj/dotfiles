@@ -70,6 +70,7 @@ grep -Fqx 'profiles = ["base"]' "$RAIZ/home/.config/sheldon/plugins.toml"
 grep -Fqx 'profiles = ["resaltado"]' "$RAIZ/home/.config/sheldon/plugins.toml"
 ! rg -n -i 'token|secret|password|bw_session' "$RAIZ/home/.config/sheldon/plugins.toml"
 ! rg -F 'sheldon lock --update' "$RAIZ/home/.zshrc"
+grep -Fqx "alias activar-extensiones-gnome='\$HOME/.dotfiles/scripts/activar-extensiones-gnome.sh'" "$RAIZ/home/.zsh_aliases"
 salida_no_interactiva=$(zsh -fc 'source "$1"' zsh "$RAIZ/home/.zshrc")
 [[ -z $salida_no_interactiva ]]
 

@@ -93,9 +93,49 @@ done
 grep -Fqx "instalados:Custom Hot Corners Extended (${EXTENSION_GNOME_UUID[custom-hot-corners]}): instalada desde extensions.gnome.org" "$registro"
 grep -Fqx "instalados:Clipboard Indicator (${EXTENSION_GNOME_UUID[clipboard-indicator]}): instalada desde extensions.gnome.org" "$registro"
 grep -Fqx "instalados:Vitals (${EXTENSION_GNOME_UUID[vitals]}): instalada desde extensions.gnome.org" "$registro"
-grep -Fqx "pendientes:AppIndicator ($appindicator): cierra e inicia sesión manualmente para aplicar la activación" "$registro"
-grep -Fqx "pendientes:Dash to Dock ($dash_to_dock): cierra e inicia sesión manualmente para aplicar la activación" "$registro"
-grep -Fqx "pendientes:Clipboard Indicator (${EXTENSION_GNOME_UUID[clipboard-indicator]}): cierra e inicia sesión manualmente para aplicar la activación" "$registro"
+grep -Fqx "pendientes:AppIndicator ($appindicator): cierra e inicia sesión y ejecuta activar-extensiones-gnome" "$registro"
+grep -Fqx "pendientes:Dash to Dock ($dash_to_dock): cierra e inicia sesión y ejecuta activar-extensiones-gnome" "$registro"
+grep -Fqx "pendientes:Clipboard Indicator (${EXTENSION_GNOME_UUID[clipboard-indicator]}): cierra e inicia sesión y ejecuta activar-extensiones-gnome" "$registro"
+
+: >"$registro"
+sesion_recargada=false
+gnome-extensions() {
+  case $1 in
+    list) [[ $2 == --enabled ]] ;;
+    enable) return 1 ;;
+    *) return 1 ;;
+  esac
+}
+ejecutar_extensiones_gnome
+! grep -q '^fallidos:.*no se pudo activar' "$registro"
+grep -Fqx "pendientes:AppIndicator ($appindicator): cierra e inicia sesión y ejecuta activar-extensiones-gnome" "$registro"
+
+gnome-extensions() {
+  case $1 in
+    list)
+      [[ $2 == --enabled ]] || return 1
+      local uuid
+      if [[ $sesion_recargada == true ]]; then
+        for uuid in "${!activas[@]}"; do
+          [[ ${activas[$uuid]} == true ]] && printf '%s\n' "$uuid"
+        done
+      fi
+      ;;
+    install)
+      [[ $2 == --force ]] || return 1
+      local uuid
+      uuid=$(<"$3")
+      mkdir -p "$HOME/.local/share/gnome-shell/extensions/$uuid"
+      : >"$HOME/.local/share/gnome-shell/extensions/$uuid/metadata.json"
+      printf 'instala:%s\n' "$uuid" >>"$operaciones"
+      ;;
+    enable)
+      activas[$2]=true
+      printf 'activa:%s\n' "$2" >>"$operaciones"
+      ;;
+    *) return 1 ;;
+  esac
+}
 
 : >"$registro"
 : >"$operaciones"

@@ -134,19 +134,32 @@ instalar_extension_desde_ego() {
 activar_extension_gnome() {
   local nombre=$1
   local uuid=$2
+  local modo=${3:-bootstrap}
+  local diagnostico temporal
 
   if extension_gnome_activa "$uuid"; then
     registrar_extension_gnome presentes "$nombre ($uuid): ya estaba activa"
     return 0
   fi
-  if ! gnome-extensions enable "$uuid" >/dev/null 2>&1; then
-    registrar_extension_gnome fallidos "$nombre ($uuid): no se pudo activar"
+  temporal=$(mktemp "${TMPDIR:-/tmp}/activar-extension-gnome.XXXXXX") || return 1
+  if ! gnome-extensions enable "$uuid" >"$temporal" 2>&1; then
+    diagnostico=$(<"$temporal")
+    rm -f "$temporal"
+    if [[ $modo == bootstrap ]]; then
+      registrar_extension_gnome pendientes "$nombre ($uuid): cierra e inicia sesión y ejecuta activar-extensiones-gnome"
+      return 0
+    fi
+    registrar_extension_gnome fallidos "$nombre ($uuid): no se pudo activar${diagnostico:+: $diagnostico}"
     return 1
   fi
+  rm -f "$temporal"
   if extension_gnome_activa "$uuid"; then
     registrar_extension_gnome instalados "$nombre ($uuid): activada"
+  elif [[ $modo == bootstrap ]]; then
+    registrar_extension_gnome pendientes "$nombre ($uuid): cierra e inicia sesión y ejecuta activar-extensiones-gnome"
   else
-    registrar_extension_gnome pendientes "$nombre ($uuid): cierra e inicia sesión manualmente para aplicar la activación"
+    registrar_extension_gnome fallidos "$nombre ($uuid): no figura como activa tras solicitar su activación"
+    return 1
   fi
 }
 
@@ -166,7 +179,36 @@ procesar_extension_gnome() {
   elif ! extension_gnome_instalada_usuario "$uuid"; then
     instalar_extension_desde_ego "$nombre" "$uuid" "$version_shell" || return 1
   fi
-  activar_extension_gnome "$nombre" "$uuid"
+  activar_extension_gnome "$nombre" "$uuid" bootstrap
+}
+
+ejecutar_activacion_extensiones_gnome() {
+  local id nombre uuid origen paquete_dnf
+  local hubo_fallos=false
+
+  if ! command -v gnome-shell >/dev/null 2>&1 || ! command -v gnome-extensions >/dev/null 2>&1; then
+    registrar_extension_gnome fallidos 'Extensiones GNOME: faltan comandos requeridos para activarlas'
+    return 1
+  fi
+  for id in "${EXTENSIONES_GNOME[@]}"; do
+    nombre=${EXTENSION_GNOME_NOMBRE[$id]}
+    uuid=${EXTENSION_GNOME_UUID[$id]}
+    origen=${EXTENSION_GNOME_ORIGEN[$id]}
+    paquete_dnf=${EXTENSION_GNOME_PAQUETE_DNF[$id]:-}
+    if [[ $origen == dnf ]]; then
+      extension_gnome_instalada_dnf "$paquete_dnf" "$uuid" || {
+        registrar_extension_gnome fallidos "$nombre ($uuid): no se encontró metadata.json en el paquete DNF $paquete_dnf"
+        hubo_fallos=true
+        continue
+      }
+    elif ! extension_gnome_instalada_usuario "$uuid"; then
+      registrar_extension_gnome fallidos "$nombre ($uuid): no se encontró metadata.json tras el bootstrap"
+      hubo_fallos=true
+      continue
+    fi
+    activar_extension_gnome "$nombre" "$uuid" posterior || hubo_fallos=true
+  done
+  [[ $hubo_fallos == false ]]
 }
 
 ejecutar_extensiones_gnome() {

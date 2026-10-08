@@ -73,6 +73,16 @@ Con Secure Boot activo, completa antes el enrolamiento MOK solicitado por el
 sistema. El bootstrap no desactiva Secure Boot, no automatiza firmware ni
 reinicia el equipo por su cuenta.
 
+Si el resumen final deja pendiente la activación de extensiones GNOME, cierra e
+inicia sesión y ejecuta:
+
+```bash
+activar-extensiones-gnome
+```
+
+El alias solo activa y verifica las extensiones declaradas; no actualiza
+paquetes ni cambia preferencias.
+
 Comprueba también el servicio de Syncthing para el usuario actual:
 
 ```bash

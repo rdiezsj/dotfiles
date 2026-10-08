@@ -13,7 +13,8 @@ propuesta para la motivación y el contrato de comportamiento.
 - Mantener las extensiones con paquetes Fedora cuando existen.
 - Instalar desde extensions.gnome.org únicamente las extensiones sin paquete
   oficial Fedora y compatibles con la versión de GNOME Shell instalada.
-- Activar el conjunto con UUIDs declarados y sin versionar preferencias.
+- Activar el conjunto con UUIDs declarados y sin versionar preferencias,
+  distinguiendo una activación diferida de un fallo persistente.
 
 **Non-Goals:**
 
@@ -31,20 +32,36 @@ Clipboard Indicator y Vitals se resolverán desde extensions.gnome.org para la
 versión de GNOME Shell detectada. Se descartan GitHub, compilación y COPR por
 incrementar la carga de actualización y el riesgo de incompatibilidad.
 
-### Instalación de usuario y activación declarativa
+### Instalación de usuario y activación diferida
 
 El ejecutor conservará una tabla con nombre, UUID y origen de las cinco
 extensiones. Para las publicadas en extensions.gnome.org consultará la
 publicación compatible, descargará el archivo temporal e instalará para el
 usuario mediante `gnome-extensions`; después verificará y activará cada UUID.
-Los paquetes DNF se activarán con el mismo paso, sin reinstalarlos.
+Los paquetes DNF se activarán con el mismo paso, sin reinstalarlos. Si una
+extensión confirmada no está disponible todavía para activar en esa sesión, se
+registrará como pendiente para una nueva sesión en lugar de como fallida.
+
+### Comprobación posterior acotada
+
+Un ejecutable dedicado cargará la misma tabla de extensiones y, desde una nueva
+sesión GNOME, activará y verificará únicamente las cinco extensiones
+declaradas. El alias `activar-extensiones-gnome` lo invocará desde Zsh. Si una
+extensión sigue sin activarse, el ejecutable comunicará su nombre, UUID y un
+diagnóstico no sensible, y terminará con error.
+
+Se descarta reutilizar `update` o reejecutar el bootstrap porque ambos flujos
+actualizan gestores o ejecutan fases que no forman parte de esta comprobación.
 
 ### Fase visible y tolerante a fallos
 
 El bootstrap mostrará «Extensiones GNOME» como fase independiente tras el
-catálogo de software. Un fallo de una extensión se registrará y permitirá que
-el resto continúe; el resumen conservará la instrucción de reinicio de sesión
-manual cuando proceda.
+catálogo de software. Un fallo de instalación o compatibilidad se registrará y
+permitirá que el resto continúe. Una activación todavía no disponible tras una
+instalación confirmada será una acción pendiente que indique cerrar e iniciar
+sesión y ejecutar el alias posterior. El resumen final incluirá ese alias como
+siguiente paso y no listará esa extensión ni la fase «Extensiones GNOME» en
+«Fallidos».
 
 ## Risks / Trade-offs
 
@@ -55,6 +72,8 @@ manual cuando proceda.
   bloque comunica la extensión concreta afectada.
 - Vitals requiere acceso a sensores locales → DNF instala sus dependencias,
   pero la disponibilidad de sensores sigue dependiendo del hardware.
+- Un fallo real inicial puede aplazarse hasta la nueva sesión → el ejecutable
+  posterior devuelve error y conserva el diagnóstico si persiste.
 
 ## Migration Plan
 
@@ -62,7 +81,7 @@ manual cuando proceda.
    plan y confirmarlo.
 2. Instalar los paquetes DNF y procesar el bloque de extensiones para el
    usuario actual.
-3. Cerrar e iniciar sesión manualmente si GNOME Shell no carga de inmediato
-   una extensión activada.
+3. Cerrar e iniciar sesión manualmente si una extensión queda pendiente y
+   ejecutar `activar-extensiones-gnome`.
 4. Para revertir, desactivar o desinstalar una extensión desde GNOME Extensions
    y retirar su paquete DNF solo cuando corresponda.

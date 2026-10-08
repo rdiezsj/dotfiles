@@ -53,6 +53,8 @@ done
 
 grep -Fq 'Si ya se ejecuta desde Zsh, conserva esa sesión y no solicita' "$RAIZ/docs/terminal.md"
 grep -Fq '~/.dotfiles/scripts/actualizar.sh' "$RAIZ/docs/instalacion.md"
+grep -Fq 'activar-extensiones-gnome' "$RAIZ/docs/instalacion.md"
+grep -Fq 'activar-extensiones-gnome' "$RAIZ/docs/catalogo-fedora.md"
 grep -Fq 'sin confirmaciones propias' "$RAIZ/docs/instalacion.md"
 grep -Fq 'SHA-256 verificable' "$RAIZ/docs/instalacion.md"
 grep -Fq 'usa `Adwaita:dark` solo para Terminator' "$RAIZ/docs/catalogo-fedora.md"
