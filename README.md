@@ -44,7 +44,11 @@ ni se aplican automáticamente.
 - Atajos de teclado.
 - Scripts de actualización.
 - Wiki de GitHub.
-- Comprobaciones de secretos.
+- Integración continua técnica: sintaxis Bash, pruebas unitarias y OpenSpec estricto.
+- Escaneo local y en CI para prevenir secretos versionados.
+- Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.
+- Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.
+- Actualización verificable de Nextcloud AppImage mediante su firma publicada.
 - Teclas Inicio y Fin en el teclado.
 
 ## Construir el sitio de documentación

@@ -13,3 +13,4 @@ nav:
       - Terminal y Zsh: terminal.md
   - Seguridad:
       - Vaultwarden y GNOME Keyring: vaultwarden.md
+      - Prevención de secretos: seguridad.md

@@ -1,0 +1,4 @@
+title = "dotfiles"
+
+[extend]
+useDefault = true

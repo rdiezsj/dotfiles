@@ -11,6 +11,7 @@ for archivo in \
   docs/aplicaciones.md \
   docs/terminal.md \
   docs/vaultwarden.md \
+  docs/seguridad.md \
   requirements-docs.txt; do
   [[ -f $RAIZ/$archivo ]]
 done
@@ -20,7 +21,11 @@ for pendiente in \
   'Atajos de teclado.' \
   'Scripts de actualización.' \
   'Wiki de GitHub.' \
-  'Comprobaciones de secretos.' \
+  'Integración continua técnica: sintaxis Bash, pruebas unitarias y OpenSpec estricto.' \
+  'Escaneo local y en CI para prevenir secretos versionados.' \
+  'Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.' \
+  'Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.' \
+  'Actualización verificable de Nextcloud AppImage mediante su firma publicada.' \
   'Teclas Inicio y Fin en el teclado.'; do
   grep -Fqx -- "- $pendiente" "$RAIZ/README.md"
 done
@@ -30,7 +35,8 @@ for entrada in \
   'Catálogo por gestor: catalogo-fedora.md' \
   'Aplicaciones: aplicaciones.md' \
   'Terminal y Zsh: terminal.md' \
-  'Vaultwarden y GNOME Keyring: vaultwarden.md'; do
+  'Vaultwarden y GNOME Keyring: vaultwarden.md' \
+  'Prevención de secretos: seguridad.md'; do
   grep -Fqx "      - $entrada" "$RAIZ/mkdocs.yml"
 done
 
