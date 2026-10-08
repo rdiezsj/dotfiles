@@ -16,4 +16,4 @@
 
 - [x] 3.1 Integrar «Extensiones GNOME» como fase independiente tras el catálogo de software del bootstrap; verificar el orden con `tests/unit/bootstrap-simulacion.sh` o una prueba focalizada equivalente.
 - [x] 3.2 Publicar el alias `activar-extensiones-gnome` en la configuración interactiva de Zsh y documentar el flujo posterior a una nueva sesión, sus fuentes, UUID, dependencias y estado local no versionado; verificar el alias con una prueba unitaria y la documentación con `tests/unit/documentacion.sh` y `mkdocs build --strict` cuando estén disponibles.
-- [ ] 3.3 Ejecutar `bash tests/unit/run.sh`, `./scripts/check.sh`, `openspec validate configure-essential-gnome-extensions --strict` y `git diff --check`; verificar en una VM Fedora limpia que, tras una nueva sesión, `activar-extensiones-gnome` completa solo la activación declarada.
+- [x] 3.3 Ejecutar `bash tests/unit/run.sh`, `./scripts/check.sh`, `openspec validate configure-essential-gnome-extensions --strict` y `git diff --check`; verificar en una VM Fedora limpia que, tras una nueva sesión, `activar-extensiones-gnome` completa solo la activación declarada.
