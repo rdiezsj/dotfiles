@@ -15,6 +15,16 @@ for archivo in \
   [[ -f $RAIZ/$archivo ]]
 done
 
+for pendiente in \
+  'Configuración de tema y apariencia para Zellij.' \
+  'Atajos de teclado.' \
+  'Scripts de actualización.' \
+  'Wiki de GitHub.' \
+  'Comprobaciones de secretos.' \
+  'Teclas Inicio y Fin en el teclado.'; do
+  grep -Fqx -- "- $pendiente" "$RAIZ/README.md"
+done
+
 for entrada in \
   'Instalación y verificación: instalacion.md' \
   'Catálogo por gestor: catalogo-fedora.md' \
@@ -42,6 +52,9 @@ for extension in \
 done
 
 grep -Fq 'Si ya se ejecuta desde Zsh, conserva esa sesión y no solicita' "$RAIZ/docs/terminal.md"
+grep -Fq '~/.dotfiles/scripts/actualizar.sh' "$RAIZ/docs/instalacion.md"
+grep -Fq 'sin confirmaciones propias' "$RAIZ/docs/instalacion.md"
+grep -Fq 'SHA-256 verificable' "$RAIZ/docs/instalacion.md"
 grep -Fq 'usa `Adwaita:dark` solo para Terminator' "$RAIZ/docs/catalogo-fedora.md"
 grep -Fq '| Ptyxis | Terminal principal de GNOME.' "$RAIZ/docs/catalogo-fedora.md"
 grep -Fq '| Zellij | Multiplexor de terminal con paneles.' "$RAIZ/docs/catalogo-fedora.md"

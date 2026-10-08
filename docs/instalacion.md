@@ -37,6 +37,26 @@ del catálogo se registra en el resumen; el resto del catálogo sigue su curso.
 Consulta [Catálogo de software](catalogo-fedora.md) para el detalle de cada
 paquete y [Configuración de aplicaciones](aplicaciones.md) para los enlaces.
 
+## Actualizar una estación ya desplegada
+
+Desde una sesión Zsh con los dotfiles enlazados, ejecuta:
+
+```bash
+update
+```
+
+El alias ejecuta `~/.dotfiles/scripts/actualizar.sh` sin confirmaciones propias.
+Primero sincroniza el checkout con avance rápido y aplica Dotbot solo si no hay
+cambios Git ni destinos locales no gestionados. A continuación actualiza DNF
+(incluidos sus repositorios), Homebrew, Flatpak de usuario, las extensiones
+GNOME declaradas y los AppImage que dispongan de metadatos oficiales con
+SHA-256 verificable. `sudo` puede solicitar la autenticación normal del sistema.
+
+No se modifican AppImage, extensiones ni configuraciones locales fuera del
+catálogo. Si una fase falla, las independientes continúan, el resumen lo indica
+y el comando termina con error. Si DNF recomienda reiniciar, hazlo manualmente:
+el actualizador no reinicia el equipo.
+
 ## Verificación posterior
 
 Abre una sesión Zsh nueva tras finalizar y comprueba las herramientas de

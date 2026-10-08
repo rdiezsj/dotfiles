@@ -35,6 +35,18 @@ Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bo
 - [Terminal y Zsh](docs/terminal.md)
 - [Vaultwarden y GNOME Keyring](docs/vaultwarden.md)
 
+## Hoja de ruta
+
+Ideas pendientes para iterar sobre el entorno. No implican un cambio aprobado
+ni se aplican automáticamente.
+
+- Configuración de tema y apariencia para Zellij.
+- Atajos de teclado.
+- Scripts de actualización.
+- Wiki de GitHub.
+- Comprobaciones de secretos.
+- Teclas Inicio y Fin en el teclado.
+
 ## Construir el sitio de documentación
 
 Instala las dependencias en un entorno aislado y construye el sitio con enlaces
