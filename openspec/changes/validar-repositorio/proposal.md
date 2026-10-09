@@ -3,8 +3,8 @@
 ## Why
 
 El repositorio ya dispone de una validación integrada local, pero los cambios
-pueden llegar a `main` sin ejecutar esa barrera de sintaxis Bash, pruebas,
-documentación y contratos OpenSpec en un entorno limpio.
+pueden llegar a `main` sin ejecutar esa barrera de sintaxis Bash, pruebas y
+documentación en un entorno limpio.
 
 ## What Changes
 
@@ -35,5 +35,6 @@ documentación y contratos OpenSpec en un entorno limpio.
 - Nuevo workflow de GitHub Actions, su badge en el README y una guía de
   automatización enlazada desde la documentación.
 - Dependencias de validación disponibles solo en el runner efímero.
-- Las pruebas existentes, `scripts/check.sh` y las especificaciones OpenSpec se
-  ejecutarán como una única barrera de integración.
+- Las pruebas existentes y `scripts/check.sh` se ejecutarán como una única
+  barrera de integración, independiente de la herramienta de desarrollo usada
+  para planificar los cambios.

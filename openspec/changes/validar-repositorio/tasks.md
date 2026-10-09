@@ -15,3 +15,8 @@
 
 - [x] 3.1 Crear la guía de automatización con finalidad, disparadores, límites y reproducción local de los workflows de validación, secretos y documentación.
 - [x] 3.2 Enlazar la guía desde MkDocs y el README, ampliar la prueba documental y verificar la construcción estricta.
+
+## 4. Independencia de la metodología de desarrollo
+
+- [x] 4.1 Eliminar la invocación de OpenSpec de `scripts/check.sh` y corregir la guía de automatización para que la CI no la anuncie como requisito.
+- [x] 4.2 Verificar que la validación integrada funciona sin una CLI de OpenSpec disponible.

@@ -8,4 +8,3 @@ for archivo in "$RAIZ"/bootstrap "$RAIZ"/catalogs/*.sh "$RAIZ"/platforms/fedora/
 done
 bash "$RAIZ/tests/unit/run.sh"
 bash "$RAIZ/tests/unit/documentacion.sh"
-(cd "$RAIZ" && openspec validate --strict --all)

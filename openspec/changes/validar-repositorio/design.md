@@ -23,6 +23,8 @@ define el alcance funcional.
   Fedora destino.
 - Fusionar los workflows de publicación, seguridad y validación en uno solo.
 - Añadir análisis estático adicional como ShellCheck en este cambio.
+- Requerir la CLI de OpenSpec u otra herramienta de planificación para validar
+  el repositorio.
 
 ## Decisions
 
@@ -34,7 +36,9 @@ define el alcance funcional.
   el resultado definitivo tras integrar.
 - Usar un único job que invoque `bash scripts/check.sh`. La lógica no se
   duplicará en YAML: el script local seguirá siendo la fuente única de la
-  validación.
+  validación y no invocará OpenSpec. OpenSpec puede seguir instalado y
+  versionado como software de desarrollo, igual que otras aplicaciones del
+  catálogo, sin ser una dependencia de CI.
 - Obtener el checkout con submódulos recursivos, preparar Python con las
   dependencias de documentación, `pre-commit` y una versión de Go compatible
   con el hook de Gitleaks. Así `tests/unit/documentacion.sh` no omite MkDocs y
@@ -65,5 +69,7 @@ define el alcance funcional.
 2. Añadir la guía de automatización, su navegación y sus comprobaciones
    documentales.
 3. Verificar localmente la sintaxis del workflow y la suite integrada.
-4. Tras publicar, confirmar una ejecución correcta en GitHub Actions antes de
+4. Mantener la validación independiente de OpenSpec u otra metodología de
+   desarrollo.
+5. Tras publicar, confirmar una ejecución correcta en GitHub Actions antes de
    exigirla como protección de rama.

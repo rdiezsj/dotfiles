@@ -17,11 +17,11 @@ El workflow obtiene los submódulos, instala las dependencias de documentación,
 bash scripts/check.sh
 ```
 
-Ese comando comprueba sintaxis Bash, pruebas unitarias, construcción estricta
-de MkDocs y especificaciones OpenSpec. Para reproducirlo localmente, instala
-las dependencias de documentación y `pre-commit` en un entorno aislado antes
-de ejecutar el mismo comando. No sustituye las validaciones en una estación
-Fedora destino ni ejecuta `./bootstrap` desde este checkout de desarrollo.
+Ese comando comprueba sintaxis Bash, pruebas unitarias y construcción estricta
+de MkDocs. Para reproducirlo localmente, instala las dependencias de
+documentación y `pre-commit` en un entorno aislado antes de ejecutar el mismo
+comando. No sustituye las validaciones en una estación Fedora destino ni
+ejecuta `./bootstrap` desde este checkout de desarrollo.
 
 ## Analizar secretos
 

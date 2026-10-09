@@ -9,8 +9,8 @@ repositorio antes de integrarlos y después de incorporarlos a `main`.
 
 ### Requirement: Validación integrada del repositorio
 El repositorio SHALL ejecutar una validación integrada en un runner limpio que
-compruebe la sintaxis Bash, las pruebas unitarias, la documentación estricta y
-las especificaciones OpenSpec.
+compruebe la sintaxis Bash, las pruebas unitarias y la documentación estricta,
+sin requerir herramientas de planificación del desarrollo.
 
 #### Scenario: Cambio conforme
 - **WHEN** una propuesta o cambio integrado cumple todas las comprobaciones
