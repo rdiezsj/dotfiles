@@ -158,4 +158,4 @@ if ejecutar_extensiones_gnome; then
 fi
 grep -Fqx "fallidos:Clipboard Indicator ($clipboard): no hay una publicación compatible en extensions.gnome.org" "$registro"
 grep -Fqx "presentes:Vitals (${EXTENSION_GNOME_UUID[vitals]}): ya estaba activa" "$registro"
-! grep -Eq 'git|copr|make|gcc' "$RAIZ/platforms/fedora/extensiones-gnome.sh"
+! grep -Eq '(^|[^[:alnum:]_])(git|copr|make|gcc)([^[:alnum:]_]|$)' "$RAIZ/platforms/fedora/extensiones-gnome.sh"

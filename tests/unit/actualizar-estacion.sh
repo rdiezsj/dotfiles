@@ -113,5 +113,5 @@ actualizar_extensiones_gnome() { printf '%s\n' extensiones >>"$fases"; registrar
 if ejecutar_actualizacion_estacion "$RAIZ" >/dev/null; then exit 1; fi
 [[ $(paste -sd '|' "$fases") == 'checkout|dotbot|dnf|brew|flatpak|appimage|extensiones' ]]
 
-rg -Fqx "alias update='\$HOME/.dotfiles/scripts/actualizar.sh'" "$RAIZ/home/.zsh_aliases"
+grep -Fqx "alias update='\$HOME/.dotfiles/scripts/actualizar.sh'" "$RAIZ/home/.zsh_aliases"
 bash -n "$RAIZ/scripts/actualizar.sh" "$RAIZ/scripts/lib/actualizar-estacion.sh"

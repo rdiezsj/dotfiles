@@ -22,7 +22,7 @@ fi
 registro=$(mktemp)
 registrar_resultado() { printf '%s:%s\n' "$1" "$2" >>"$registro"; }
 operaciones="$TEMPORAL/operaciones"
-nvidia_paquete_ausente=
+nvidia_paquete_ausente='*'
 modulo_nvidia=false
 nvidia_smi=false
 resultado_akmods=0
@@ -30,7 +30,7 @@ rpm() {
   if [[ $1 == -q ]]; then
     case $2 in
       akmod-nvidia|xorg-x11-drv-nvidia-cuda|libva-nvidia-driver|libva-nvidia-driver.i686|xorg-x11-drv-nvidia-libs.i686)
-        [[ $2 != "$nvidia_paquete_ausente" ]]
+        [[ $nvidia_paquete_ausente != '*' && $2 != "$nvidia_paquete_ausente" ]]
         return
         ;;
     esac

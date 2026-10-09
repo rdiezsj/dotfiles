@@ -75,13 +75,13 @@ if verificar_terminal zellij Homebrew; then exit 1; fi
 grep -Fqx 'fallidos:Terminal: zellij no está disponible tras el catálogo Homebrew' "$registro"
 
 flatpak() {
-  case $1:$2:$3:$4:$5 in
+  case ${1-}:${2-}:${3-}:${4-}:${5-} in
     info:--user:it.mijorus.gearlever::) return 0 ;;
     run:--command=gsettings:it.mijorus.gearlever:get:it.mijorus.gearlever)
       printf "'%s'\n" "$HOME/AppImages"
       ;;
     run:--command=gsettings:it.mijorus.gearlever:set:it.mijorus.gearlever)
-      [[ $6 == appimages-default-folder && $7 == "$HOME/Apps" ]]
+      [[ ${6-} == appimages-default-folder && ${7-} == "$HOME/Apps" ]]
       ;;
     *) return 1 ;;
   esac
@@ -89,7 +89,7 @@ flatpak() {
 configurar_carpeta_gear_lever
 grep -Fqx "instalados:Gear Lever: carpeta predeterminada configurada en $HOME/Apps" "$registro"
 flatpak() {
-  case $1:$2:$3:$4:$5 in
+  case ${1-}:${2-}:${3-}:${4-}:${5-} in
     info:--user:it.mijorus.gearlever::) return 0 ;;
     run:--command=gsettings:it.mijorus.gearlever:get:it.mijorus.gearlever)
       printf "'%s'\n" "$HOME/Apps"

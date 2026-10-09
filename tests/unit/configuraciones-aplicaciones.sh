@@ -35,8 +35,8 @@ grep -Fqx 'Exec=/usr/bin/env GTK_THEME=Adwaita:dark /usr/bin/terminator --new-ta
 grep -Fqx "default-profile-uuid='b3a9ca574b7b4bbd9c73a56c3e254ef4'" "$RAIZ/home/.config/ptyxis/config.dconf"
 grep -Fqx "palette='nord'" "$RAIZ/home/.config/ptyxis/config.dconf"
 grep -Fqx 'limit-scrollback=false' "$RAIZ/home/.config/ptyxis/config.dconf"
-! rg -n '^\[.*\]$' "$RAIZ/home/.config/ptyxis/config.dconf" | grep -Fv -e '[/]' -e '[Profiles/b3a9ca574b7b4bbd9c73a56c3e254ef4]'
-! rg -n -i '^(keybinds|plugins|layout|default_layout|default_mode)' "$RAIZ/home/.config/zellij/config.kdl"
+! grep -En '^\[.*\]$' "$RAIZ/home/.config/ptyxis/config.dconf" | grep -Fv -e '[/]' -e '[Profiles/b3a9ca574b7b4bbd9c73a56c3e254ef4]'
+! grep -Ein '^(keybinds|plugins|layout|default_layout|default_mode)' "$RAIZ/home/.config/zellij/config.kdl"
 
 git config --file "$RAIZ/home/.gitconfig" --get core.excludesfile | grep -Fqx '~/.gitignore'
 jq -e . "$RAIZ/home/.config/Heynote/config.json" "$RAIZ/home/.config/Heynote/Preferences" "$RAIZ/home/.config/input-remapper-2/config.json" >/dev/null
@@ -50,8 +50,8 @@ grep -Fqx 'from fedora_desktop@rdiez.es' "$RAIZ/home/.config/msmtp/config"
 grep -Fqx 'eval ~/.dotfiles/bin/msmtp-obtener-usuario' "$RAIZ/home/.config/msmtp/config"
 grep -Fqx 'passwordeval ~/.dotfiles/bin/msmtp-obtener-contrasena' "$RAIZ/home/.config/msmtp/config"
 grep -Fqx 'logfile ~/.local/state/msmtp/msmtp.log' "$RAIZ/home/.config/msmtp/config"
-! rg -n -i '^(user|password)[[:space:]]|BW_SESSION|token[[:space:]]*=' "$RAIZ/home/.config/msmtp/config"
-! rg -n -i '(password\s*=\s*[^<]|token\s*=|secret\s*=)' "$RAIZ/home"
+! grep -Ein '^(user|password)[[:space:]]|BW_SESSION|token[[:space:]]*=' "$RAIZ/home/.config/msmtp/config"
+! grep -REin '(password[[:space:]]*=[[:space:]]*[^<]|token[[:space:]]*=|secret[[:space:]]*=)' "$RAIZ/home"
 [[ ! -d $RAIZ/templates ]]
 
 for destino in \

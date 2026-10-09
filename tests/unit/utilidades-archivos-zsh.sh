@@ -20,21 +20,22 @@ zsh -fc '
     extract "$archivo"
   done
   [[ -f "$2/archivo/entrada/archivo.txt" ]]
-  extract "$2/no-existe" >/dev/null 2>&1 && exit 1
-  extract "$2/entrada/archivo.txt" >/dev/null 2>&1 && exit 1
+  if extract "$2/no-existe" >/dev/null 2>&1; then exit 1; fi
+  if extract "$2/entrada/archivo.txt" >/dev/null 2>&1; then exit 1; fi
 ' zsh "$RAIZ/home/.zsh_functions" "$TEMPORAL"
 
-zsh -fc '
+cat >"$TEMPORAL/compress-test.zsh" <<'EOF'
   source "$1"
+  TEST_FORMATO=tar.gz
   output=$2/salida.tar.gz
-  bloques="Sin dividir"
+  TEST_BLOQUES="Sin dividir"
   gum() {
     case $1 in
       choose)
         case "$*" in
-          *Formato*) print -r -- "$formato" ;;
+          *Formato*) print -r -- "$TEST_FORMATO" ;;
           *Nivel*) print -r -- Normal ;;
-          *Dividir*) print -r -- "$bloques" ;;
+          *Dividir*) print -r -- "$TEST_BLOQUES" ;;
         esac
         ;;
       input) print -r -- "$output" ;;
@@ -45,19 +46,19 @@ zsh -fc '
   tar -tzf "$output" | grep -Fqx entrada/archivo.txt
   [[ -f "$2/entrada/archivo.txt" ]]
 
-  formato=zip
+  TEST_FORMATO=zip
   output=$2/salida.zip
   compress "$2/entrada"
   unzip -tqq "$output"
 
-  formato=7z
+  TEST_FORMATO=7z
   output=$2/salida.7z
   compress "$2/entrada"
   7z t -bd "$output" >/dev/null
 
-  formato=tar.xz
+  TEST_FORMATO=tar.xz
   output=$2/dividido.tar.xz
-  bloques=100M
+  TEST_BLOQUES=100M
   compress "$2/entrada"
   [[ -f "${output}.part-000" ]]
   cat "${output}".part-* >"$output"
@@ -65,10 +66,11 @@ zsh -fc '
 
   print -r -- conservar >"$2/existente.tar.gz"
   output=$2/existente.tar.gz
-  bloques="Sin dividir"
+  TEST_BLOQUES="Sin dividir"
   compress "$2/entrada"
   [[ $(<$2/existente.tar.gz) == conservar ]]
-' zsh "$RAIZ/home/.zsh_functions" "$TEMPORAL"
+EOF
+script -qec "zsh $TEMPORAL/compress-test.zsh $RAIZ/home/.zsh_functions $TEMPORAL" /dev/null
 
 zsh -fc '
   source "$1"

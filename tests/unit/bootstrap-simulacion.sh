@@ -33,7 +33,15 @@ salida_remota=$(printf 'n\n' | DOTFILES_OS_RELEASE="$TEMPORAL/os-release" DOTFIL
 [[ $salida_remota == *'Instalación cancelada antes de modificar el equipo.'* ]]
 
 git clone --quiet "$RAIZ" "$TEMPORAL/remoto"
-git clone --bare --quiet "$RAIZ/dotbot" "$TEMPORAL/dotbot"
+git clone --quiet "$RAIZ/dotbot" "$TEMPORAL/dotbot-origen"
+git clone --bare --quiet "$RAIZ/dotbot/lib/pyyaml" "$TEMPORAL/pyyaml"
+git -C "$TEMPORAL/dotbot-origen" config -f .gitmodules submodule.lib/pyyaml.url "$TEMPORAL/pyyaml"
+git -C "$TEMPORAL/dotbot-origen" add .gitmodules
+git -C "$TEMPORAL/dotbot-origen" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
+  commit --quiet -m 'Aísla PyYAML para la prueba remota'
+git clone --bare --quiet "$TEMPORAL/dotbot-origen" "$TEMPORAL/dotbot"
+dotbot_referencia=$(git -C "$TEMPORAL/dotbot-origen" rev-parse HEAD)
+git -C "$TEMPORAL/remoto" update-index --add --cacheinfo 160000,"$dotbot_referencia",dotbot
 git -C "$TEMPORAL/remoto" config -f .gitmodules submodule.dotbot.url "$TEMPORAL/dotbot"
 cp "$RAIZ/bootstrap" "$TEMPORAL/remoto/bootstrap"
 cp "$RAIZ/platforms/fedora/catalogo-software.sh" "$TEMPORAL/remoto/platforms/fedora/catalogo-software.sh"

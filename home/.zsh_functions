@@ -138,16 +138,17 @@ compress() {
   fi
   mkdir -p -- "${destino:h}" || return 1
   temporal=$(mktemp "${destino:h}/.${destino:t}.XXXXXX") || return 1
+  rm -f -- "$temporal"
 
   case $formato:$nivel in
     tar.gz:Normal) tar -czf "$temporal" -- "${elementos[@]}" ;;
     tar.gz:Máximo) tar -I 'gzip -9' -cf "$temporal" -- "${elementos[@]}" ;;
     tar.xz:Normal) tar -cJf "$temporal" -- "${elementos[@]}" ;;
     tar.xz:Máximo) env XZ_OPT=-9 tar -cJf "$temporal" -- "${elementos[@]}" ;;
-    zip:Normal) zip -r -q -6 "$temporal" -- "${elementos[@]}" ;;
-    zip:Máximo) zip -r -q -9 "$temporal" -- "${elementos[@]}" ;;
-    7z:Normal) 7z a -t7z -bd -mx=5 "$temporal" -- "${elementos[@]}" ;;
-    7z:Máximo) 7z a -t7z -bd -mx=9 "$temporal" -- "${elementos[@]}" ;;
+    zip:Normal) zip -r -q -6 "$temporal" "${elementos[@]}" ;;
+    zip:Máximo) zip -r -q -9 "$temporal" "${elementos[@]}" ;;
+    7z:Normal) 7z a -t7z -bd -mx=5 "$temporal" "${elementos[@]}" ;;
+    7z:Máximo) 7z a -t7z -bd -mx=9 "$temporal" "${elementos[@]}" ;;
   esac || {
     rm -f -- "$temporal"
     print -u2 -- "Compress: no se pudo crear $destino"
