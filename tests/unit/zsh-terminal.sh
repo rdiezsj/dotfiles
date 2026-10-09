@@ -6,9 +6,24 @@ RAIZ=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 TEMPORAL=$(mktemp -d)
 trap 'rm -rf "$TEMPORAL"' EXIT
 trap 'estado=$?; printf "Fallo de zsh-terminal.sh en línea %s: %s\\n" "$LINENO" "$BASH_COMMAND" >&2; exit "$estado"' ERR
+ZSH_BIN=$(command -v zsh)
+PYTHON_BIN=$(command -v python || command -v python3)
 export HOME="$TEMPORAL/home"
-mkdir -p "$HOME/.config" "$HOME/.codex/skills/.system/runtime-skill" "$TEMPORAL/bin"
+export ZDOTDIR="$TEMPORAL/zsh"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export DOTFILES_SKIP_BREW_SHELLENV=true
+export LC_ALL=C
+export TERM=xterm-256color
+unset DOTFILES FPATH FZF_DEFAULT_OPTS SHELDON_CONFIG_DIR SHELDON_DATA_DIR
+mkdir -p "$HOME/.config" "$HOME/.codex/skills/.system/runtime-skill" "$ZDOTDIR" "$TEMPORAL/bin"
 printf '%s\n' 'skill gestionada por Codex' >"$HOME/.codex/skills/.system/runtime-skill/SKILL.md"
+
+cat >"$TEMPORAL/bin/python" <<EOF
+#!/usr/bin/env bash
+exec "$PYTHON_BIN" "\$@"
+EOF
 
 cat >"$TEMPORAL/bin/sheldon" <<'EOF'
 #!/usr/bin/env bash
@@ -53,7 +68,8 @@ cat >"$TEMPORAL/bin/starship" <<'EOF'
 printf '%s\n' ':'
 EOF
 chmod +x "$TEMPORAL/bin/kubectl" "$TEMPORAL/bin/fzf" "$TEMPORAL/bin/starship"
-export PATH="$TEMPORAL/bin:$PATH"
+chmod +x "$TEMPORAL/bin/python"
+export PATH="$TEMPORAL/bin:/usr/bin:/bin"
 
 dconf_cargado=false
 zellij_validado=false
@@ -83,7 +99,7 @@ zellij() {
 # shellcheck source=/dev/null
 source "$RAIZ/scripts/lib/zsh-terminal.sh"
 
-zsh -n "$RAIZ/home/.zshrc" "$RAIZ/home/.zsh_aliases" "$RAIZ/home/.zsh_functions" "$RAIZ/home/.zprofile"
+"$ZSH_BIN" -n "$RAIZ/home/.zshrc" "$RAIZ/home/.zsh_aliases" "$RAIZ/home/.zsh_functions" "$RAIZ/home/.zprofile"
 ! grep -Ein 'token|secret|password|bw_session' "$RAIZ/home/.zshrc" "$RAIZ/home/.zsh_aliases" "$RAIZ/home/.zsh_functions" "$RAIZ/home/.profile" "$RAIZ/home/.zprofile" "$RAIZ/home/.config/starship.toml"
 [[ $(grep -Ec '^rev = "[[:xdigit:]]{40}"$' "$RAIZ/home/.config/sheldon/plugins.toml") -eq 6 ]]
 grep -Fqx 'profiles = ["base"]' "$RAIZ/home/.config/sheldon/plugins.toml"
@@ -91,7 +107,7 @@ grep -Fqx 'profiles = ["resaltado"]' "$RAIZ/home/.config/sheldon/plugins.toml"
 ! grep -Ein 'token|secret|password|bw_session' "$RAIZ/home/.config/sheldon/plugins.toml"
 ! grep -F 'sheldon lock --update' "$RAIZ/home/.zshrc"
 grep -Fqx "alias activar-extensiones-gnome='\$HOME/.dotfiles/scripts/activar-extensiones-gnome.sh'" "$RAIZ/home/.zsh_aliases"
-salida_no_interactiva=$(zsh -fc 'source "$1"' zsh "$RAIZ/home/.zshrc")
+salida_no_interactiva=$("$ZSH_BIN" -fc 'source "$1"' zsh "$RAIZ/home/.zshrc")
 [[ -z $salida_no_interactiva ]]
 
 registro="$TEMPORAL/registro"
@@ -177,14 +193,14 @@ configurar_archivos_zsh "$RAIZ"
 [[ $(grep -Fc 'Configuración: archivos versionados enlazados mediante Dotbot' "$registro") == 4 ]]
 grep -Fqx 'instalados:Sheldon: plugins Zsh materializados en el estado local' "$registro"
 grep -Fqx 'presentes:Sheldon: estado local de plugins ya materializado' "$registro"
-zsh -dfic '
+"$ZSH_BIN" -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
   source "$1"
   typeset -f extract | grep -Fq "Extract: no existe un archivo válido"
 ' zsh "$HOME/.zshrc"
 
 mkdir -p "$HOME/.local/bin" "$HOME/.dotfiles/bin" "$HOME/.krew/bin"
-zsh -dfic '
+"$ZSH_BIN" -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- "extract() { :; }"; }
   fzf() { [[ $1 == --zsh ]] && print -r -- ":"; }
   starship() { [[ $1 == init ]] && print -r -- ":"; }
@@ -247,14 +263,14 @@ grep -Fqx '  name = Git local' "$HOME/.gitconfig"
 [[ ! -L $HOME/.zshrc && ! -L $HOME/.gitconfig ]]
 
 mkdir -p "$TEMPORAL/sheldon-config/sheldon"
-salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL" XDG_DATA_HOME="$TEMPORAL" zsh -dfic '
+salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL" XDG_DATA_HOME="$TEMPORAL" "$ZSH_BIN" -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
   source "$1"
 ' zsh "$RAIZ/home/.zshrc" 2>&1)
 [[ $salida_sheldon == *'Aviso Sheldon: falta ~/.config/sheldon/plugins.toml; resuelve el conflicto de Dotbot y ejecuta ./bootstrap.'* ]]
 
 cp "$RAIZ/home/.config/sheldon/plugins.toml" "$TEMPORAL/sheldon-config/sheldon/plugins.toml"
-salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMPORAL" zsh -dfic '
+salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMPORAL" "$ZSH_BIN" -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
   source "$1"
 ' zsh "$RAIZ/home/.zshrc" 2>&1)
@@ -262,7 +278,7 @@ salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMP
 
 mkdir -p "$TEMPORAL/sheldon-data/sheldon"
 touch "$TEMPORAL/sheldon-data/sheldon/plugins.base.lock"
-salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMPORAL/sheldon-data" zsh -dfic '
+salida_sheldon=$(XDG_CONFIG_HOME="$TEMPORAL/sheldon-config" XDG_DATA_HOME="$TEMPORAL/sheldon-data" "$ZSH_BIN" -dfic '
   sheldon() { [[ ${@: -1} == source ]] && print -r -- ":"; }
   source "$1"
 ' zsh "$RAIZ/home/.zshrc" 2>&1)

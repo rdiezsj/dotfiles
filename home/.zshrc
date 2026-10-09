@@ -2,7 +2,8 @@
 
 [[ -o interactive ]] || return 0
 
-if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+# Las pruebas desactivan esta inicialización para no heredar el Homebrew del equipo.
+if [[ ${DOTFILES_SKIP_BREW_SHELLENV:-false} != true && -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 fi
 
