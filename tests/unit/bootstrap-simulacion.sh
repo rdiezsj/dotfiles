@@ -33,12 +33,14 @@ salida_remota=$(printf 'n\n' | DOTFILES_OS_RELEASE="$TEMPORAL/os-release" DOTFIL
 [[ $salida_remota == *'Instalación cancelada antes de modificar el equipo.'* ]]
 
 git clone --quiet "$RAIZ" "$TEMPORAL/remoto"
+git clone --bare --quiet "$RAIZ/dotbot" "$TEMPORAL/dotbot"
+git -C "$TEMPORAL/remoto" config -f .gitmodules submodule.dotbot.url "$TEMPORAL/dotbot"
 cp "$RAIZ/bootstrap" "$TEMPORAL/remoto/bootstrap"
 cp "$RAIZ/platforms/fedora/catalogo-software.sh" "$TEMPORAL/remoto/platforms/fedora/catalogo-software.sh"
 cp "$RAIZ/platforms/fedora/extensiones-gnome.sh" "$TEMPORAL/remoto/platforms/fedora/extensiones-gnome.sh"
 cp "$RAIZ/platforms/fedora/multimedia-nvidia.sh" "$TEMPORAL/remoto/platforms/fedora/multimedia-nvidia.sh"
 cp "$RAIZ/scripts/lib/zsh-terminal.sh" "$TEMPORAL/remoto/scripts/lib/zsh-terminal.sh"
-git -C "$TEMPORAL/remoto" add bootstrap platforms/fedora/catalogo-software.sh platforms/fedora/extensiones-gnome.sh platforms/fedora/multimedia-nvidia.sh scripts/lib/zsh-terminal.sh
+git -C "$TEMPORAL/remoto" add .gitmodules bootstrap platforms/fedora/catalogo-software.sh platforms/fedora/extensiones-gnome.sh platforms/fedora/multimedia-nvidia.sh scripts/lib/zsh-terminal.sh
 if ! git -C "$TEMPORAL/remoto" diff --cached --quiet; then
   git -C "$TEMPORAL/remoto" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
     commit --quiet -m 'Actualiza bootstrap para la prueba remota'

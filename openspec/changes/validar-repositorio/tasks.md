@@ -4,7 +4,7 @@
 
 - [x] 1.1 Crear `.github/workflows/validar-repositorio.yml` con el nombre visible `Validar repositorio`, permisos mínimos de lectura y ejecución en propuestas contra `main`, cambios en `main` y ejecución manual.
 - [x] 1.2 Preparar el entorno efímero del workflow: checkout recursivo de submódulos, dependencias de documentación, `pre-commit` y Go compatible con Gitleaks; fijar las acciones externas a commits completos.
-- [x] 1.3 Ejecutar `bash scripts/check.sh` como única barrera integrada del workflow y comprobar que sus fallos hacen fallar el job.
+- [x] 1.3 Ejecutar `bash scripts/check.sh` como única barrera integrada del workflow y comprobar que sus fallos hacen fallar el job e identifican la comprobación que falló.
 
 ## 2. Estado visible y verificación
 

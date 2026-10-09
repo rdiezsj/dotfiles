@@ -20,7 +20,7 @@ git() {
     diff:--quiet|diff:--cached) [[ ${GIT_SUCIO:-false} == false ]] ;;
     branch:--show-current) printf '%s\n' main ;;
     fetch:origin) printf 'fetch:%s\n' "$3" >>"$operaciones" ;;
-    merge:--ff-only) [[ ${GIT_DIVERGE:-false} == false ]] && printf 'merge:%s\n' "$2" >>"$operaciones" ;;
+    merge:--ff-only) [[ ${GIT_DIVERGE:-false} == false ]] && printf 'merge:%s\n' "$3" >>"$operaciones" ;;
     *) return 1 ;;
   esac
 }
@@ -67,7 +67,7 @@ actualizar_homebrew
 flatpak() { [[ $1 == update && $2 == --user && $3 == -y ]]; }
 actualizar_flatpak
 
-APPIMAGE_MANIFIESTO_GITHUB=([prueba]=manifest)
+declare -A APPIMAGE_MANIFIESTO_GITHUB=([prueba]=manifest)
 PAQUETES_APPIMAGE=(prueba)
 obtener_metadatos_appimage() { printf 'Prueba.AppImage\tfile://origen\t%s\n' "$SUMA_PRUEBA"; }
 printf 'binario nuevo' >"$TEMPORAL/origen"
