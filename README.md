@@ -2,6 +2,7 @@
 
 [![Publicar documentación](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml)
 [![Analizar secretos](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml)
+[![Validar repositorio](https://github.com/rdiezsj/dotfiles/actions/workflows/validar-repositorio.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/validar-repositorio.yml)
 
 Bootstrap personal reproducible para Fedora Workstation con GNOME.
 
@@ -36,6 +37,7 @@ Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bo
 - [Catálogo de software](docs/catalogo-fedora.md)
 - [Configuración de aplicaciones](docs/aplicaciones.md)
 - [Terminal y Zsh](docs/terminal.md)
+- [Workflows de GitHub Actions](docs/automatizacion.md)
 - [Vaultwarden y GNOME Keyring](docs/vaultwarden.md)
 
 ## Hoja de ruta
@@ -47,7 +49,6 @@ ni se aplican automáticamente.
 - Atajos de teclado.
 - Scripts de actualización.
 - Wiki de GitHub.
-- Integración continua técnica: sintaxis Bash, pruebas unitarias y OpenSpec estricto.
 - Escaneo local y en CI para prevenir secretos versionados.
 - Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.
 - Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.

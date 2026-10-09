@@ -10,6 +10,7 @@ for archivo in \
   docs/catalogo-fedora.md \
   docs/aplicaciones.md \
   docs/terminal.md \
+  docs/automatizacion.md \
   docs/vaultwarden.md \
   docs/seguridad.md \
   requirements-docs.txt; do
@@ -21,7 +22,6 @@ for pendiente in \
   'Atajos de teclado.' \
   'Scripts de actualización.' \
   'Wiki de GitHub.' \
-  'Integración continua técnica: sintaxis Bash, pruebas unitarias y OpenSpec estricto.' \
   'Escaneo local y en CI para prevenir secretos versionados.' \
   'Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.' \
   'Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.' \
@@ -32,12 +32,14 @@ done
 
 grep -Fqx '[![Publicar documentación](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/documentation.yml)' "$RAIZ/README.md"
 grep -Fqx '[![Analizar secretos](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/secretos.yml)' "$RAIZ/README.md"
+grep -Fqx '[![Validar repositorio](https://github.com/rdiezsj/dotfiles/actions/workflows/validar-repositorio.yml/badge.svg?branch=main&event=push)](https://github.com/rdiezsj/dotfiles/actions/workflows/validar-repositorio.yml)' "$RAIZ/README.md"
 
 for entrada in \
   'Instalación y verificación: instalacion.md' \
   'Catálogo por gestor: catalogo-fedora.md' \
   'Aplicaciones: aplicaciones.md' \
   'Terminal y Zsh: terminal.md' \
+  'Workflows de GitHub Actions: automatizacion.md' \
   'Vaultwarden y GNOME Keyring: vaultwarden.md' \
   'Prevención de secretos: seguridad.md'; do
   grep -Fqx "      - $entrada" "$RAIZ/mkdocs.yml"
@@ -85,6 +87,13 @@ grep -Fq 'cierra todas sus ventanas antes de abrirlo' "$RAIZ/docs/aplicaciones.m
 grep -Fq '~/.config/ptyxis/config.dconf' "$RAIZ/docs/aplicaciones.md"
 grep -Fq '~/.config/zellij/' "$RAIZ/docs/aplicaciones.md"
 grep -Fq 'Ctrl+P`, seguido de `D` o `R`' "$RAIZ/docs/aplicaciones.md"
+grep -Fqx '# Automatización' "$RAIZ/docs/automatizacion.md"
+grep -Fq '## Validar repositorio' "$RAIZ/docs/automatizacion.md"
+grep -Fq '## Analizar secretos' "$RAIZ/docs/automatizacion.md"
+grep -Fq '## Publicar documentación' "$RAIZ/docs/automatizacion.md"
+grep -Fq 'bash scripts/check.sh' "$RAIZ/docs/automatizacion.md"
+grep -Fq 'pre-commit run --all-files' "$RAIZ/docs/automatizacion.md"
+grep -Fqx -- '- [Workflows de GitHub Actions](docs/automatizacion.md)' "$RAIZ/README.md"
 
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then
   printf '%s\n' 'Documentación: instala pip install -r requirements-docs.txt para ejecutar mkdocs build --strict.'

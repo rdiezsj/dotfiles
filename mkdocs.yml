@@ -11,6 +11,8 @@ nav:
   - Configuración:
       - Aplicaciones: aplicaciones.md
       - Terminal y Zsh: terminal.md
+  - Automatización:
+      - Workflows de GitHub Actions: automatizacion.md
   - Seguridad:
       - Vaultwarden y GNOME Keyring: vaultwarden.md
       - Prevención de secretos: seguridad.md
