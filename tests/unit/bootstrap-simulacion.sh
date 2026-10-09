@@ -39,6 +39,7 @@ git -C "$TEMPORAL/dotbot-origen" config -f .gitmodules submodule.lib/pyyaml.url 
 git -C "$TEMPORAL/dotbot-origen" add .gitmodules
 git -C "$TEMPORAL/dotbot-origen" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
   commit --quiet -m 'Aísla PyYAML para la prueba remota'
+git -C "$TEMPORAL/dotbot-origen" branch --force prueba-remota-local HEAD
 git clone --bare --quiet "$TEMPORAL/dotbot-origen" "$TEMPORAL/dotbot"
 dotbot_referencia=$(git -C "$TEMPORAL/dotbot-origen" rev-parse HEAD)
 git -C "$TEMPORAL/remoto" update-index --add --cacheinfo 160000,"$dotbot_referencia",dotbot

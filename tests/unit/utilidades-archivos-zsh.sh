@@ -74,5 +74,5 @@ script -qec "zsh $TEMPORAL/compress-test.zsh $RAIZ/home/.zsh_functions $TEMPORAL
 
 zsh -fc '
   source "$1"
-  compress "$2/entrada" >/dev/null 2>&1 && exit 1
+  if compress "$2/entrada" >/dev/null 2>&1; then exit 1; fi
 ' zsh "$RAIZ/home/.zsh_functions" "$TEMPORAL"
