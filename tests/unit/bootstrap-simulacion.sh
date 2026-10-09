@@ -59,6 +59,7 @@ if [[ $(git -C "$TEMPORAL/remoto" branch --show-current) != main ]]; then
 fi
 
 if ! salida_remota=$(printf 's\nn\n' | DOTFILES_DISABLE_GUM=true \
+  GIT_ALLOW_PROTOCOL=file \
   DOTFILES_REMOTE="file://$TEMPORAL/remoto" \
   DOTFILES_HOME="$TEMPORAL/dotfiles" \
   DOTFILES_OS_RELEASE="$TEMPORAL/os-release" \
