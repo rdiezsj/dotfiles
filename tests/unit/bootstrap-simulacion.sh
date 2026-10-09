@@ -54,13 +54,19 @@ if ! git -C "$TEMPORAL/remoto" diff --cached --quiet; then
   git -C "$TEMPORAL/remoto" -c user.name='Pruebas Dotfiles' -c user.email='pruebas@example.invalid' \
     commit --quiet -m 'Actualiza bootstrap para la prueba remota'
 fi
+if [[ $(git -C "$TEMPORAL/remoto" branch --show-current) != main ]]; then
+  git -C "$TEMPORAL/remoto" branch --force main HEAD
+fi
 
-salida_remota=$(printf 's\nn\n' | DOTFILES_DISABLE_GUM=true \
+if ! salida_remota=$(printf 's\nn\n' | DOTFILES_DISABLE_GUM=true \
   DOTFILES_REMOTE="file://$TEMPORAL/remoto" \
   DOTFILES_HOME="$TEMPORAL/dotfiles" \
   DOTFILES_OS_RELEASE="$TEMPORAL/os-release" \
   DOTFILES_DESKTOP=GNOME \
-  bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
+  bash -c "$(<"$RAIZ/bootstrap")" 2>&1); then
+  printf '%s\n' "$salida_remota" >&2
+  exit 1
+fi
 [[ -d $TEMPORAL/dotfiles ]]
 [[ $salida_remota == *'DOTFILES FEDORA -- PLAN COMPLETO'* ]]
 [[ $salida_remota == *'Bootstrap cancelado antes de modificar el equipo.'* ]]
