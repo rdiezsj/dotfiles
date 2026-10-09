@@ -25,6 +25,8 @@ zsh -fc '
 ' zsh "$RAIZ/home/.zsh_functions" "$TEMPORAL"
 
 cat >"$TEMPORAL/compress-test.zsh" <<'EOF'
+setopt errexit
+
   source "$1"
   TEST_FORMATO=tar.gz
   output=$2/salida.tar.gz
@@ -32,6 +34,7 @@ cat >"$TEMPORAL/compress-test.zsh" <<'EOF'
   gum() {
     case $1 in
       choose)
+        cat >/dev/null
         case "$*" in
           *Formato*) print -r -- "$TEST_FORMATO" ;;
           *Nivel*) print -r -- Normal ;;
@@ -42,24 +45,25 @@ cat >"$TEMPORAL/compress-test.zsh" <<'EOF'
       confirm) return 1 ;;
     esac
   }
-  compress "$2/entrada"
+  cd "$2"
+  compress entrada
   tar -tzf "$output" | grep -Fqx entrada/archivo.txt
   [[ -f "$2/entrada/archivo.txt" ]]
 
   TEST_FORMATO=zip
   output=$2/salida.zip
-  compress "$2/entrada"
+  compress entrada
   unzip -tqq "$output"
 
   TEST_FORMATO=7z
   output=$2/salida.7z
-  compress "$2/entrada"
+  compress entrada
   7z t -bd "$output" >/dev/null
 
   TEST_FORMATO=tar.xz
   output=$2/dividido.tar.xz
-  TEST_BLOQUES=100M
-  compress "$2/entrada"
+  TEST_BLOQUES=1
+  compress entrada
   [[ -f "${output}.part-000" ]]
   cat "${output}".part-* >"$output"
   tar -tJf "$output" | grep -Fqx entrada/archivo.txt
@@ -67,7 +71,7 @@ cat >"$TEMPORAL/compress-test.zsh" <<'EOF'
   print -r -- conservar >"$2/existente.tar.gz"
   output=$2/existente.tar.gz
   TEST_BLOQUES="Sin dividir"
-  compress "$2/entrada"
+  compress entrada
   [[ $(<$2/existente.tar.gz) == conservar ]]
 EOF
 script -qec "zsh $TEMPORAL/compress-test.zsh $RAIZ/home/.zsh_functions $TEMPORAL" /dev/null

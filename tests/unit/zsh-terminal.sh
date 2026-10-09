@@ -5,6 +5,7 @@ set -euo pipefail
 RAIZ=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 TEMPORAL=$(mktemp -d)
 trap 'rm -rf "$TEMPORAL"' EXIT
+trap 'estado=$?; printf "Fallo de zsh-terminal.sh en línea %s: %s\\n" "$LINENO" "$BASH_COMMAND" >&2; exit "$estado"' ERR
 export HOME="$TEMPORAL/home"
 mkdir -p "$HOME/.config" "$HOME/.codex/skills/.system/runtime-skill" "$TEMPORAL/bin"
 printf '%s\n' 'skill gestionada por Codex' >"$HOME/.codex/skills/.system/runtime-skill/SKILL.md"
@@ -33,6 +34,25 @@ mkdir -p "${SHELDON_DATA_DIR:?}"
 touch "${SHELDON_DATA_DIR}/plugins.${perfil}.lock"
 EOF
 chmod +x "$TEMPORAL/bin/sheldon"
+cat >"$TEMPORAL/bin/kubectl" <<'EOF'
+#!/usr/bin/env bash
+
+[[ $1 == completion && $2 == zsh ]] || exit 1
+printf '%s\n' ':'
+EOF
+cat >"$TEMPORAL/bin/fzf" <<'EOF'
+#!/usr/bin/env bash
+
+[[ $1 == --zsh ]] || exit 1
+printf '%s\n' ':'
+EOF
+cat >"$TEMPORAL/bin/starship" <<'EOF'
+#!/usr/bin/env bash
+
+[[ $1 == init && $2 == zsh ]] || exit 1
+printf '%s\n' ':'
+EOF
+chmod +x "$TEMPORAL/bin/kubectl" "$TEMPORAL/bin/fzf" "$TEMPORAL/bin/starship"
 export PATH="$TEMPORAL/bin:$PATH"
 
 dconf_cargado=false
