@@ -93,6 +93,7 @@ grep -Fq '## Analizar secretos' "$RAIZ/docs/automatizacion.md"
 grep -Fq '## Publicar documentación' "$RAIZ/docs/automatizacion.md"
 grep -Fq 'bash scripts/check.sh' "$RAIZ/docs/automatizacion.md"
 grep -Fq 'pre-commit run --all-files' "$RAIZ/docs/automatizacion.md"
+grep -Fq 'instala explícitamente `zsh`, `7z`, `jq`' "$RAIZ/docs/automatizacion.md"
 grep -Fqx -- '- [Workflows de GitHub Actions](docs/automatizacion.md)' "$RAIZ/README.md"
 
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then

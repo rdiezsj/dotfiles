@@ -10,18 +10,21 @@ ejecuta el bootstrap ni modifica una estación Fedora.
 `main`, al integrar cambios en `main` y manualmente. Solo dispone de permisos
 de lectura sobre el contenido del repositorio.
 
-El workflow obtiene los submódulos, instala las dependencias de documentación,
-`pre-commit` y Go, y ejecuta:
+El workflow obtiene los submódulos e instala explícitamente `zsh`, `7z`, `jq`
+y las utilidades de archivado y terminal que usan las pruebas, además de las
+dependencias de documentación, `pre-commit` y Go. Antes de probar, la barrera
+comprueba que esas herramientas están disponibles y ejecuta:
 
 ```bash
 bash scripts/check.sh
 ```
 
 Ese comando comprueba sintaxis Bash, pruebas unitarias y construcción estricta
-de MkDocs. Para reproducirlo localmente, instala las dependencias de
-documentación y `pre-commit` en un entorno aislado antes de ejecutar el mismo
-comando. No sustituye las validaciones en una estación Fedora destino ni
-ejecuta `./bootstrap` desde este checkout de desarrollo.
+de MkDocs. Para reproducirlo localmente, instala las herramientas que indica
+su comprobación previa y las dependencias de documentación y `pre-commit` en
+un entorno aislado antes de ejecutar el mismo comando. No sustituye las
+validaciones en una estación Fedora destino ni ejecuta `./bootstrap` desde
+este checkout de desarrollo.
 
 ## Analizar secretos
 
