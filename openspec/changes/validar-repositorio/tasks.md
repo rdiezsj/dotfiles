@@ -20,3 +20,7 @@
 
 - [x] 4.1 Eliminar la invocación de OpenSpec de `scripts/check.sh` y corregir la guía de automatización para que la CI no la anuncie como requisito.
 - [x] 4.2 Verificar que la validación integrada funciona sin una CLI de OpenSpec disponible.
+
+## 5. Portabilidad del runner
+
+- [x] 5.1 Hacer que la simulación del bootstrap declare Fedora también en el recorrido remoto y verificar la suite en un entorno no Fedora.

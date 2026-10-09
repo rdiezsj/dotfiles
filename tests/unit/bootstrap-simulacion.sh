@@ -27,7 +27,8 @@ linea_catalogo=$(grep -nF "ejecutar_fase 'Catálogo DNF, Homebrew, Flatpak y App
 linea_extensiones=$(grep -nF "ejecutar_fase 'Extensiones GNOME'" "$RAIZ/bootstrap" | cut -d: -f1)
 [[ $linea_catalogo -lt $linea_extensiones ]]
 
-salida_remota=$(printf 'n\n' | bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
+salida_remota=$(printf 'n\n' | DOTFILES_OS_RELEASE="$TEMPORAL/os-release" DOTFILES_DESKTOP=GNOME \
+  bash -c "$(<"$RAIZ/bootstrap")" 2>&1)
 [[ $salida_remota == *'DOTFILES FEDORA -- PLAN INICIAL'* ]]
 [[ $salida_remota == *'Instalación cancelada antes de modificar el equipo.'* ]]
 

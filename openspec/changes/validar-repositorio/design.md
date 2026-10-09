@@ -60,6 +60,8 @@ define el alcance funcional.
   explícita antes de ejecutar la suite.
 - [Diferencia entre entorno local y runner] → Ejecutar exactamente
   `scripts/check.sh` y conservar pruebas aisladas con dobles de comandos.
+- [El runner de CI no es Fedora] → Las pruebas de bootstrap declararán siempre
+  el `os-release` y escritorio simulados, incluidos los recorridos remotos.
 - [Cambio de una dependencia externa] → Fijar acciones y versiones declaradas
   y actualizar únicamente mediante un cambio revisable.
 

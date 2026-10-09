@@ -23,6 +23,11 @@ sin requerir herramientas de planificación del desarrollo.
 - **THEN** el workflow termina como fallido e identifica la comprobación que
   impidió validarlo
 
+#### Scenario: Runner no Fedora
+- **WHEN** la validación se ejecuta en un runner que no es Fedora
+- **THEN** las pruebas que simulan el bootstrap usan su entorno Fedora
+  declarado y no dependen del sistema anfitrión
+
 ### Requirement: Cobertura de eventos de integración
 El sistema SHALL ejecutar la validación integrada para propuestas contra
 `main`, cambios incorporados a `main` y ejecuciones manuales.
