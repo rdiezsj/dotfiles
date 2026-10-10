@@ -2,7 +2,8 @@
 
 Los workflows de GitHub Actions tienen responsabilidades separadas: validar la
 integridad técnica, detectar secretos y publicar la documentación. Ninguno
-ejecuta el bootstrap ni modifica una estación Fedora.
+ejecuta el bootstrap ni modifica una estación Fedora. Todos fijan el runner
+`ubuntu-26.04` para evitar las migraciones automáticas de `ubuntu-latest`.
 
 ## Validar repositorio
 
@@ -25,6 +26,10 @@ su comprobación previa y las dependencias de documentación y `pre-commit` en
 un entorno aislado antes de ejecutar el mismo comando. No sustituye las
 validaciones en una estación Fedora destino ni ejecuta `./bootstrap` desde
 este checkout de desarrollo.
+
+Go se utiliza para instalar Gitleaks mediante `pre-commit`; su caché de módulos
+está desactivada porque este repositorio no contiene un módulo Go ni `go.sum`.
+Las acciones de preparación de Python y Go usan Node 24 y se fijan por SHA.
 
 ## Analizar secretos
 
