@@ -15,6 +15,18 @@ Starship usa `~/.config/starship.toml`. Sheldon usa
 lockfiles son estado local en `~/.local/share/sheldon/`. Zsh activa completado
 de kubectl, modo Emacs y fzf con interfaz compacta.
 
+El modo Emacs conserva la edición directa del comando y los atajos `Ctrl+A`,
+`Ctrl+E` y `Ctrl+R` (fzf). Inicio y Fin mueven el cursor a los extremos de la
+línea; Suprimir borra el carácter bajo el cursor y Retroceso borra el anterior.
+Las flechas permiten mover el cursor y recorrer el historial; RePág y AvPág
+también recorren el historial. `Ctrl+izquierda/derecha` mueve por palabras,
+`Ctrl+Suprimir` borra la palabra siguiente y `Alt+Retroceso` la anterior.
+`Ctrl+Inicio/Fin` mueve a los extremos de la línea, Insertar alterna inserción y
+sobrescritura, y `Mayús+Tab` recorre el completado hacia atrás. Se reconocen las
+secuencias habituales y las declaradas por la terminal mediante `terminfo`.
+Estos atajos se aplican al prompt de Zsh; las aplicaciones tienen sus propios
+atajos. Tras actualizar los dotfiles, abre otra terminal o ejecuta `exec zsh`.
+
 Si `~/.config/sheldon/plugins.toml` ya existe durante el bootstrap, el aviso de
 Dotbot muestra ese destino y `home/.config/sheldon/plugins.toml` como origen, y
 pide confirmación antes de reemplazarlo con el enlace. Al aceptar, la copia

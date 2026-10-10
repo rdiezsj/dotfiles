@@ -59,6 +59,19 @@ el actualizador no reinicia el equipo.
 
 ## Verificación posterior
 
+El bootstrap solicita el nombre y correo para los commits Git cuando no existe
+una identidad global. Los guarda únicamente en `~/.gitconfig.local`, con permisos
+`600`; el `.gitconfig` versionado incluye ese archivo, excluido mediante el
+`.gitignore` global. Puedes usar un correo `noreply` de GitHub o dejar la respuesta
+vacía para omitir esta configuración. Si ya hay una identidad global, la conserva
+en el archivo local antes de aplicar Dotbot. En siguientes ejecuciones no vuelve
+a solicitarla ni sobrescribe el archivo.
+
+Comprueba la identidad con `git config --global --includes --get user.name` y
+`git config --global --includes --get user.email`. Una identidad propia de un repositorio
+prevalece sobre estos valores globales. Los commits publicados contienen el nombre
+y correo elegidos; el archivo local no se publica.
+
 Abre una sesión Zsh nueva tras finalizar y comprueba las herramientas de
 terminal descritas en [Terminal y Zsh](terminal.md). El bootstrap valida
 automáticamente NVIDIA durante cada ejecución. Si el resumen final indica que

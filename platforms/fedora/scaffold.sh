@@ -2,6 +2,38 @@
 
 # Crea el scaffold personal y las plantillas de Nautilus sin sobrescribirlas.
 
+configurar_identidad_git() {
+  local archivo="$HOME/.gitconfig.local" nombre correo
+  if [[ -e $archivo ]]; then
+    if git config --file "$archivo" user.name >/dev/null && git config --file "$archivo" user.email >/dev/null; then
+      printf '%s\n' 'Identidad Git local ya configurada.'
+      return 0
+    fi
+    printf '%s\n' 'La identidad Git local está incompleta; revisa ~/.gitconfig.local sin sobrescribirla.' >&2
+    return 1
+  fi
+  nombre=$(git config --global --includes user.name || true)
+  correo=$(git config --global --includes user.email || true)
+  if [[ -z $nombre ]]; then
+    read -r -p 'Nombre para los commits Git (vacío para omitir): ' nombre || nombre=
+  fi
+  if [[ -z $nombre ]]; then
+    printf '%s\n' 'Configuración de identidad Git omitida.'
+    return 0
+  fi
+  if [[ -z $correo ]]; then
+    read -r -p 'Correo para los commits Git (puedes usar noreply de GitHub; vacío para omitir): ' correo || correo=
+  fi
+  if [[ -z $correo ]]; then
+    printf '%s\n' 'Configuración de identidad Git omitida.'
+    return 0
+  fi
+  (umask 077
+   git config --file "$archivo" user.name "$nombre" &&
+   git config --file "$archivo" user.email "$correo") || return 1
+  printf '%s\n' 'Identidad Git guardada solo en ~/.gitconfig.local.'
+}
+
 directorio_plantillas_nautilus() {
   if [[ -n ${DOTFILES_TEMPLATES_DIR:-} ]]; then
     printf '%s\n' "$DOTFILES_TEMPLATES_DIR"

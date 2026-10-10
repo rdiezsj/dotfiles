@@ -25,8 +25,7 @@ for pendiente in \
   'Escaneo local y en CI para prevenir secretos versionados.' \
   'Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.' \
   'Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.' \
-  'Actualización verificable de Nextcloud AppImage mediante su firma publicada.' \
-  'Teclas Inicio y Fin en el teclado.'; do
+  'Actualización verificable de Nextcloud AppImage mediante su firma publicada.'; do
   grep -Fqx -- "- $pendiente" "$RAIZ/README.md"
 done
 

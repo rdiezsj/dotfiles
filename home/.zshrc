@@ -21,6 +21,9 @@ _dotfiles_extender_path "$HOME/.local/bin"
 _dotfiles_extender_path "$DOTFILES/bin"
 _dotfiles_extender_path "$HOME/.krew/bin"
 
+# Recupera la sesión revocable del llavero para esta terminal.
+[[ -f "$DOTFILES/scripts/lib/vaultwarden-terminal.zsh" ]] && source "$DOTFILES/scripts/lib/vaultwarden-terminal.zsh"
+
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 HISTSIZE=100000
 SAVEHIST=100000
@@ -75,6 +78,44 @@ fi
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
 fi
+
+# Teclas de edición: terminfo y variantes CSI/SS3 usadas por terminales y Zellij.
+_dotfiles_configurar_teclas() {
+  local tecla secuencia accion
+  zmodload zsh/terminfo
+  for tecla accion in \
+    khome beginning-of-line kend end-of-line kdch1 delete-char \
+    kbs backward-delete-char kich1 overwrite-mode kcbt reverse-menu-complete \
+    kpp up-line-or-history knp down-line-or-history; do
+    secuencia=${terminfo[$tecla]}
+    [[ -n $secuencia ]] && bindkey -M emacs "$secuencia" "$accion"
+  done
+  for secuencia in $'\e[H' $'\eOH' $'\e[1~' $'\e[7~' $'\e[1;5H'; do
+    bindkey -M emacs "$secuencia" beginning-of-line
+  done
+  for secuencia in $'\e[F' $'\eOF' $'\e[4~' $'\e[8~' $'\e[1;5F'; do
+    bindkey -M emacs "$secuencia" end-of-line
+  done
+  for secuencia accion in \
+    $'\e[3~' delete-char $'\x7f' backward-delete-char $'\x08' backward-delete-char \
+    $'\e[2~' overwrite-mode $'\e[Z' reverse-menu-complete \
+    $'\e[5~' up-line-or-history $'\e[6~' down-line-or-history \
+    $'\e[1;5D' backward-word $'\e[1;5C' forward-word \
+    $'\e[3;5~' kill-word $'\e\x7f' backward-kill-word; do
+    bindkey -M emacs "$secuencia" "$accion"
+  done
+  # Conserva los widgets de flechas de plugins si ya están configurados.
+  for secuencia accion in \
+    $'\e[A' up-line-or-history $'\eOA' up-line-or-history \
+    $'\e[B' down-line-or-history $'\eOB' down-line-or-history \
+    $'\e[C' forward-char $'\eOC' forward-char \
+    $'\e[D' backward-char $'\eOD' backward-char; do
+    [[ $(bindkey -M emacs "$secuencia") == *undefined-key ]] && bindkey -M emacs "$secuencia" "$accion"
+  done
+  return 0
+}
+_dotfiles_configurar_teclas
+unfunction _dotfiles_configurar_teclas
 
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"

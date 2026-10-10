@@ -28,7 +28,7 @@ registrar_resultado() {
 mostrar_categoria() {
   local titulo=$1
   shift
-  if command -v gum >/dev/null 2>&1; then
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
     gum style --foreground 212 --bold "$titulo"
   else
     printf '%s\n' "$titulo"
@@ -44,7 +44,7 @@ mostrar_categoria() {
 }
 
 mostrar_resumen_final() {
-  if command -v gum >/dev/null 2>&1; then
+  if [[ ${DOTFILES_DISABLE_GUM:-false} != true ]] && command -v gum >/dev/null 2>&1; then
     gum style --border double --padding '0 1' --foreground 212 'DOTFILES FEDORA -- RESUMEN FINAL'
   else
     printf '\n+----------------------------------------+\n'

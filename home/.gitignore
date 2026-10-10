@@ -1,3 +1,6 @@
+# Identidad Git privada de cada estación
+.gitconfig.local
+
 # Metadatos de macOS
 .DS_Store
 .AppleDouble

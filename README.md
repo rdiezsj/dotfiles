@@ -53,7 +53,6 @@ ni se aplican automáticamente.
 - Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.
 - Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.
 - Actualización verificable de Nextcloud AppImage mediante su firma publicada.
-- Teclas Inicio y Fin en el teclado.
 
 ## Construir el sitio de documentación
 
