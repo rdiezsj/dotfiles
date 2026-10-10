@@ -4,10 +4,16 @@ El bootstrap instala Bitwarden CLI mediante Homebrew antes de solicitar la URL d
 
 El bootstrap guarda solo la sesión revocable `BW_SESSION` en GNOME Keyring. No guarda ni versiona la contraseña maestra, tokens ni credenciales.
 
-Cada terminal interactiva Zsh recupera esa sesión del llavero, la valida y
-exporta `BW_SESSION` para los comandos `bw` ejecutados desde ella. Si la sesión
-falta o no es válida, la terminal se abre sin solicitar la contraseña maestra.
+Cada terminal interactiva Zsh recupera la sesión del llavero al ejecutar `bw`
+y se la pasa únicamente a ese proceso. Bitwarden valida la sesión al ejecutar
+el comando solicitado. El arranque de la terminal no accede al llavero ni lanza
+Bitwarden; una sesión ausente o inválida no retrasa el prompt. Si ya has exportado
+`BW_SESSION`, se respeta esa sesión sin consultar el llavero.
 La recuperación requiere que GNOME Keyring esté disponible y desbloqueado.
+
+Al repetir el bootstrap, una sesión válida existente evita volver a solicitar
+la URL, iniciar sesión o desbloquear. Una URL explícita distinta mediante
+`--vault-server` mantiene la configuración del nuevo servidor.
 
 Después de desplegar esta corrección, abre una terminal Zsh nueva y ejecuta
 `bw status`: debe indicar `unlocked`. No es necesario repetir el bootstrap si

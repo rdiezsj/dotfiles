@@ -21,7 +21,7 @@ _dotfiles_extender_path "$HOME/.local/bin"
 _dotfiles_extender_path "$DOTFILES/bin"
 _dotfiles_extender_path "$HOME/.krew/bin"
 
-# Recupera la sesión revocable del llavero para esta terminal.
+# Define el acceso diferido a la sesión revocable del llavero.
 [[ -f "$DOTFILES/scripts/lib/vaultwarden-terminal.zsh" ]] && source "$DOTFILES/scripts/lib/vaultwarden-terminal.zsh"
 
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"

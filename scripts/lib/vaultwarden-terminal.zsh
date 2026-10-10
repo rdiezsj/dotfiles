@@ -1,16 +1,13 @@
-# Reutiliza una sesión válida sin solicitar contraseñas al abrir la terminal.
-_dotfiles_recuperar_sesion_vaultwarden() {
+# Recupera la sesión al usar Bitwarden, sin retrasar el prompt.
+bw() {
   emulate -L zsh
   local sesion
-  command -v secret-tool >/dev/null 2>&1 || return 0
-  command -v bw >/dev/null 2>&1 || return 0
-  sesion=$(secret-tool lookup service dotfiles-vaultwarden account "$USER" 2>/dev/null) || return 0
-  [[ -n $sesion ]] || return 0
-  if BW_SESSION="$sesion" bw list folders --raw >/dev/null 2>&1; then
-    export BW_SESSION="$sesion"
+  if [[ -z ${BW_SESSION:-} ]] && command -v secret-tool >/dev/null 2>&1; then
+    sesion=$(secret-tool lookup service dotfiles-vaultwarden account "$USER" 2>/dev/null) || sesion=
+    if [[ -n $sesion ]]; then
+      BW_SESSION="$sesion" command bw "$@"
+      return $?
+    fi
   fi
-  return 0
+  command bw "$@"
 }
-
-_dotfiles_recuperar_sesion_vaultwarden
-unfunction _dotfiles_recuperar_sesion_vaultwarden

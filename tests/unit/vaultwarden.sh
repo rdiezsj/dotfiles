@@ -9,7 +9,10 @@ trap 'rm -rf "$TEMPORAL"' EXIT
 cat >"$TEMPORAL/bw" <<'EOF'
 #!/usr/bin/env bash
 case "$1 $2" in
-  'config server') printf '%s\n' "$*" >"$BW_PRUEBA_SALIDA" ;;
+  'config server')
+    if (( $# == 2 )); then printf '%s\n' https://vaultwarden.example.invalid
+    else printf '%s\n' "$*" >"$BW_PRUEBA_SALIDA"; fi ;;
+  'login ') printf '%s\n' login >>"$BW_PRUEBA_SALIDA" ;;
   'unlock --raw') printf '%s\n' 'sesion-de-prueba' ;;
   'list folders') test "${BW_SESSION:-}" = sesion-de-prueba ;;
 esac
@@ -31,8 +34,14 @@ export PATH="$TEMPORAL:/usr/bin:/bin"
 export BW_PRUEBA_SALIDA="$TEMPORAL/salida"
 export BW_PRUEBA_SESION="$TEMPORAL/sesion"
 configurar_vaultwarden 'https://vaultwarden.example.invalid'
-[[ $(<"$TEMPORAL/salida") == 'config server https://vaultwarden.example.invalid' ]]
+[[ $(head -n 1 "$TEMPORAL/salida") == 'config server https://vaultwarden.example.invalid' ]]
 [[ $(<"$TEMPORAL/sesion") == sesion-de-prueba ]]
+
+rm "$TEMPORAL/salida"
+configurar_vaultwarden </dev/null
+[[ ! -e $TEMPORAL/salida ]]
+configurar_vaultwarden 'https://vaultwarden.example.invalid' </dev/null
+[[ ! -e $TEMPORAL/salida ]]
 
 rm "$TEMPORAL/bw"
 hash -r

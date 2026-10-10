@@ -26,8 +26,10 @@ obtener_sesion_vaultwarden() {
 }
 
 validar_sesion_vaultwarden() {
-  local sesion
-  sesion=$(obtener_sesion_vaultwarden) || return 1
+  local sesion=${1:-${BW_SESSION:-}}
+  if [[ -z $sesion ]]; then
+    sesion=$(obtener_sesion_vaultwarden 2>/dev/null) || return 1
+  fi
   [[ -n $sesion ]] && BW_SESSION="$sesion" bw list folders --raw >/dev/null
 }
 
@@ -37,7 +39,7 @@ iniciar_sesion_vaultwarden() {
   local sesion
   sesion=$(bw unlock --raw)
   guardar_sesion_vaultwarden "$sesion"
-  if ! validar_sesion_vaultwarden; then
+  if ! validar_sesion_vaultwarden "$sesion"; then
     printf '%s\n' 'La sesión de Vaultwarden no pudo validarse.' >&2
     return 1
   fi
@@ -49,6 +51,16 @@ configurar_vaultwarden() {
   if ! preparar_bitwarden_cli; then
     printf '%s\n' 'Bitwarden CLI no está disponible; Vaultwarden queda pendiente.' >&2
     return 1
+  fi
+  # Una URL explícita diferente solicita configurar otra instancia.
+  if [[ -z $servidor || $(bw config server) == "$servidor" ]]; then
+    if validar_sesion_vaultwarden 2>/dev/null; then
+      if [[ -n ${BW_SESSION:-} ]]; then
+        guardar_sesion_vaultwarden "$BW_SESSION" || return 1
+      fi
+      printf '%s\n' 'Vaultwarden ya está configurado y desbloqueado; se conserva la sesión.'
+      return 0
+    fi
   fi
   if [[ -z $servidor ]]; then
     read -r -p 'URL de Vaultwarden (vacía para omitir): ' servidor
