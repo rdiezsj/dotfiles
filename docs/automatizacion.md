@@ -65,3 +65,72 @@ python3 -m venv /tmp/dotfiles-docs
 
 Una ejecución correcta construye y publica el sitio; no valida el bootstrap ni
 reanuda otros workflows.
+
+## Diagnóstico local: dotfiles doctor
+
+Desde una terminal Zsh con los dotfiles desplegados:
+
+```bash
+dotfiles doctor
+```
+
+También puedes ejecutarlo directamente desde el checkout:
+
+```bash
+./bin/dotfiles doctor
+```
+
+El comando solo lee el estado local. Comprueba:
+
+- Los enlaces declarados por Dotbot en `install.conf.yaml`, incluidos archivos
+  y directorios: origen existente, destino gestionado y enlace correcto.
+- La presencia de nombre y correo en la identidad Git **global**, sin mostrar
+  sus valores. Si existe `~/.gitconfig.local`, comprueba que sea un archivo
+  regular con permisos privados. Una identidad Git omitida voluntariamente se
+  informa como incompleta; el bootstrap sigue permitiendo omitirla.
+- La presencia de lockfiles no vacíos para los perfiles `base` y `resaltado` de
+  Sheldon, en `${XDG_DATA_HOME:-$HOME/.local/share}/sheldon`. No valida sus
+  revisiones ni el contenido de las cachés de plugins.
+- Los valores aplicados de Ptyxis frente a `home/.config/ptyxis/config.dconf`,
+  mediante `dconf read`. Una consulta fallida o que tarda más de cinco segundos
+  se informa como no disponible.
+
+Los enlaces se comprueban en las rutas de HOME declaradas por Dotbot. La
+variable `DOTFILES_HOME` permite seleccionar otro checkout como referencia;
+por defecto se usa el que contiene el comando. Para interpretar YAML necesita
+el submódulo de PyYAML de Dotbot y Python 3; si faltan, no los instala y explica
+qué no pudo comprobar.
+
+| Código | Resultado |
+| --- | --- |
+| `0` | Todas las comprobaciones son conformes. |
+| `1` | Hay deriva, aunque también haya comprobaciones no disponibles. |
+| `2` | No hay deriva observada, pero el informe está incompleto; también se usa para argumentos no admitidos. |
+
+Cada incidencia ofrece orientación manual. Revisa los destinos no gestionados
+antes de volver a ejecutar `./bootstrap`: el doctor no confirma ni aplica
+reparaciones. Una preferencia personal diferente se muestra como deriva para
+que puedas decidir si conservarla o actualizar la declaración versionada.
+
+No instala paquetes, usa `sudo`, accede a la red ni consulta Bitwarden o GNOME
+Keyring. Tampoco escribe cachés de Python ni modifica preferencias. No es un
+inventario exhaustivo de paquetes ni una validación de sesiones o secretos.
+
+## Mantenimiento local: dotfiles update
+
+`dotfiles update` es otro acceso al mismo mantenimiento que el alias `update`:
+
+```bash
+dotfiles update
+# Desde el checkout:
+./bin/dotfiles update
+```
+
+Ejecuta `scripts/actualizar.sh`, conserva su código de salida y respeta
+`DOTFILES_HOME`. Sin esa variable, el script usa su propio checkout. El alias
+`update` sigue disponible. Consulta el
+[procedimiento de actualización](instalacion.md) para los gestores cubiertos,
+los privilegios necesarios y la conservación de conflictos locales.
+
+`dotfiles update --help` muestra el uso sin ejecutar el mantenimiento. Los
+argumentos adicionales no admitidos devuelven `2` sin iniciar la actualización.

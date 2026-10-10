@@ -40,6 +40,14 @@ Durante esta fase se instalan Homebrew y el grupo DNF `development-tools`. El bo
 - [Workflows de GitHub Actions](docs/automatizacion.md)
 - [Vaultwarden y GNOME Keyring](docs/vaultwarden.md)
 
+## Diagnosticar la configuración
+
+Ejecuta `dotfiles doctor` en Zsh, o `./bin/dotfiles doctor` desde el checkout,
+para detectar deriva sin modificar el equipo. Comprueba enlaces Dotbot,
+identidad Git, perfiles Sheldon y preferencias Ptyxis. Para el mantenimiento,
+`dotfiles update` ejecuta la misma actualización que el alias `update`. Consulta el
+[alcance y los códigos de salida](docs/automatizacion.md#diagnóstico-local-dotfiles-doctor).
+
 ## Hoja de ruta
 
 Ideas pendientes para iterar sobre el entorno. No implican un cambio aprobado
@@ -50,7 +58,6 @@ ni se aplican automáticamente.
 - Scripts de actualización.
 - Wiki de GitHub.
 - Escaneo local y en CI para prevenir secretos versionados.
-- Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.
 - Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.
 - Actualización verificable de Nextcloud AppImage mediante su firma publicada.
 

@@ -10,7 +10,7 @@ for comando in git jq zsh 7z tar unzip zip xz script pre-commit; do
   fi
 done
 
-for archivo in "$RAIZ"/bootstrap "$RAIZ"/catalogs/*.sh "$RAIZ"/platforms/fedora/*.sh "$RAIZ"/scripts/*.sh "$RAIZ"/scripts/lib/*.sh; do
+for archivo in "$RAIZ"/bootstrap "$RAIZ"/bin/dotfiles "$RAIZ"/catalogs/*.sh "$RAIZ"/platforms/fedora/*.sh "$RAIZ"/scripts/*.sh "$RAIZ"/scripts/lib/*.sh; do
   bash -n "$archivo"
 done
 bash "$RAIZ/tests/unit/run.sh"

@@ -23,7 +23,6 @@ for pendiente in \
   'Scripts de actualización.' \
   'Wiki de GitHub.' \
   'Escaneo local y en CI para prevenir secretos versionados.' \
-  'Diagnóstico de solo lectura `dotfiles doctor` para detectar deriva de configuración.' \
   'Validación del bootstrap en una estación Fedora de destino para Ptyxis y Zellij.' \
   'Actualización verificable de Nextcloud AppImage mediante su firma publicada.'; do
   grep -Fqx -- "- $pendiente" "$RAIZ/README.md"
@@ -94,6 +93,12 @@ grep -Fq 'bash scripts/check.sh' "$RAIZ/docs/automatizacion.md"
 grep -Fq 'pre-commit run --all-files' "$RAIZ/docs/automatizacion.md"
 grep -Fq 'instala explícitamente `zsh`, `7z`, `jq`' "$RAIZ/docs/automatizacion.md"
 grep -Fqx -- '- [Workflows de GitHub Actions](docs/automatizacion.md)' "$RAIZ/README.md"
+
+
+# El diagnóstico está implementado y documentado, ya no es una idea pendiente.
+grep -Fq '## Diagnosticar la configuración' "$RAIZ/README.md"
+grep -Fq '## Diagnóstico local: dotfiles doctor' "$RAIZ/docs/automatizacion.md"
+grep -Fq './bin/dotfiles doctor' "$RAIZ/docs/automatizacion.md"
 
 if ! command -v mkdocs >/dev/null 2>&1 || ! python3 -c 'import material' >/dev/null 2>&1; then
   printf '%s\n' 'Documentación: instala pip install -r requirements-docs.txt para ejecutar mkdocs build --strict.'
