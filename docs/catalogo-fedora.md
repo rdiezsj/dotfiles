@@ -58,7 +58,7 @@ Vaultwarden.
 
 | Aplicación | Finalidad | Configuración |
 | --- | --- | --- |
-| Firefox PWA | Crear y ejecutar aplicaciones web de Firefox. | Local. |
+| Firefox PWA | Crear y ejecutar aplicaciones web de Firefox. | El bootstrap enlaza el manifiesto nativo de Homebrew para Firefox; aplicaciones y datos, locales. |
 | Starship | Prompt de shell. | Versionada: `~/.config/starship.toml`. |
 | Sheldon | Gestor de plugins Zsh. | Versionada: `~/.config/sheldon/plugins.toml`; clones y lockfiles, locales. |
 | fzf | Búsqueda interactiva en terminal. | Ajustes en Zsh versionada; caché local. |
@@ -168,6 +168,15 @@ systemctl --user status syncthing.service
 Es un servicio de usuario, no un demonio global ejecutado como `root`; por ello usa el HOME y los permisos de quien ejecutó el bootstrap. Se inicia con la sesión gráfica. Si se requiere que continúe sin iniciar sesión, habilita explícitamente `linger` más adelante.
 
 Comprueba la instalación de Firefox PWA desde Homebrew:
+
+El bootstrap crea `/usr/lib/mozilla/native-messaging-hosts/firefoxpwa.json`
+como enlace al manifiesto de la fórmula Homebrew y comprueba que el conector
+declarado existe y es ejecutable. También realiza este paso si la fórmula ya
+estaba instalada. Si encuentra un archivo o enlace distinto en el destino,
+lo conserva y registra el conflicto para revisarlo antes de repetir el bootstrap.
+La extensión Firefox PWA debe instalarse en el navegador; el enlace permite
+que se comunique con el componente nativo. No se inicia ningún servicio Zellij:
+su uso como multiplexor sigue siendo manual mediante `zellij`.
 
 ```bash
 brew list --versions firefoxpwa

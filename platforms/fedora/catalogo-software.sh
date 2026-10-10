@@ -110,6 +110,35 @@ instalar_paquete_homebrew() {
   fi
 }
 
+configurar_manifiesto_firefoxpwa() {
+  local destino=${1:-/usr/lib/mozilla/native-messaging-hosts/firefoxpwa.json}
+  local brew prefijo origen conector
+  brew=$(obtener_brew_catalogo) || return 1
+  prefijo=$("$brew" --prefix firefoxpwa) || return 1
+  origen="$prefijo/share/firefoxpwa.json"
+  if [[ ! -f $origen ]] || ! conector=$(jq -er 'select(.name == "firefoxpwa" and .type == "stdio") | .path | select(type == "string" and startswith("/"))' "$origen") || [[ ! -x $conector ]]; then
+    registrar_catalogo fallidos 'Firefox PWA: manifiesto o conector nativo no disponible o inválido'
+    return 1
+  fi
+  if [[ -L $destino && $destino -ef $origen ]]; then
+    registrar_catalogo presentes 'Firefox PWA: manifiesto nativo ya enlazado'
+    return 0
+  fi
+  if [[ -e $destino || -L $destino ]]; then
+    registrar_catalogo fallidos "Firefox PWA: conflicto en $destino; se conserva el destino, revísalo antes de volver a ejecutar el bootstrap"
+    return 1
+  fi
+  if ! sudo mkdir -p "$(dirname "$destino")" || ! sudo ln -s "$origen" "$destino"; then
+    registrar_catalogo fallidos 'Firefox PWA: no se pudo enlazar el manifiesto nativo'
+    return 1
+  fi
+  if [[ ! -L $destino || ! $destino -ef $origen ]]; then
+    registrar_catalogo fallidos 'Firefox PWA: el enlace del manifiesto nativo no pudo verificarse'
+    return 1
+  fi
+  registrar_catalogo instalados 'Firefox PWA: manifiesto nativo enlazado para la extensión de Firefox'
+}
+
 instalar_openspec_global() {
   local version
   if command -v openspec >/dev/null 2>&1 && version=$(openspec --version 2>/dev/null) && [[ -n $version ]]; then
@@ -315,6 +344,10 @@ ejecutar_catalogo_software() {
   for paquete in "${PAQUETES_HOMEBREW[@]}"; do
     if [[ $paquete == openspec ]]; then
       instalar_openspec_global || true
+    elif [[ $paquete == firefoxpwa ]]; then
+      if instalar_paquete_homebrew "$paquete"; then
+        configurar_manifiesto_firefoxpwa || true
+      fi
     else
       instalar_paquete_homebrew "$paquete" || true
     fi
