@@ -3,12 +3,22 @@ import os
 import pathlib
 import pty
 import select
+import shutil
 import subprocess
 import sys
 import tempfile
 import time
 
 root = pathlib.Path(sys.argv[1])
+autoload_files = subprocess.check_output([
+    "zsh", "-dfc",
+    'for name in compinit compaudit compdump compinstall; do '
+    'for directory in $fpath; do '
+    'if [[ -f $directory/$name ]]; then print -r -- "$directory/$name"; break; fi; '
+    'done; done',
+], text=True).splitlines()
+if len(autoload_files) != 4:
+    raise AssertionError("No se localizaron las funciones de inicialización de completado Zsh")
 cases = [
     ("Inicio CSI", b"abc\x1b[HX", "Xabc"),
     ("Inicio SS3", b"abc\x1bOHX", "Xabc"),
@@ -37,7 +47,19 @@ for terminal in ("xterm-256color", "screen-256color", "dumb"):
     with tempfile.TemporaryDirectory(prefix="teclas-zsh-") as tmp:
         home = pathlib.Path(tmp)
         result = home / "resultado"
+        (home / "functions").mkdir(mode=0o700)
+        for source in autoload_files:
+            destination = home / "functions" / pathlib.Path(source).name
+            shutil.copyfile(source, destination)
+            destination.chmod(0o600)
+        # Reproduce los permisos inseguros que puede heredar el runner de CI.
+        (home / "insecure").mkdir()
+        (home / "insecure").chmod(0o777)
+        (home / "insecure" / "_insecure").write_text("#compdef insecure\n")
+        (home / ".zshenv").write_text('fpath=("$HOME/insecure" $fpath)\n')
         (home / ".zshrc").write_text('''
+fpath=("$HOME/functions")
+_compdir=''
 brew() { print -r -- /nonexistent; }
 sheldon() { return 0; }
 starship() { return 0; }
@@ -71,7 +93,10 @@ bindkey '^X^T' capturar
                 if time.monotonic() > deadline:
                     raise AssertionError(f"Zsh no arranca: {terminal}: {output!r}")
                 if select.select([master], [], [], 0.1)[0]:
-                    output += os.read(master, 65536)
+                    try:
+                        output += os.read(master, 65536)
+                    except OSError as error:
+                        raise AssertionError(f"Zsh terminó antes del prompt: {output!r}") from error
             for number, (name, keys, expected) in enumerate(cases, 1):
                 os.write(master, keys + b"\x18\x14")
                 deadline = time.monotonic() + 3
